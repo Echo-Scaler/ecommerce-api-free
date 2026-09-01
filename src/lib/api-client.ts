@@ -11,6 +11,7 @@ export interface RequestOptions {
   bearerToken?: string | null;
   endpointId?: string;
   baseUrl?: string;
+  timeoutMs?: number;
 }
 
 // Configurable API base URL resolution
@@ -65,7 +66,7 @@ export const buildQueryString = (queryParams?: Record<string, string | number | 
 };
 
 /**
- * Centralized API Client executor supporting GET, POST, PUT, PATCH, DELETE
+ * Centralized API Client executor supporting GET, POST, PUT, PATCH, DELETE with full error handling & timeout
  */
 export const executeApiRequest = async (options: RequestOptions): Promise<ApiResponseExecution> => {
   const {
@@ -76,7 +77,8 @@ export const executeApiRequest = async (options: RequestOptions): Promise<ApiRes
     headers = {},
     body,
     bearerToken,
-    baseUrl: customBaseUrl
+    baseUrl: customBaseUrl,
+    timeoutMs = 15000
   } = options;
 
   const baseUrl = getApiBaseUrl(customBaseUrl);
@@ -106,14 +108,19 @@ export const executeApiRequest = async (options: RequestOptions): Promise<ApiRes
 
   const startTime = performance.now();
 
+  // Setup abort controller for timeout handling
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
   try {
-    // Attempt real HTTP fetch
     const response = await fetch(fullUrl, {
       method,
       headers: requestHeaders,
       body: formattedBody,
+      signal: controller.signal,
     });
 
+    clearTimeout(timeoutId);
     const endTime = performance.now();
     const durationMs = Math.round(endTime - startTime);
 
@@ -145,21 +152,39 @@ export const executeApiRequest = async (options: RequestOptions): Promise<ApiRes
       timestamp: new Date().toISOString(),
       isError: !response.ok
     };
-  } catch (_networkError: any) {
-    // When live remote is unreachable or sandbox simulation is active,
-    // generate an authentic response based on the endpoint definition
+  } catch (error: any) {
+    clearTimeout(timeoutId);
     const endTime = performance.now();
-    const simulatedDuration = Math.round((endTime - startTime) + (Math.random() * 80 + 120));
 
+    if (error.name === 'AbortError') {
+      return {
+        status: 504,
+        statusText: 'Gateway Timeout',
+        durationMs: timeoutMs,
+        headers: { 'content-type': 'application/json' },
+        data: {
+          success: false,
+          statusCode: 504,
+          error: 'Gateway Timeout',
+          message: `Request exceeded timeout limit of ${timeoutMs}ms without response.`
+        },
+        timestamp: new Date().toISOString(),
+        isError: true
+      };
+    }
+
+    // When remote network is unreachable or sandbox simulation is active,
+    // generate an authentic simulation response based on endpoint definition
+    const simulatedDuration = Math.round((endTime - startTime) + (Math.random() * 80 + 120));
     return generateSimulatedResponse(options, simulatedDuration);
   }
 };
 
 /**
- * Intelligent simulation generator for interactive testing when offline or testing without live server
+ * Intelligent simulation generator for interactive testing
  */
 function generateSimulatedResponse(options: RequestOptions, durationMs: number): ApiResponseExecution {
-  const { endpointId, method, path, bearerToken, body } = options;
+  const { endpointId, method, path, bearerToken, body, pathParams } = options;
 
   // Find endpoint definition
   let matchedEndpoint: ApiEndpoint | undefined;
@@ -171,7 +196,7 @@ function generateSimulatedResponse(options: RequestOptions, durationMs: number):
     }
   }
 
-  // Check auth requirement simulation
+  // 1. Check 401 Unauthorized requirement
   if (matchedEndpoint?.authRequired && !bearerToken) {
     return {
       status: 401,
@@ -193,7 +218,46 @@ function generateSimulatedResponse(options: RequestOptions, durationMs: number):
     };
   }
 
-  // Check for body parsing if present
+  // 2. Check 403 Forbidden simulation (if admin required but customer token used)
+  if (matchedEndpoint?.roles?.includes('admin') && bearerToken && bearerToken.includes('cust_')) {
+    return {
+      status: 403,
+      statusText: 'Forbidden',
+      durationMs,
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        'x-powered-by': 'Antigravity-Ecommerce-API'
+      },
+      data: {
+        success: false,
+        statusCode: 403,
+        error: 'Forbidden',
+        message: 'Forbidden: Admin role privileges are required to access this endpoint.'
+      },
+      timestamp: new Date().toISOString(),
+      isError: true
+    };
+  }
+
+  // 3. Check 404 Not Found simulation (e.g. if path parameter is invalid / 'not-found' / 'invalid')
+  if (pathParams && Object.values(pathParams).some((v) => v === 'not_found' || v === '404' || v === 'unknown')) {
+    return {
+      status: 404,
+      statusText: 'Not Found',
+      durationMs,
+      headers: { 'content-type': 'application/json; charset=utf-8' },
+      data: {
+        success: false,
+        statusCode: 404,
+        error: 'Not Found',
+        message: `Resource with identifier was not found in catalog.`
+      },
+      timestamp: new Date().toISOString(),
+      isError: true
+    };
+  }
+
+  // 4. Check 400 Bad Request / 422 Validation Error
   let parsedBody: any = null;
   if (body) {
     try {
@@ -203,7 +267,7 @@ function generateSimulatedResponse(options: RequestOptions, durationMs: number):
         status: 400,
         statusText: 'Bad Request',
         durationMs,
-        headers: { 'content-type': 'application/json' },
+        headers: { 'content-type': 'application/json; charset=utf-8' },
         data: {
           success: false,
           statusCode: 400,
@@ -220,7 +284,6 @@ function generateSimulatedResponse(options: RequestOptions, durationMs: number):
   const successExample = matchedEndpoint?.responseExamples.find((ex) => ex.statusCode >= 200 && ex.statusCode < 300);
   const responseData = successExample ? JSON.parse(JSON.stringify(successExample.body)) : { success: true, message: 'Request executed successfully' };
 
-  // If payload provided on POST/PUT, reflect input in response for authentic feedback
   if (parsedBody && typeof responseData === 'object' && responseData.data) {
     if (typeof responseData.data === 'object') {
       responseData.data = {

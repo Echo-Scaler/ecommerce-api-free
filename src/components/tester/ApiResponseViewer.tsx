@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { ApiResponseExecution } from '../../types/api';
+import { parseApiError } from '../../lib/api-errors';
+import { ApiErrorDisplay } from './ApiErrorDisplay';
 import { 
   Check, 
   Copy, 
@@ -7,9 +9,9 @@ import {
   Layers, 
   AlertTriangle, 
   CheckCircle2, 
-  Info, 
   Download,
-  Terminal
+  Terminal,
+  Activity
 } from 'lucide-react';
 
 interface ApiResponseViewerProps {
@@ -21,7 +23,7 @@ export const ApiResponseViewer: React.FC<ApiResponseViewerProps> = ({
   response,
   isLoading = false
 }) => {
-  const [activeTab, setActiveTab] = useState<'body' | 'headers'>('body');
+  const [activeTab, setActiveTab] = useState<'body' | 'headers' | 'diagnostics'>('body');
   const [copied, setCopied] = useState(false);
 
   // Loading State
@@ -56,6 +58,9 @@ export const ApiResponseViewer: React.FC<ApiResponseViewerProps> = ({
 
   const payloadSizeKb = (new Blob([jsonString]).size / 1024).toFixed(2);
   const headerEntries = Object.entries(response.headers || {});
+  const parsedError = response.isError
+    ? parseApiError(response.status, response.statusText, response.data, response.status === 0, response.status === 504)
+    : null;
 
   const handleCopyJson = async () => {
     try {
@@ -148,7 +153,7 @@ export const ApiResponseViewer: React.FC<ApiResponseViewerProps> = ({
         </div>
       </div>
 
-      {/* Tab Selectors (Body vs Headers) */}
+      {/* Tab Selectors (Body vs Headers vs Diagnostics) */}
       <div className="response-tabs-header">
         <div className="response-tab-buttons">
           <button
@@ -159,6 +164,7 @@ export const ApiResponseViewer: React.FC<ApiResponseViewerProps> = ({
             <span>Response Body</span>
             <span className="tab-pill-count font-mono">{response.status}</span>
           </button>
+
           <button
             type="button"
             className={`response-view-tab ${activeTab === 'headers' ? 'active' : ''}`}
@@ -167,6 +173,17 @@ export const ApiResponseViewer: React.FC<ApiResponseViewerProps> = ({
             <span>Headers</span>
             <span className="tab-pill-count font-mono">{headerEntries.length}</span>
           </button>
+
+          {parsedError && (
+            <button
+              type="button"
+              className={`response-view-tab error-tab ${activeTab === 'diagnostics' ? 'active' : ''}`}
+              onClick={() => setActiveTab('diagnostics')}
+            >
+              <Activity size={14} />
+              <span>Error Diagnostics</span>
+            </button>
+          )}
         </div>
 
         <div className="response-meta-timestamp font-mono">
@@ -174,15 +191,19 @@ export const ApiResponseViewer: React.FC<ApiResponseViewerProps> = ({
         </div>
       </div>
 
+      {/* Tab: Error Diagnostics (if active) */}
+      {activeTab === 'diagnostics' && parsedError && (
+        <div className="response-diagnostics-wrapper">
+          <ApiErrorDisplay error={parsedError} />
+        </div>
+      )}
+
       {/* Tab: Response Body */}
       {activeTab === 'body' && (
         <div className="response-body-wrapper">
-          {response.isError && (
-            <div className="response-error-banner">
-              <Info size={16} />
-              <span>
-                Server responded with HTTP {response.status} ({response.statusText}). Inspect payload details below.
-              </span>
+          {parsedError && (
+            <div className="response-inline-error-header">
+              <ApiErrorDisplay error={parsedError} />
             </div>
           )}
           <pre className="response-json-pre">
