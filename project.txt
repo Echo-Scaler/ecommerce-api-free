@@ -1,0 +1,1178 @@
+# 🛒 E-Commerce API Documentation & Interactive API Tester
+
+## 📌 Project Overview
+
+Create a modern, professional **E-Commerce API Documentation and Interactive API Testing Platform**.
+
+The platform should be inspired by modern API documentation websites where developers can:
+
+* Browse API modules
+* Select API endpoints
+* Read endpoint documentation
+* View parameters and request bodies
+* Authenticate using Bearer tokens
+* Send real API requests
+* View JSON responses
+* Check status codes and response times
+* Copy API code examples
+
+The API modules are:
+
+1. 📦 Products
+2. 🗂 Categories
+3. 🛒 Orders
+4. 👤 Customers
+5. 🔐 Authentication
+6. 🛍 Shopping Cart
+7. 🔎 Product Search
+8. 📊 Inventory / Stock
+
+---
+
+# 🚨 CRITICAL DEVELOPMENT RULES
+
+## DO NOT BUILD THE ENTIRE PROJECT AT ONCE
+
+The complete project is divided into multiple steps.
+
+You must implement **ONLY ONE STEP AT A TIME**.
+
+After completing the current step:
+
+1. Analyze the result.
+2. Test the implementation.
+3. Fix errors related to that step.
+4. Show changed files.
+5. Create a Git commit.
+6. STOP.
+7. Wait for my explicit approval.
+
+Do NOT automatically continue.
+
+I will explicitly tell you:
+
+```text
+Continue to Step X
+```
+
+Only then may you continue.
+
+---
+
+# 🔄 REQUIRED PROCESS FOR EVERY STEP
+
+For every step, follow this exact workflow.
+
+## 1. Analyze Current Project
+
+Before making changes:
+
+* Inspect the current project structure.
+* Check existing source code.
+* Check the technology stack.
+* Check dependencies.
+* Check configuration.
+* Check Git status.
+* Understand previous implementation.
+
+Do not make assumptions.
+
+---
+
+## 2. Explain What You Found
+
+Before implementation, report:
+
+* Current project status
+* Relevant files
+* Existing implementation
+* Potential issues
+* Dependencies related to the current step
+
+Keep the explanation clear and concise.
+
+---
+
+## 3. Explain the Current Step Plan
+
+Explain:
+
+* What will be implemented
+* Which files will be created
+* Which files will be modified
+* Why the changes are necessary
+* How the feature will be tested
+
+Only discuss the current step.
+
+Do NOT implement future steps.
+
+---
+
+## 4. Implement ONLY the Current Step
+
+Rules:
+
+* Keep changes focused.
+* Do not modify unrelated code.
+* Do not add unnecessary dependencies.
+* Do not implement future features.
+* Reuse existing architecture when appropriate.
+* Use TypeScript strictly if the project uses TypeScript.
+
+---
+
+## 5. Test the Current Step
+
+After implementation, run relevant checks.
+
+Examples:
+
+```bash
+npm run lint
+npm run build
+npm test
+```
+
+Run only commands appropriate to the project.
+
+Also verify:
+
+* No TypeScript errors
+* No build errors
+* No obvious runtime errors
+* The current feature works correctly
+
+---
+
+## 6. Fix Current-Step Errors
+
+If errors occur:
+
+1. Identify the error.
+2. Explain the cause.
+3. Fix the error.
+4. Run tests again.
+
+Do NOT fix unrelated problems unless they block the current step.
+
+If unrelated problems are discovered, report them separately.
+
+---
+
+## 7. Review Changes
+
+Before committing:
+
+```bash
+git status
+git diff
+```
+
+Check:
+
+* Which files changed
+* No secrets are included
+* No `.env` files are committed
+* No unrelated files are included
+
+---
+
+## 8. Show Changed Files
+
+Use this format:
+
+```text
+Added:
+- src/components/example.tsx
+
+Modified:
+- src/app/page.tsx
+
+Deleted:
+- None
+```
+
+Briefly explain each change.
+
+---
+
+## 9. Create Git Commit
+
+Use meaningful Conventional Commit messages.
+
+Examples:
+
+```text
+chore(api-docs): inspect existing project
+feat(api-docs): create application layout
+feat(api-docs): add API sidebar navigation
+feat(api-docs): add endpoint documentation
+feat(api-docs): add authentication token support
+feat(api-docs): add interactive API tester
+test(api-docs): verify API request workflow
+fix(api-docs): handle API request errors
+```
+
+Before committing:
+
+```bash
+git status
+```
+
+Then commit only relevant files.
+
+Never commit:
+
+```text
+.env
+.env.local
+node_modules
+secrets
+API keys
+passwords
+```
+
+---
+
+## 10. STOP
+
+After the Git commit:
+
+* Do NOT continue.
+* Do NOT start the next step.
+* Do NOT make additional improvements.
+* Wait for my approval.
+
+End every completed step with:
+
+```text
+✅ Step X completed successfully.
+
+Git Commit:
+<commit message>
+
+Waiting for your approval.
+
+To continue, say:
+"Continue to Step X+1"
+```
+
+---
+
+# 🚫 STRICT RULES
+
+You must NEVER:
+
+❌ Build multiple steps at once.
+
+❌ Continue automatically.
+
+❌ Skip testing.
+
+❌ Skip Git commits when code changes exist.
+
+❌ Create one huge commit.
+
+❌ Modify unrelated files.
+
+❌ Install unnecessary packages.
+
+❌ Commit secrets.
+
+❌ Commit `.env` files.
+
+❌ Invent backend API routes.
+
+❌ Invent DTO fields.
+
+❌ Invent authentication methods.
+
+❌ Implement future features before approval.
+
+---
+
+# 🗺️ COMPLETE DEVELOPMENT ROADMAP
+
+---
+
+# STEP 1 — Inspect Current Project
+
+## Goal
+
+Understand the existing project completely.
+
+## Tasks
+
+Inspect:
+
+* Project structure
+* Frontend technology
+* Backend technology
+* Existing API
+* Database configuration
+* ORM
+* Authentication
+* Existing dependencies
+* Environment configuration
+* Git repository status
+
+Identify whether the project uses:
+
+* NestJS
+* Prisma
+* Next.js
+* React
+* TypeScript
+* PostgreSQL
+* MySQL
+* JWT
+
+Do not assume.
+
+## Output Required
+
+Report:
+
+```text
+Project Structure
+Technology Stack
+Backend Architecture
+Database / ORM
+Authentication
+Existing API Modules
+Git Status
+```
+
+## Restrictions
+
+Do NOT:
+
+* Modify files
+* Install packages
+* Create frontend code
+* Create API routes
+
+## Git
+
+No commit is required unless actual project changes are intentionally made.
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 2 — Inspect and Document Real API Routes
+
+## Goal
+
+Find all real existing API endpoints.
+
+## Tasks
+
+Inspect:
+
+* Controllers
+* Routes
+* DTOs
+* Validation
+* Authentication guards
+* Services
+* Prisma schema if applicable
+
+Group discovered routes into:
+
+1. Products
+2. Categories
+3. Orders
+4. Customers
+5. Authentication
+6. Shopping Cart
+7. Product Search
+8. Inventory / Stock
+
+## IMPORTANT
+
+These are categories only.
+
+Do NOT invent missing endpoints.
+
+## Output Format
+
+```text
+📦 PRODUCTS
+
+GET     /actual-route
+POST    /actual-route
+
+
+🗂 CATEGORIES
+
+GET     /actual-route
+
+
+🛒 ORDERS
+
+...
+
+
+🔐 AUTHENTICATION
+
+...
+
+
+🛍 SHOPPING CART
+
+...
+
+
+🔎 PRODUCT SEARCH
+
+...
+
+
+📊 INVENTORY / STOCK
+
+...
+```
+
+## Git Commit
+
+If documentation/configuration files are created:
+
+```text
+chore(api-docs): document existing API routes
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 3 — Create API Documentation Architecture
+
+## Goal
+
+Design the documentation structure.
+
+## Tasks
+
+Create the architecture for:
+
+* API modules
+* Endpoint configuration
+* Type definitions
+* Component structure
+
+Plan reusable structures.
+
+Example concept:
+
+```text
+src/
+├── components/
+├── data/
+├── types/
+├── lib/
+└── app/
+```
+
+Do NOT build the complete UI.
+
+## Git Commit
+
+```text
+feat(api-docs): create documentation architecture
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 4 — Create Basic Application Layout
+
+## Goal
+
+Create the main UI structure only.
+
+## Implement
+
+* Header
+* Sidebar container
+* Main content area
+* Responsive layout
+
+Do NOT implement real API requests yet.
+
+## Git Commit
+
+```text
+feat(api-docs): create application layout
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 5 — Create API Sidebar Navigation
+
+## Goal
+
+Create API navigation.
+
+## Features
+
+* API module groups
+* Endpoint list
+* HTTP method badges
+* Active endpoint state
+
+Modules:
+
+```text
+📦 Products
+🗂 Categories
+🛒 Orders
+👤 Customers
+🔐 Authentication
+🛍 Shopping Cart
+🔎 Product Search
+📊 Inventory / Stock
+```
+
+Only display modules that actually exist.
+
+## Git Commit
+
+```text
+feat(api-docs): add API sidebar navigation
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 6 — Create Endpoint Documentation View
+
+## Goal
+
+Display API information.
+
+## Show
+
+* HTTP method
+* Endpoint path
+* Description
+* Authentication requirement
+* Parameters
+* Request body
+* Response example
+
+Use real backend information discovered earlier.
+
+Do NOT send real requests yet.
+
+## Git Commit
+
+```text
+feat(api-docs): add endpoint documentation view
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 7 — Add API Search
+
+## Goal
+
+Allow users to search API endpoints.
+
+## Features
+
+Search by:
+
+* Endpoint name
+* Module name
+* HTTP method
+* Path
+
+Example:
+
+```text
+🔍 Search endpoints...
+```
+
+Filter the sidebar dynamically.
+
+## Git Commit
+
+```text
+feat(api-docs): add endpoint search
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 8 — Add Authentication Token Management
+
+## Goal
+
+Manage API authentication tokens.
+
+## Features
+
+* Bearer token input
+* Save token
+* Clear token
+* Local storage
+
+Do NOT store backend secrets.
+
+The token is provided manually by the user.
+
+## Git Commit
+
+```text
+feat(api-docs): add bearer token management
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 9 — Create API Client
+
+## Goal
+
+Create a reusable API request system.
+
+## Features
+
+Create centralized:
+
+```text
+lib/
+└── api-client.ts
+```
+
+Support:
+
+* GET
+* POST
+* PUT
+* PATCH
+* DELETE
+
+Use environment variables for:
+
+```text
+NEXT_PUBLIC_API_URL
+```
+
+Do NOT hardcode API URLs everywhere.
+
+## Git Commit
+
+```text
+feat(api-docs): add reusable API client
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 10 — Create Interactive API Tester UI
+
+## Goal
+
+Build the request form UI.
+
+## Features
+
+* HTTP method display
+* URL/path display
+* Path parameters
+* Query parameters
+* Headers
+* JSON request body editor
+* Send Request button
+
+Do not add unrelated features.
+
+## Git Commit
+
+```text
+feat(api-docs): add interactive API tester interface
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 11 — Connect API Tester to Real Backend
+
+## Goal
+
+Send real API requests.
+
+## Process
+
+Connect:
+
+```text
+Frontend
+    ↓
+API Client
+    ↓
+Existing Backend API
+    ↓
+Response
+```
+
+Support the real backend endpoints.
+
+Handle:
+
+* Authentication
+* Query parameters
+* Path parameters
+* Request body
+
+## Test
+
+Test at least one endpoint from each existing API module.
+
+## Git Commit
+
+```text
+feat(api-docs): connect tester to backend API
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 12 — Create Response Viewer
+
+## Goal
+
+Display API responses professionally.
+
+## Show
+
+```text
+Status: 200 OK
+Time: 245 ms
+```
+
+Display:
+
+* JSON response
+* Error response
+* Loading state
+* Response time
+* Status code
+
+Add:
+
+* Copy JSON button
+
+## Git Commit
+
+```text
+feat(api-docs): add API response viewer
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 13 — Add Error Handling
+
+## Goal
+
+Handle API errors correctly.
+
+## Handle
+
+```text
+400 Bad Request
+401 Unauthorized
+403 Forbidden
+404 Not Found
+422 Validation Error
+500 Internal Server Error
+Network Error
+Timeout
+```
+
+Show useful error messages.
+
+## Git Commit
+
+```text
+feat(api-docs): improve API error handling
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 14 — Add Code Examples
+
+## Goal
+
+Generate API usage examples.
+
+## Add Tabs
+
+```text
+Fetch
+Axios
+cURL
+```
+
+Generate examples dynamically based on:
+
+* HTTP method
+* Endpoint path
+* Parameters
+* Request body
+* Authentication
+
+## Git Commit
+
+```text
+feat(api-docs): add dynamic API code examples
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 15 — Test Products API Module
+
+## Goal
+
+Verify Products endpoints.
+
+Test all existing:
+
+* List products
+* Product detail
+* Create
+* Update
+* Delete
+
+Only test endpoints that actually exist.
+
+## Git Commit
+
+```text
+test(api-docs): verify products API documentation
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 16 — Test Categories API Module
+
+Test all real Categories endpoints.
+
+## Git Commit
+
+```text
+test(api-docs): verify categories API documentation
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 17 — Test Orders API Module
+
+Test all real Orders endpoints.
+
+Pay attention to:
+
+* Order status
+* Authentication
+* Request validation
+
+## Git Commit
+
+```text
+test(api-docs): verify orders API documentation
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 18 — Test Customers API Module
+
+Test all real Customer endpoints.
+
+## Git Commit
+
+```text
+test(api-docs): verify customers API documentation
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 19 — Test Authentication API Module
+
+Test:
+
+* Registration
+* Login
+* Logout
+* Token handling
+
+Only if these endpoints exist.
+
+Do NOT expose passwords or tokens in Git.
+
+## Git Commit
+
+```text
+test(api-docs): verify authentication API documentation
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 20 — Test Shopping Cart API Module
+
+Test real cart functionality.
+
+Examples may include:
+
+* Get cart
+* Add item
+* Update quantity
+* Remove item
+
+Use only actual endpoints.
+
+## Git Commit
+
+```text
+test(api-docs): verify shopping cart API documentation
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 21 — Test Product Search API
+
+Test:
+
+* Search
+* Filters
+* Sorting
+* Pagination
+
+Only features that actually exist.
+
+## Git Commit
+
+```text
+test(api-docs): verify product search API documentation
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 22 — Test Inventory / Stock API
+
+Test:
+
+* Stock information
+* Stock updates
+* Inventory operations
+
+Only if implemented in the backend.
+
+## Git Commit
+
+```text
+test(api-docs): verify inventory API documentation
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 23 — Responsive Design
+
+## Goal
+
+Test and improve responsiveness.
+
+Check:
+
+* Desktop
+* Tablet
+* Mobile
+
+Ensure:
+
+* Sidebar works correctly
+* API tester is usable
+* Code blocks are readable
+* Response viewer works
+
+## Git Commit
+
+```text
+feat(api-docs): improve responsive design
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# STEP 24 — Final Quality Check
+
+## Goal
+
+Perform final verification.
+
+Check:
+
+```text
+✓ TypeScript
+✓ Build
+✓ Lint
+✓ API requests
+✓ Authentication
+✓ Error handling
+✓ Responsive design
+✓ Environment variables
+✓ No secrets in Git
+```
+
+Run appropriate commands.
+
+Example:
+
+```bash
+npm run lint
+npm run build
+```
+
+Fix only necessary issues.
+
+## Git Commit
+
+```text
+chore(api-docs): complete final quality checks
+```
+
+## STOP
+
+Wait for approval.
+
+---
+
+# 🏁 FINAL PROJECT REQUIREMENTS
+
+The completed project should allow users to:
+
+```text
+Select API Module
+        ↓
+Select Endpoint
+        ↓
+Read Documentation
+        ↓
+Enter Parameters
+        ↓
+Add Authentication Token
+        ↓
+Edit Request Body
+        ↓
+Send Real API Request
+        ↓
+View Response
+        ↓
+Copy Code Example
+```
+
+---
+
+# 🚀 START NOW
+
+Start with:
+
+# STEP 1 — Inspect Current Project
+
+IMPORTANT:
+
+Do NOT modify any files.
+
+Do NOT install packages.
+
+Do NOT write code.
+
+Do NOT create frontend components.
+
+Do NOT start Step 2.
+
+Only inspect the project and report your findings.
+
+Then STOP and wait for my approval.
