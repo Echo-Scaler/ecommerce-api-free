@@ -7,6 +7,7 @@ import { ParameterTable } from './ParameterTable';
 import { RequestBodyDoc } from './RequestBodyDoc';
 import { ResponseExampleDoc } from './ResponseExampleDoc';
 import { ApiTesterForm } from '../tester/ApiTesterForm';
+import { ApiResponseViewer } from '../tester/ApiResponseViewer';
 import { 
   Lock, 
   Unlock, 
@@ -17,10 +18,7 @@ import {
   ChevronRight,
   ShieldAlert,
   BookOpen,
-  Zap,
-  Clock,
-  CheckCircle2,
-  AlertCircle
+  Zap
 } from 'lucide-react';
 
 interface EndpointDocViewProps {
@@ -188,7 +186,7 @@ export const EndpointDocView: React.FC<EndpointDocViewProps> = ({
         </div>
       )}
 
-      {/* Tab Content: Interactive API Tester Form & Live Connection */}
+      {/* Tab Content: Interactive API Tester & Live Response Viewer */}
       {activeTab === 'tester' && (
         <div className="tester-tab-content">
           <ApiTesterForm
@@ -197,32 +195,10 @@ export const EndpointDocView: React.FC<EndpointDocViewProps> = ({
             isLoading={isLoading}
           />
 
-          {/* Quick Execution Status Callout */}
-          {lastResponse && (
-            <div className={`live-exec-status-box ${lastResponse.isError ? 'has-error' : 'has-success'}`}>
-              <div className="live-exec-header">
-                <div className="live-exec-title">
-                  {lastResponse.isError ? (
-                    <AlertCircle size={18} className="text-red-400" />
-                  ) : (
-                    <CheckCircle2 size={18} className="text-emerald-400" />
-                  )}
-                  <span className="live-exec-status-code font-mono">
-                    HTTP {lastResponse.status} {lastResponse.statusText}
-                  </span>
-                </div>
-                <div className="live-exec-meta">
-                  <span className="live-exec-time">
-                    <Clock size={13} />
-                    <span>{lastResponse.durationMs} ms</span>
-                  </span>
-                  <span className="live-exec-timestamp font-mono">
-                    {new Date(lastResponse.timestamp).toLocaleTimeString()}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
+          <ApiResponseViewer
+            response={lastResponse}
+            isLoading={isLoading}
+          />
         </div>
       )}
     </div>
