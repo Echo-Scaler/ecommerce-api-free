@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { AppLayout } from './components/layout/AppLayout';
 import { ApiSidebar } from './components/navigation/ApiSidebar';
-import { MethodBadge } from './components/common/MethodBadge';
+import { EndpointDocView } from './components/documentation/EndpointDocView';
 import { API_MODULES } from './data/api-modules';
-import { Key, ArrowRight } from 'lucide-react';
+import { ArrowRight, Layers, Zap, Shield, Database } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [selectedEndpointId, setSelectedEndpointId] = useState<string | null>(null);
@@ -24,65 +24,10 @@ export const App: React.FC = () => {
   return (
     <AppLayout sidebarContent={sidebarContent}>
       {selectedEndpoint && currentModule ? (
-        /* Selected Endpoint View Placeholder for Step 5 (full doc view in Step 6) */
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
-            padding: '0.75rem 1.25rem',
-            backgroundColor: 'var(--bg-card)',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: 'var(--radius-md)',
-            fontSize: '0.825rem',
-            color: 'var(--text-secondary)'
-          }}>
-            <span>{currentModule.name}</span>
-            <ArrowRight size={14} style={{ color: 'var(--text-muted)' }} />
-            <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{selectedEndpoint.name}</span>
-          </div>
-
-          <div style={{
-            padding: '1.75rem',
-            backgroundColor: 'var(--bg-card)',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: 'var(--radius-lg)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1rem'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-              <MethodBadge method={selectedEndpoint.method} size="md" />
-              <code style={{ fontSize: '1.05rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-                {selectedEndpoint.path}
-              </code>
-              {selectedEndpoint.authRequired && (
-                <span style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.3rem',
-                  fontSize: '0.725rem',
-                  padding: '0.2rem 0.6rem',
-                  borderRadius: '999px',
-                  backgroundColor: 'rgba(239, 68, 68, 0.12)',
-                  color: '#f87171',
-                  border: '1px solid rgba(239, 68, 68, 0.25)',
-                  fontWeight: 600
-                }}>
-                  <Key size={12} />
-                  Bearer Token Required
-                </span>
-              )}
-            </div>
-
-            <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-              {selectedEndpoint.name}
-            </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', lineHeight: 1.6 }}>
-              {selectedEndpoint.description}
-            </p>
-          </div>
-        </div>
+        <EndpointDocView
+          endpoint={selectedEndpoint}
+          module={currentModule}
+        />
       ) : (
         /* Platform Overview View */
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -111,7 +56,7 @@ export const App: React.FC = () => {
                 E-Commerce API Documentation & Interactive Testing
               </h1>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-                Explore modules on the left navigation to inspect real endpoints, parameter schemas, request bodies, and send requests directly in browser.
+                Select an endpoint from the left navigation to explore comprehensive documentation, schema parameters, JSON payloads, and response structures.
               </p>
 
               <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
@@ -175,6 +120,41 @@ export const App: React.FC = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </section>
+
+          {/* Platform Highlights */}
+          <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
+            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
+                <Layers size={18} />
+              </div>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>30 REST Endpoints</h3>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Complete coverage across all e-commerce domains.</p>
+            </div>
+
+            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
+                <Zap size={18} />
+              </div>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>Full Parameter Schemas</h3>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Path, query, header, and body specifications.</p>
+            </div>
+
+            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', background: 'rgba(168, 85, 247, 0.1)', color: '#a855f7', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
+                <Shield size={18} />
+              </div>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>Bearer Auth & Roles</h3>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Admin and customer permission guard indicators.</p>
+            </div>
+
+            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
+                <Database size={18} />
+              </div>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>Response Examples</h3>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Real JSON samples for 200, 201, 401, 404 status codes.</p>
             </div>
           </section>
         </div>
