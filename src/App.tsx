@@ -1,180 +1,184 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AppLayout } from './components/layout/AppLayout';
+import { ApiSidebar } from './components/navigation/ApiSidebar';
+import { MethodBadge } from './components/common/MethodBadge';
 import { API_MODULES } from './data/api-modules';
-import { Layers, Database, Shield, Zap } from 'lucide-react';
+import { Key, ArrowRight } from 'lucide-react';
 
 export const App: React.FC = () => {
-  const totalEndpoints = API_MODULES.reduce((acc, m) => acc + m.endpoints.length, 0);
+  const [selectedEndpointId, setSelectedEndpointId] = useState<string | null>(null);
 
-  const sidebarPlaceholder = (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-      <div style={{ 
-        padding: '0.75rem', 
-        borderRadius: 'var(--radius-md)', 
-        backgroundColor: 'var(--bg-card)', 
-        border: '1px solid var(--border-subtle)' 
-      }}>
-        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600, marginBottom: '0.5rem' }}>
-          Available Modules
-        </div>
-        <div style={{ fontSize: '0.875rem', color: 'var(--text-primary)', fontWeight: 500 }}>
-          {API_MODULES.length} Categories ({totalEndpoints} Endpoints)
-        </div>
-      </div>
+  const allEndpoints = API_MODULES.flatMap((m) => m.endpoints);
+  const selectedEndpoint = allEndpoints.find((e) => e.id === selectedEndpointId);
+  const currentModule = API_MODULES.find((m) => m.id === selectedEndpoint?.moduleId);
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-        {API_MODULES.map((m) => (
-          <div
-            key={m.id}
-            style={{
-              padding: '0.6rem 0.85rem',
-              borderRadius: 'var(--radius-sm)',
-              backgroundColor: 'rgba(255, 255, 255, 0.02)',
-              border: '1px solid transparent',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              fontSize: '0.825rem',
-              color: 'var(--text-secondary)'
-            }}
-          >
-            <span>{m.name}</span>
-            <span style={{ 
-              fontSize: '0.7rem', 
-              padding: '0.1rem 0.4rem', 
-              borderRadius: '999px', 
-              backgroundColor: 'rgba(255,255,255,0.06)',
-              color: 'var(--text-muted)'
-            }}>
-              {m.endpoints.length}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
+  const sidebarContent = (
+    <ApiSidebar
+      modules={API_MODULES}
+      selectedEndpointId={selectedEndpointId}
+      onSelectEndpoint={(id) => setSelectedEndpointId(id)}
+      onSelectOverview={() => setSelectedEndpointId(null)}
+    />
   );
 
   return (
-    <AppLayout sidebarContent={sidebarPlaceholder}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-        {/* Welcome Banner */}
-        <section style={{
-          background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(124, 58, 237, 0.05))',
-          border: '1px solid rgba(59, 130, 246, 0.2)',
-          borderRadius: 'var(--radius-lg)',
-          padding: '2rem',
-          position: 'relative',
-          overflow: 'hidden'
-        }}>
-          <div style={{ maxWidth: '720px' }}>
-            <span style={{
-              display: 'inline-block',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              textTransform: 'uppercase',
-              letterSpacing: '0.08em',
-              color: 'var(--accent-primary)',
-              marginBottom: '0.5rem'
-            }}>
-              RESTful Developer Platform
-            </span>
-            <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.2, marginBottom: '1rem' }}>
-              E-Commerce API Documentation & Interactive Suite
-            </h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6 }}>
-              A high-performance interactive documentation workspace for modern e-commerce engineering. 
-              Explore routes, inspect parameters and JSON payloads, authenticate via Bearer token, and test real endpoints.
-            </p>
-          </div>
-        </section>
-
-        {/* Feature Highlights Grid */}
-        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
+    <AppLayout sidebarContent={sidebarContent}>
+      {selectedEndpoint && currentModule ? (
+        /* Selected Endpoint View Placeholder for Step 5 (full doc view in Step 6) */
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           <div style={{
-            background: 'var(--bg-card)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            padding: '0.75rem 1.25rem',
+            backgroundColor: 'var(--bg-card)',
             border: '1px solid var(--border-subtle)',
             borderRadius: 'var(--radius-md)',
-            padding: '1.5rem'
+            fontSize: '0.825rem',
+            color: 'var(--text-secondary)'
           }}>
-            <div style={{ 
-              width: '40px', height: '40px', borderRadius: 'var(--radius-md)', 
-              background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' 
-            }}>
-              <Layers size={20} />
-            </div>
-            <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
-              8 Core Modules
-            </h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-              Products, Categories, Orders, Customers, Auth, Cart, Search, and Inventory.
-            </p>
+            <span>{currentModule.name}</span>
+            <ArrowRight size={14} style={{ color: 'var(--text-muted)' }} />
+            <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{selectedEndpoint.name}</span>
           </div>
 
           <div style={{
-            background: 'var(--bg-card)',
+            padding: '1.75rem',
+            backgroundColor: 'var(--bg-card)',
             border: '1px solid var(--border-subtle)',
-            borderRadius: 'var(--radius-md)',
-            padding: '1.5rem'
+            borderRadius: 'var(--radius-lg)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem'
           }}>
-            <div style={{ 
-              width: '40px', height: '40px', borderRadius: 'var(--radius-md)', 
-              background: 'rgba(16, 185, 129, 0.1)', color: '#10b981',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' 
-            }}>
-              <Zap size={20} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+              <MethodBadge method={selectedEndpoint.method} size="md" />
+              <code style={{ fontSize: '1.05rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                {selectedEndpoint.path}
+              </code>
+              {selectedEndpoint.authRequired && (
+                <span style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.3rem',
+                  fontSize: '0.725rem',
+                  padding: '0.2rem 0.6rem',
+                  borderRadius: '999px',
+                  backgroundColor: 'rgba(239, 68, 68, 0.12)',
+                  color: '#f87171',
+                  border: '1px solid rgba(239, 68, 68, 0.25)',
+                  fontWeight: 600
+                }}>
+                  <Key size={12} />
+                  Bearer Token Required
+                </span>
+              )}
             </div>
-            <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
-              Interactive Tester
-            </h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-              Live in-browser request execution with status codes, headers, and latency.
-            </p>
-          </div>
 
-          <div style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: 'var(--radius-md)',
-            padding: '1.5rem'
-          }}>
-            <div style={{ 
-              width: '40px', height: '40px', borderRadius: 'var(--radius-md)', 
-              background: 'rgba(168, 85, 247, 0.1)', color: '#a855f7',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' 
-            }}>
-              <Shield size={20} />
-            </div>
-            <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
-              Bearer Authentication
-            </h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-              JWT token persistence and role-based endpoint authorization.
+            <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+              {selectedEndpoint.name}
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', lineHeight: 1.6 }}>
+              {selectedEndpoint.description}
             </p>
           </div>
+        </div>
+      ) : (
+        /* Platform Overview View */
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+          {/* Welcome Banner */}
+          <section style={{
+            background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(124, 58, 237, 0.06))',
+            border: '1px solid rgba(59, 130, 246, 0.25)',
+            borderRadius: 'var(--radius-lg)',
+            padding: '2.25rem',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            <div style={{ maxWidth: '780px' }}>
+              <span style={{
+                display: 'inline-block',
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                color: 'var(--accent-primary)',
+                marginBottom: '0.5rem'
+              }}>
+                RESTful Developer Platform
+              </span>
+              <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.25, marginBottom: '1rem' }}>
+                E-Commerce API Documentation & Interactive Testing
+              </h1>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+                Explore modules on the left navigation to inspect real endpoints, parameter schemas, request bodies, and send requests directly in browser.
+              </p>
 
-          <div style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: 'var(--radius-md)',
-            padding: '1.5rem'
-          }}>
-            <div style={{ 
-              width: '40px', height: '40px', borderRadius: 'var(--radius-md)', 
-              background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' 
-            }}>
-              <Database size={20} />
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  onClick={() => setSelectedEndpointId('get-products')}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    backgroundColor: 'var(--accent-primary)',
+                    color: '#ffffff',
+                    padding: '0.6rem 1.2rem',
+                    borderRadius: 'var(--radius-md)',
+                    fontWeight: 600,
+                    fontSize: '0.85rem',
+                    border: 'none',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <span>Explore Products API</span>
+                  <ArrowRight size={16} />
+                </button>
+              </div>
             </div>
-            <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
-              Code Generators
-            </h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-              Ready-to-copy code snippets in cURL, Fetch, and Axios.
-            </p>
-          </div>
-        </section>
-      </div>
+          </section>
+
+          {/* Module Cards Grid */}
+          <section>
+            <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem' }}>
+              API Modules ({API_MODULES.length})
+            </h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
+              {API_MODULES.map((m) => (
+                <div
+                  key={m.id}
+                  onClick={() => setSelectedEndpointId(m.endpoints[0]?.id || null)}
+                  style={{
+                    backgroundColor: 'var(--bg-card)',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: 'var(--radius-md)',
+                    padding: '1.25rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <div>
+                    <h3 style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
+                      {m.name}
+                    </h3>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.4, marginBottom: '1rem' }}>
+                      {m.description}
+                    </p>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--accent-primary)', fontWeight: 600 }}>
+                    <span>{m.endpoints.length} Endpoints</span>
+                    <ArrowRight size={14} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+      )}
     </AppLayout>
   );
 };
