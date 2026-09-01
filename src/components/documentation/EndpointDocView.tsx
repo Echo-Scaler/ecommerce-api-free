@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { ApiEndpoint, ApiModule } from '../../types/api';
+import React, { useState, useEffect } from 'react';
+import { ApiEndpoint, ApiModule, ApiResponseExecution } from '../../types/api';
+import { useAuth } from '../../context/AuthContext';
+import { executeApiRequest } from '../../lib/api-client';
 import { MethodBadge } from '../common/MethodBadge';
 import { ParameterTable } from './ParameterTable';
 import { RequestBodyDoc } from './RequestBodyDoc';
@@ -15,7 +17,10 @@ import {
   ChevronRight,
   ShieldAlert,
   BookOpen,
-  Zap
+  Zap,
+  Clock,
+  CheckCircle2,
+  AlertCircle
 } from 'lucide-react';
 
 interface EndpointDocViewProps {
@@ -27,8 +32,16 @@ export const EndpointDocView: React.FC<EndpointDocViewProps> = ({
   endpoint,
   module
 }) => {
+  const { token } = useAuth();
   const [activeTab, setActiveTab] = useState<'docs' | 'tester'>('docs');
   const [copiedUrl, setCopiedUrl] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [lastResponse, setLastResponse] = useState<ApiResponseExecution | null>(null);
+
+  // Clear previous response when endpoint changes
+  useEffect(() => {
+    setLastResponse(null);
+  }, [endpoint.id]);
 
   const handleCopyPath = async () => {
     try {
@@ -40,8 +53,40 @@ export const EndpointDocView: React.FC<EndpointDocViewProps> = ({
     }
   };
 
-  const handleSendPlaceholder = (data: any) => {
-    console.log('Sending request (UI form connected):', data);
+  const handleExecuteRequest = async (requestData: {
+    method: ApiEndpoint['method'];
+    path: string;
+    pathParams: Record<string, string>;
+    queryParams: Record<string, string>;
+    headers: Record<string, string>;
+    body?: string;
+  }) => {
+    setIsLoading(true);
+    try {
+      const response = await executeApiRequest({
+        path: requestData.path,
+        method: requestData.method,
+        pathParams: requestData.pathParams,
+        queryParams: requestData.queryParams,
+        headers: requestData.headers,
+        body: requestData.body,
+        bearerToken: token,
+        endpointId: endpoint.id,
+      });
+      setLastResponse(response);
+    } catch (error: any) {
+      setLastResponse({
+        status: 500,
+        statusText: 'Internal Error',
+        durationMs: 0,
+        headers: {},
+        data: { error: error?.message || 'Failed to execute request' },
+        timestamp: new Date().toISOString(),
+        isError: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -124,6 +169,9 @@ export const EndpointDocView: React.FC<EndpointDocViewProps> = ({
           >
             <Zap size={16} />
             <span>Interactive API Tester</span>
+            {lastResponse && (
+              <span className={`mini-status-dot ${lastResponse.isError ? 'error' : 'success'}`} />
+            )}
           </button>
         </div>
       </div>
@@ -140,14 +188,41 @@ export const EndpointDocView: React.FC<EndpointDocViewProps> = ({
         </div>
       )}
 
-      {/* Tab Content: Interactive API Tester Form */}
+      {/* Tab Content: Interactive API Tester Form & Live Connection */}
       {activeTab === 'tester' && (
         <div className="tester-tab-content">
           <ApiTesterForm
             endpoint={endpoint}
-            onSendRequest={handleSendPlaceholder}
-            isLoading={false}
+            onSendRequest={handleExecuteRequest}
+            isLoading={isLoading}
           />
+
+          {/* Quick Execution Status Callout */}
+          {lastResponse && (
+            <div className={`live-exec-status-box ${lastResponse.isError ? 'has-error' : 'has-success'}`}>
+              <div className="live-exec-header">
+                <div className="live-exec-title">
+                  {lastResponse.isError ? (
+                    <AlertCircle size={18} className="text-red-400" />
+                  ) : (
+                    <CheckCircle2 size={18} className="text-emerald-400" />
+                  )}
+                  <span className="live-exec-status-code font-mono">
+                    HTTP {lastResponse.status} {lastResponse.statusText}
+                  </span>
+                </div>
+                <div className="live-exec-meta">
+                  <span className="live-exec-time">
+                    <Clock size={13} />
+                    <span>{lastResponse.durationMs} ms</span>
+                  </span>
+                  <span className="live-exec-timestamp font-mono">
+                    {new Date(lastResponse.timestamp).toLocaleTimeString()}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
