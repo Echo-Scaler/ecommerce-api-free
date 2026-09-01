@@ -1,5 +1,6 @@
 import React from 'react';
-import { ShoppingBag, Terminal, ShieldCheck, Menu, ExternalLink } from 'lucide-react';
+import { ShoppingBag, Terminal, ShieldCheck, Menu, ExternalLink, Key } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 interface HeaderProps {
   onToggleSidebar?: () => void;
@@ -7,6 +8,8 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
+  const { isAuthenticated, openAuthModal } = useAuth();
+
   return (
     <header className="app-header">
       <div className="header-left">
@@ -42,10 +45,25 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
 
         <div className="header-divider" />
 
-        <div className="auth-indicator">
-          <ShieldCheck size={16} className="auth-icon" />
-          <span>Bearer Auth Ready</span>
-        </div>
+        {/* Interactive Auth Button */}
+        <button 
+          type="button" 
+          className={`auth-header-btn ${isAuthenticated ? 'authenticated' : 'unauthenticated'}`}
+          onClick={openAuthModal}
+          title="Configure Bearer Token for API Authentication"
+        >
+          {isAuthenticated ? (
+            <>
+              <ShieldCheck size={16} className="text-emerald-400" />
+              <span>Token Active</span>
+            </>
+          ) : (
+            <>
+              <Key size={15} />
+              <span>Authorize</span>
+            </>
+          )}
+        </button>
 
         <a 
           href="https://github.com/Echo-Scaler/ecommerce-api-free" 

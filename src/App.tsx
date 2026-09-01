@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
+import { AuthProvider } from './context/AuthContext';
+import { AuthTokenModal } from './components/auth/AuthTokenModal';
 import { AppLayout } from './components/layout/AppLayout';
 import { ApiSidebar } from './components/navigation/ApiSidebar';
 import { EndpointDocView } from './components/documentation/EndpointDocView';
 import { API_MODULES } from './data/api-modules';
 import { ArrowRight, Layers, Zap, Shield, Database } from 'lucide-react';
 
-export const App: React.FC = () => {
+const AppContent: React.FC = () => {
   const [selectedEndpointId, setSelectedEndpointId] = useState<string | null>(null);
 
   const allEndpoints = API_MODULES.flatMap((m) => m.endpoints);
@@ -134,19 +136,19 @@ export const App: React.FC = () => {
             </div>
 
             <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
-              <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
-                <Zap size={18} />
-              </div>
-              <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>Full Parameter Schemas</h3>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Path, query, header, and body specifications.</p>
-            </div>
-
-            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
               <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', background: 'rgba(168, 85, 247, 0.1)', color: '#a855f7', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
                 <Shield size={18} />
               </div>
               <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>Bearer Auth & Roles</h3>
               <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Admin and customer permission guard indicators.</p>
+            </div>
+
+            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
+                <Zap size={18} />
+              </div>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>Interactive Tester</h3>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>In-browser request execution and status validation.</p>
             </div>
 
             <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
@@ -159,7 +161,16 @@ export const App: React.FC = () => {
           </section>
         </div>
       )}
+      <AuthTokenModal />
     </AppLayout>
+  );
+};
+
+export const App: React.FC = () => {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 };
 
