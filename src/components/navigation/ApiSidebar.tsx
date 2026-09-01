@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   Package, 
   FolderTree, 
@@ -10,10 +10,12 @@ import {
   BarChart2, 
   ChevronDown, 
   ChevronRight,
-  BookOpen
+  BookOpen,
+  SearchX
 } from 'lucide-react';
 import { ApiModule } from '../../types/api';
 import { MethodBadge } from '../common/MethodBadge';
+import { ApiSearchInput } from './ApiSearchInput';
 
 interface ApiSidebarProps {
   modules: ApiModule[];
@@ -51,7 +53,7 @@ export const ApiSidebar: React.FC<ApiSidebarProps> = ({
   onSelectEndpoint,
   onSelectOverview,
 }) => {
-  // Initialize all modules as expanded by default
+  const [searchQuery, setSearchQuery] = useState('');
   const [expandedModules, setExpandedModules] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
     modules.forEach((m) => {
@@ -67,78 +69,154 @@ export const ApiSidebar: React.FC<ApiSidebarProps> = ({
     }));
   };
 
+  // Filter modules and endpoints dynamically based on search query
+  const filteredModules = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return modules;
+
+    return modules
+      .map((module) => {
+        const isModuleMatch = module.name.toLowerCase().includes(query);
+        const matchingEndpoints = module.endpoints.filter((endpoint) => {
+          const nameMatch = endpoint.name.toLowerCase().includes(query);
+          const pathMatch = endpoint.path.toLowerCase().includes(query);
+          const methodMatch = endpoint.method.toLowerCase() === query || endpoint.method.toLowerCase().includes(query);
+          const summaryMatch = endpoint.summary.toLowerCase().includes(query);
+          const tagsMatch = endpoint.tags.some((t) => t.toLowerCase().includes(query));
+
+          return nameMatch || pathMatch || methodMatch || summaryMatch || tagsMatch || isModuleMatch;
+        });
+
+        if (matchingEndpoints.length === 0) return null;
+
+        return {
+          ...module,
+          endpoints: matchingEndpoints,
+        };
+      })
+      .filter((m): m is ApiModule => m !== null);
+  }, [modules, searchQuery]);
+
+  const totalMatchingEndpoints = filteredModules.reduce((acc, m) => acc + m.endpoints.length, 0);
+
   return (
     <nav className="api-sidebar-nav" aria-label="API Documentation Navigation">
-      {/* Overview Button */}
-      <div className="nav-section-header">GETTING STARTED</div>
-      <button
-        type="button"
-        className={`nav-overview-btn ${selectedEndpointId === null ? 'active' : ''}`}
-        onClick={onSelectOverview}
-      >
-        <BookOpen size={16} />
-        <span>Platform Overview</span>
-      </button>
+      {/* Search Bar Component */}
+      <ApiSearchInput
+        value={searchQuery}
+        onChange={setSearchQuery}
+        placeholder="Search endpoints (e.g. GET, /cart)..."
+      />
 
-      {/* Modules List */}
-      <div className="nav-section-header" style={{ marginTop: '1.25rem' }}>
-        API MODULES ({modules.length})
-      </div>
+      {/* Overview Button (only when not searching) */}
+      {!searchQuery && (
+        <>
+          <div className="nav-section-header">GETTING STARTED</div>
+          <button
+            type="button"
+            className={`nav-overview-btn ${selectedEndpointId === null ? 'active' : ''}`}
+            onClick={onSelectOverview}
+          >
+            <BookOpen size={16} />
+            <span>Platform Overview</span>
+          </button>
+        </>
+      )}
 
-      <div className="module-groups-list">
-        {modules.map((module) => {
-          const isExpanded = expandedModules[module.id] ?? true;
-          const hasActiveEndpoint = module.endpoints.some((e) => e.id === selectedEndpointId);
-
-          return (
-            <div key={module.id} className={`module-group ${hasActiveEndpoint ? 'has-active-child' : ''}`}>
-              {/* Module Header */}
-              <button
-                type="button"
-                className="module-header-btn"
-                onClick={() => toggleModule(module.id)}
-                aria-expanded={isExpanded}
+      {/* Modules List Header */}
+      <div className="nav-section-header" style={{ marginTop: searchQuery ? '0.25rem' : '1.25rem' }}>
+        {searchQuery ? (
+          <div className="search-results-count">
+            <span>RESULTS ({totalMatchingEndpoints})</span>
+            {searchQuery && (
+              <button 
+                type="button" 
+                className="search-clear-link" 
+                onClick={() => setSearchQuery('')}
               >
-                <div className="module-header-title">
-                  {getModuleIcon(module.iconName)}
-                  <span className="module-name">{module.name}</span>
-                </div>
-                <div className="module-header-meta">
-                  <span className="module-count">{module.endpoints.length}</span>
-                  {isExpanded ? (
-                    <ChevronDown size={15} className="chevron-icon" />
-                  ) : (
-                    <ChevronRight size={15} className="chevron-icon" />
-                  )}
-                </div>
+                Reset
               </button>
-
-              {/* Endpoint Items */}
-              {isExpanded && (
-                <div className="endpoints-list">
-                  {module.endpoints.map((endpoint) => {
-                    const isSelected = endpoint.id === selectedEndpointId;
-
-                    return (
-                      <button
-                        key={endpoint.id}
-                        type="button"
-                        className={`endpoint-nav-item ${isSelected ? 'active' : ''}`}
-                        onClick={() => onSelectEndpoint(endpoint.id)}
-                        title={`${endpoint.method} ${endpoint.path} — ${endpoint.name}`}
-                      >
-                        <MethodBadge method={endpoint.method} size="sm" />
-                        <span className="endpoint-name">{endpoint.name}</span>
-                        <span className="endpoint-path-subtle">{endpoint.path.replace('/api/v1', '')}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          );
-        })}
+            )}
+          </div>
+        ) : (
+          `API MODULES (${modules.length})`
+        )}
       </div>
+
+      {/* Empty State */}
+      {filteredModules.length === 0 ? (
+        <div className="sidebar-empty-search">
+          <SearchX size={32} className="empty-search-icon" />
+          <div className="empty-search-title">No endpoints found</div>
+          <div className="empty-search-subtitle">
+            No matches for &ldquo;<span className="font-mono">{searchQuery}</span>&rdquo;
+          </div>
+          <button
+            type="button"
+            className="empty-search-reset-btn"
+            onClick={() => setSearchQuery('')}
+          >
+            Clear Search
+          </button>
+        </div>
+      ) : (
+        <div className="module-groups-list">
+          {filteredModules.map((module) => {
+            // When searching, always expand groups
+            const isExpanded = searchQuery ? true : (expandedModules[module.id] ?? true);
+            const hasActiveEndpoint = module.endpoints.some((e) => e.id === selectedEndpointId);
+
+            return (
+              <div key={module.id} className={`module-group ${hasActiveEndpoint ? 'has-active-child' : ''}`}>
+                {/* Module Header */}
+                <button
+                  type="button"
+                  className="module-header-btn"
+                  onClick={() => !searchQuery && toggleModule(module.id)}
+                  aria-expanded={isExpanded}
+                >
+                  <div className="module-header-title">
+                    {getModuleIcon(module.iconName)}
+                    <span className="module-name">{module.name}</span>
+                  </div>
+                  <div className="module-header-meta">
+                    <span className="module-count">{module.endpoints.length}</span>
+                    {!searchQuery && (
+                      isExpanded ? (
+                        <ChevronDown size={15} className="chevron-icon" />
+                      ) : (
+                        <ChevronRight size={15} className="chevron-icon" />
+                      )
+                    )}
+                  </div>
+                </button>
+
+                {/* Endpoint Items */}
+                {isExpanded && (
+                  <div className="endpoints-list">
+                    {module.endpoints.map((endpoint) => {
+                      const isSelected = endpoint.id === selectedEndpointId;
+
+                      return (
+                        <button
+                          key={endpoint.id}
+                          type="button"
+                          className={`endpoint-nav-item ${isSelected ? 'active' : ''}`}
+                          onClick={() => onSelectEndpoint(endpoint.id)}
+                          title={`${endpoint.method} ${endpoint.path} — ${endpoint.name}`}
+                        >
+                          <MethodBadge method={endpoint.method} size="sm" />
+                          <span className="endpoint-name">{endpoint.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </nav>
   );
 };
