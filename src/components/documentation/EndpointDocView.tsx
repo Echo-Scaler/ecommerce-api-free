@@ -6,6 +6,7 @@ import { MethodBadge } from '../common/MethodBadge';
 import { ParameterTable } from './ParameterTable';
 import { RequestBodyDoc } from './RequestBodyDoc';
 import { ResponseExampleDoc } from './ResponseExampleDoc';
+import { CodeExamplesDoc } from './CodeExamplesDoc';
 import { ApiTesterForm } from '../tester/ApiTesterForm';
 import { ApiResponseViewer } from '../tester/ApiResponseViewer';
 import { 
@@ -183,6 +184,7 @@ export const EndpointDocView: React.FC<EndpointDocViewProps> = ({
             defaultBody={endpoint.defaultRequestBody} 
           />
           <ResponseExampleDoc examples={endpoint.responseExamples} />
+          <CodeExamplesDoc endpoint={endpoint} />
         </div>
       )}
 
