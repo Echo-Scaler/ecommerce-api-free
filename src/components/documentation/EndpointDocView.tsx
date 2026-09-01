@@ -4,6 +4,7 @@ import { MethodBadge } from '../common/MethodBadge';
 import { ParameterTable } from './ParameterTable';
 import { RequestBodyDoc } from './RequestBodyDoc';
 import { ResponseExampleDoc } from './ResponseExampleDoc';
+import { ApiTesterForm } from '../tester/ApiTesterForm';
 import { 
   Lock, 
   Unlock, 
@@ -12,7 +13,9 @@ import {
   Check, 
   Layers, 
   ChevronRight,
-  ShieldAlert
+  ShieldAlert,
+  BookOpen,
+  Zap
 } from 'lucide-react';
 
 interface EndpointDocViewProps {
@@ -24,6 +27,7 @@ export const EndpointDocView: React.FC<EndpointDocViewProps> = ({
   endpoint,
   module
 }) => {
+  const [activeTab, setActiveTab] = useState<'docs' | 'tester'>('docs');
   const [copiedUrl, setCopiedUrl] = useState(false);
 
   const handleCopyPath = async () => {
@@ -34,6 +38,10 @@ export const EndpointDocView: React.FC<EndpointDocViewProps> = ({
     } catch (e) {
       console.error(e);
     }
+  };
+
+  const handleSendPlaceholder = (data: any) => {
+    console.log('Sending request (UI form connected):', data);
   };
 
   return (
@@ -50,7 +58,7 @@ export const EndpointDocView: React.FC<EndpointDocViewProps> = ({
         </div>
       </div>
 
-      {/* Endpoint Hero Box */}
+      {/* Endpoint Hero Card */}
       <div className="endpoint-hero-card">
         <div className="endpoint-header-top">
           <div className="endpoint-signature-row">
@@ -98,19 +106,50 @@ export const EndpointDocView: React.FC<EndpointDocViewProps> = ({
         <h1 className="endpoint-title">{endpoint.name}</h1>
         <p className="endpoint-summary-text">{endpoint.summary}</p>
         <div className="endpoint-detailed-desc">{endpoint.description}</div>
+
+        {/* View Mode Switcher Tabs */}
+        <div className="endpoint-view-tabs">
+          <button
+            type="button"
+            className={`view-tab-btn ${activeTab === 'docs' ? 'active' : ''}`}
+            onClick={() => setActiveTab('docs')}
+          >
+            <BookOpen size={16} />
+            <span>Endpoint Documentation</span>
+          </button>
+          <button
+            type="button"
+            className={`view-tab-btn ${activeTab === 'tester' ? 'active' : ''}`}
+            onClick={() => setActiveTab('tester')}
+          >
+            <Zap size={16} />
+            <span>Interactive API Tester</span>
+          </button>
+        </div>
       </div>
 
-      {/* Parameter Table Section */}
-      <ParameterTable parameters={endpoint.parameters} />
+      {/* Tab Content: Documentation */}
+      {activeTab === 'docs' && (
+        <div className="doc-tab-content">
+          <ParameterTable parameters={endpoint.parameters} />
+          <RequestBodyDoc 
+            schema={endpoint.requestBodySchema} 
+            defaultBody={endpoint.defaultRequestBody} 
+          />
+          <ResponseExampleDoc examples={endpoint.responseExamples} />
+        </div>
+      )}
 
-      {/* Request Body Section */}
-      <RequestBodyDoc 
-        schema={endpoint.requestBodySchema} 
-        defaultBody={endpoint.defaultRequestBody} 
-      />
-
-      {/* Response Examples Section */}
-      <ResponseExampleDoc examples={endpoint.responseExamples} />
+      {/* Tab Content: Interactive API Tester Form */}
+      {activeTab === 'tester' && (
+        <div className="tester-tab-content">
+          <ApiTesterForm
+            endpoint={endpoint}
+            onSendRequest={handleSendPlaceholder}
+            isLoading={false}
+          />
+        </div>
+      )}
     </div>
   );
 };
