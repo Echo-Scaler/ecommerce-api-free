@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "npx tsx tests/api-pipeline.test.ts && npx tsx tests/api-errors.test.ts && npx tsx tests/code-generator.test.ts && npx tsx tests/products-module.test.ts && npx tsx tests/categories-module.test.ts && npx tsx tests/orders-module.test.ts && npx tsx tests/customers-module.test.ts"
+    "test": "npx tsx tests/api-pipeline.test.ts && npx tsx tests/api-errors.test.ts && npx tsx tests/code-generator.test.ts && npx tsx tests/products-module.test.ts && npx tsx tests/categories-module.test.ts && npx tsx tests/orders-module.test.ts && npx tsx tests/customers-module.test.ts && npx tsx tests/auth-module.test.ts"
   },
   "dependencies": {
     "clsx": "^2.1.1",
