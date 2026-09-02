@@ -43,54 +43,10 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
   const [copiedJson, setCopiedJson] = useState<boolean>(false);
   const [activeEndpointId, setActiveEndpointId] = useState<string>('get-products');
 
-  // Sync token when auth context changes
-  useEffect(() => {
-    if (token) {
-      setApiKey(token);
-    }
-  }, [token]);
-
-  // Handle initial endpoint selection
-  useEffect(() => {
-    if (initialEndpointId) {
-      const ep = allEndpoints.find((e) => e.id === initialEndpointId);
-      if (ep) {
-        selectEndpoint(ep);
-      }
-    }
-  }, [initialEndpointId]);
-
-  const selectEndpoint = (ep: ApiEndpoint, overridePath?: string) => {
-    setActiveEndpointId(ep.id);
-    setSelectedMethod(ep.method);
-    const targetPath = overridePath || ep.path.replace(':id', '30').replace(':productId', '30').replace(':itemId', 'item_1');
-    setRequestPath(targetPath);
-
-    if (ep.defaultRequestBody && ['POST', 'PUT', 'PATCH'].includes(ep.method)) {
-      setRequestBody(JSON.stringify(ep.defaultRequestBody, null, 2));
-    } else {
-      setRequestBody('');
-    }
-  };
-
-  const selectPreset = (method: HttpMethod, path: string, body?: any, epId?: string) => {
-    setSelectedMethod(method);
-    setRequestPath(path);
-    if (epId) setActiveEndpointId(epId);
-    if (body) {
-      setRequestBody(typeof body === 'string' ? body : JSON.stringify(body, null, 2));
-    } else {
-      setRequestBody('');
-    }
-  };
-
-  const handleSendRequest = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
+  const executePath = async (method: HttpMethod, path: string, body?: string, epId?: string) => {
     setIsLoading(true);
-
     try {
-      // Split path and query parameters
-      const [pathOnly, queryString] = requestPath.split('?');
+      const [pathOnly, queryString] = path.split('?');
       const queryParams: Record<string, string> = {};
       if (queryString) {
         const searchParams = new URLSearchParams(queryString);
@@ -99,7 +55,6 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
         });
       }
 
-      // Headers assembly
       const headers: Record<string, string> = {
         'Accept': 'application/json'
       };
@@ -109,13 +64,13 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
       }
 
       const res = await executeApiRequest({
-        path: pathOnly || requestPath,
-        method: selectedMethod,
+        path: pathOnly || path,
+        method,
         queryParams,
         headers,
-        body: requestBody.trim() ? requestBody : undefined,
+        body: body && body.trim() ? body : undefined,
         bearerToken: apiKey.trim() || undefined,
-        endpointId: activeEndpointId
+        endpointId: epId || activeEndpointId
       });
 
       setLastResponse(res);
@@ -132,6 +87,65 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Sync token when auth context changes
+  useEffect(() => {
+    if (token) {
+      setApiKey(token);
+    }
+  }, [token]);
+
+  // Handle initial endpoint selection & initial load
+  useEffect(() => {
+    if (initialEndpointId) {
+      const ep = allEndpoints.find((e) => e.id === initialEndpointId);
+      if (ep) {
+        selectEndpoint(ep);
+        return;
+      }
+    }
+    // Default initial execution
+    executePath('GET', '/api/v1/products?limit=5', undefined, 'get-products');
+  }, [initialEndpointId]);
+
+  const selectEndpoint = (ep: ApiEndpoint, overridePath?: string) => {
+    setActiveEndpointId(ep.id);
+    setSelectedMethod(ep.method);
+    const targetPath = overridePath || ep.path.replace(':id', '30').replace(':productId', '30').replace(':itemId', 'item_1');
+    setRequestPath(targetPath);
+
+    let bodyStr = '';
+    if (ep.defaultRequestBody && ['POST', 'PUT', 'PATCH'].includes(ep.method)) {
+      bodyStr = JSON.stringify(ep.defaultRequestBody, null, 2);
+      setRequestBody(bodyStr);
+    } else {
+      setRequestBody('');
+    }
+
+    // Immediately execute and display related data
+    executePath(ep.method, targetPath, bodyStr, ep.id);
+  };
+
+  const selectPreset = (method: HttpMethod, path: string, body?: any, epId?: string) => {
+    setSelectedMethod(method);
+    setRequestPath(path);
+    if (epId) setActiveEndpointId(epId);
+    let bodyStr = '';
+    if (body) {
+      bodyStr = typeof body === 'string' ? body : JSON.stringify(body, null, 2);
+      setRequestBody(bodyStr);
+    } else {
+      setRequestBody('');
+    }
+
+    // Immediately execute and display related data
+    executePath(method, path, bodyStr, epId);
+  };
+
+  const handleSendRequest = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    await executePath(selectedMethod, requestPath, requestBody, activeEndpointId);
   };
 
   const handleCopyBaseUrl = async () => {

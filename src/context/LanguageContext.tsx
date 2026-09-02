@@ -105,7 +105,7 @@ const translations: Record<Language, Translations> = {
     highlight4Desc: '50 structured records per resource for realistic API simulations.',
 
     overviewNav: 'Platform Overview',
-    searchPlaceholder: 'Search endpoints, paths, verbs (⌘K)...',
+    searchPlaceholder: 'Search endpoints (⌘K)...',
     noEndpointsFound: 'No matching endpoints found',
     matchingEndpoints: 'Matching Endpoints',
 
@@ -172,7 +172,7 @@ const translations: Record<Language, Translations> = {
     highlight4Desc: 'ကဏ္ဍတိုင်းအတွက် တကယ့်လက်တွေ့နှင့် တူညီသော ဒေတာ ပစ္စည်း ၅၀ စီ ပါဝင်ခြင်း။',
 
     overviewNav: 'အနှစ်ချုပ် အကျဉ်း',
-    searchPlaceholder: 'API အမည်၊ လမ်းကြောင်း သို့မဟုတ် နည်းလမ်း ရှာရန် (⌘K)...',
+    searchPlaceholder: 'API ရှာဖွေရန် (⌘K)...',
     noEndpointsFound: 'ရှာဖွေမှုနှင့် ကိုက်ညီသော API မရှိပါ',
     matchingEndpoints: 'ကိုက်ညီသော Endpoints များ',
 

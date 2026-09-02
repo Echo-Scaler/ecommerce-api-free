@@ -62,6 +62,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
     setExerciseResponse(null);
     setSelectedAnswers({});
     setQuizSubmitted(false);
+    document.querySelector('.app-main-content')?.scrollTo({ top: 0, behavior: 'smooth' });
   }, [selectedLessonId]);
 
   const toggleCompleteLesson = (lessonId: string) => {

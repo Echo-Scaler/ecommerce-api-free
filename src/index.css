@@ -71,27 +71,36 @@ html, body {
   overflow-x: hidden;
 }
 
-/* Myanmar Language Mode Typography */
-body.lang-my, [lang="my"], .lang-my {
-  font-family: var(--font-myanmar);
-  letter-spacing: 0;
+/* Myanmar Typography Global Perfection */
+body.lang-my,
+body.lang-my *,
+[lang="my"],
+[lang="my"] * {
+  font-family: 'Noto Sans Myanmar', 'Padauk', 'Pyidaungsu', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  letter-spacing: normal !important;
+  word-spacing: normal !important;
+}
+
+body.lang-my {
   line-height: 1.65;
 }
 
 body.lang-my .brand-title {
-  font-size: 1.05rem;
-  line-height: 1.35;
-}
-
-body.lang-my .brand-subtitle {
-  font-size: 0.725rem;
-  line-height: 1.35;
+  font-size: 1rem;
+  line-height: 1;
 }
 
 body.lang-my .header-nav-tab,
 body.lang-my .mobile-view-tab {
   font-size: 0.8rem;
-  line-height: 1.4;
+  line-height: 1;
+}
+
+body.lang-my .banner-title {
+  font-size: 1.65rem !important;
+  line-height: 1.4 !important;
+  letter-spacing: normal !important;
+  word-break: break-word !important;
 }
 
 code, pre, .font-mono {
@@ -126,6 +135,7 @@ code, pre, .font-mono {
 .app-header {
   height: var(--header-height);
   min-height: var(--header-height);
+  max-height: var(--header-height);
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -138,15 +148,16 @@ code, pre, .font-mono {
   box-shadow: var(--shadow-sm);
   overflow: visible;
   gap: 0.75rem;
+  box-sizing: border-box;
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.65rem;
   overflow: visible;
   flex-shrink: 0;
-  min-width: 0;
+  min-width: max-content;
 }
 
 .mobile-sidebar-toggle {
@@ -170,17 +181,18 @@ code, pre, .font-mono {
 .brand-badge {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.55rem;
   text-decoration: none;
   overflow: visible;
-  min-width: 0;
+  min-width: max-content;
   user-select: none;
+  flex-shrink: 0;
 }
 
 .brand-icon-wrapper {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
   background: var(--brand-primary);
   display: flex;
   align-items: center;
@@ -190,22 +202,17 @@ code, pre, .font-mono {
   flex-shrink: 0;
 }
 
-.brand-text-col {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: visible;
-  min-width: 0;
-}
-
 .brand-title {
   font-size: 1.05rem;
   font-weight: 800;
-  letter-spacing: -0.01em;
+  letter-spacing: normal;
   color: #101828;
-  line-height: 1.25;
+  line-height: 1;
   white-space: nowrap;
   overflow: visible;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .brand-highlight {
@@ -213,34 +220,24 @@ code, pre, .font-mono {
   font-weight: 800;
 }
 
-.brand-subtitle {
-  font-size: 0.725rem;
-  color: var(--text-muted);
-  font-weight: 500;
-  line-height: 1.2;
-  white-space: nowrap;
-  overflow: visible;
-}
-
 .version-pill {
   font-size: 0.7rem;
   font-family: var(--font-mono);
   background: #eef6e9;
   color: #415a24;
-  padding: 0.15rem 0.5rem;
+  padding: 0.15rem 0.45rem;
   border-radius: 999px;
   border: 1px solid #c9e1b4;
   font-weight: 600;
-  letter-spacing: 0.02em;
   white-space: nowrap;
   flex-shrink: 0;
-  line-height: 1.3;
+  line-height: 1;
 }
 
 .header-right {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.5rem;
   flex-shrink: 0;
 }
 
@@ -290,55 +287,60 @@ code, pre, .font-mono {
 
 /* Bulletproof Language Switcher */
 .lang-switcher-wrapper {
-  display: inline-flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 2px;
-  background: #f1f5f9;
-  border: 1px solid var(--border-subtle);
-  padding: 2px 4px;
-  border-radius: 999px;
-  flex-shrink: 0;
-  white-space: nowrap;
-  box-sizing: border-box;
-  min-width: max-content;
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-wrap: nowrap !important;
+  gap: 2px !important;
+  background: #f1f5f9 !important;
+  border: 1px solid var(--border-medium) !important;
+  padding: 2px 3px !important;
+  border-radius: 999px !important;
+  flex-shrink: 0 !important;
+  min-width: 106px !important;
+  width: 106px !important;
+  height: 32px !important;
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
 }
 
 .globe-icon {
   color: var(--text-muted);
-  margin-left: 2px;
+  margin-left: 3px;
   margin-right: 2px;
   flex-shrink: 0;
 }
 
 .lang-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 32px;
-  height: 24px;
-  padding: 0 7px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--text-secondary);
-  background: transparent;
-  border: none;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  line-height: 1;
-  white-space: nowrap;
-  flex-shrink: 0;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 1 !important;
+  height: 26px !important;
+  padding: 0 6px !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  color: var(--text-secondary) !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 999px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
 }
 
 .lang-btn:hover {
-  color: var(--text-primary);
+  color: var(--text-primary) !important;
 }
 
 .lang-btn.active {
-  background: #ffffff;
-  color: var(--brand-primary);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: #ffffff !important;
+  color: var(--brand-primary) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
 }
 
 /* Header Auth Button */
@@ -470,8 +472,9 @@ code, pre, .font-mono {
   background: #f8faf7;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 0.5rem 0.75rem;
+  padding: 0.45rem 0.65rem;
   transition: all 0.15s ease;
+  min-width: 0;
 }
 
 .api-search-input-wrapper:focus-within {
@@ -483,7 +486,7 @@ code, pre, .font-mono {
 .api-search-icon {
   color: var(--text-muted);
   flex-shrink: 0;
-  margin-right: 0.5rem;
+  margin-right: 0.45rem;
 }
 
 .api-search-input {
@@ -492,12 +495,15 @@ code, pre, .font-mono {
   border: none;
   outline: none;
   color: var(--text-primary);
-  font-size: 0.835rem;
+  font-size: 0.825rem;
   font-family: var(--font-sans);
+  min-width: 0;
+  padding-right: 0.4rem;
 }
 
 .api-search-input::placeholder {
   color: var(--text-muted);
+  font-size: 0.8rem;
 }
 
 .api-search-shortcut {
@@ -506,8 +512,10 @@ code, pre, .font-mono {
   color: var(--text-muted);
   background: #ffffff;
   border: 1px solid var(--border-subtle);
-  padding: 0.15rem 0.4rem;
+  padding: 0.12rem 0.35rem;
   border-radius: 4px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .api-search-clear-btn {
@@ -3236,28 +3244,30 @@ code, pre, .font-mono {
 
 .docs-sidebar-link {
   text-align: left;
-  padding: 0.55rem 0.75rem;
-  font-size: 0.85rem;
-  font-weight: 500;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.835rem;
+  font-weight: 600;
   color: var(--text-secondary);
   background: transparent;
   border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
-.docs-sidebar-link:hover {
-  background: var(--bg-card-hover);
+.docs-sidebar-link:hover:not(.active) {
+  background: #f1f5f9;
   color: var(--text-primary);
-  padding-left: 0.95rem;
 }
 
 .docs-sidebar-link.active {
-  background: var(--brand-sage-light);
-  color: var(--brand-primary);
+  background: #eef6e9;
+  color: #415a24;
   font-weight: 700;
-  border-left: 3px solid var(--brand-primary);
+  border-left: 3px solid #415a24;
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 

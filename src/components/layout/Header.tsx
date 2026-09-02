@@ -64,11 +64,8 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="brand-icon-wrapper">
               <ShoppingBag size={18} className="brand-icon" />
             </div>
-            <div className="brand-text-col">
-              <div className="brand-title">
-                {t('brandTitle')} <span className="brand-highlight">{t('brandHighlight')}</span>
-              </div>
-              <div className="brand-subtitle">{t('brandSubtitle')}</div>
+            <div className="brand-title">
+              {t('brandTitle')} <span className="brand-highlight">{t('brandHighlight')}</span>
             </div>
           </div>
 

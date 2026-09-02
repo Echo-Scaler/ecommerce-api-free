@@ -32,16 +32,21 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
     { id: 'best-practices', title: '8. Best Practices' }
   ];
 
-  // ScrollSpy listener
+  // ScrollSpy listener attached to .app-main-content and window
   useEffect(() => {
+    const scrollContainer = document.querySelector('.app-main-content');
+    
     const handleScroll = () => {
-      const scrollPos = window.scrollY + 140;
+      const containerTop = scrollContainer ? scrollContainer.getBoundingClientRect().top : 0;
+      
       for (const section of docSections) {
         const el = document.getElementById(section.id);
         if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPos >= top && scrollPos < top + height) {
+          const rect = el.getBoundingClientRect();
+          const relativeTop = rect.top - containerTop;
+          const relativeBottom = rect.bottom - containerTop;
+          // When section is near top of viewport/container
+          if (relativeTop <= 160 && relativeBottom > 60) {
             setActiveSection(section.id);
             break;
           }
@@ -49,21 +54,23 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
       }
     };
 
+    scrollContainer?.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    return () => {
+      scrollContainer?.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   const scrollToSection = (id: string) => {
+    setActiveSection(id);
     const el = document.getElementById(id);
     if (el) {
-      const headerOffset = 80;
-      const elementPosition = el.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
+      el.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
       });
-      setActiveSection(id);
     }
   };
 
