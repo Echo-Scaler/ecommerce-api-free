@@ -11,17 +11,24 @@ import {
   ChevronDown, 
   ChevronRight,
   BookOpen,
-  SearchX
+  SearchX,
+  GraduationCap,
+  SlidersHorizontal
 } from 'lucide-react';
 import { ApiModule } from '../../types/api';
 import { MethodBadge } from '../common/MethodBadge';
 import { ApiSearchInput } from './ApiSearchInput';
+import { useLanguage } from '../../context/LanguageContext';
+
+export type AppView = 'console' | 'docs' | 'learn';
 
 interface ApiSidebarProps {
   modules: ApiModule[];
   selectedEndpointId: string | null;
   onSelectEndpoint: (endpointId: string) => void;
   onSelectOverview: () => void;
+  currentView?: AppView;
+  onSelectView?: (view: AppView) => void;
 }
 
 const getModuleIcon = (iconName: string) => {
@@ -47,13 +54,13 @@ const getModuleIcon = (iconName: string) => {
   }
 };
 
-import { useLanguage } from '../../context/LanguageContext';
-
 export const ApiSidebar: React.FC<ApiSidebarProps> = ({
   modules,
   selectedEndpointId,
   onSelectEndpoint,
   onSelectOverview,
+  currentView = 'console',
+  onSelectView
 }) => {
   const { t, isMyanmar } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
@@ -111,23 +118,58 @@ export const ApiSidebar: React.FC<ApiSidebarProps> = ({
         placeholder={t('searchPlaceholder')}
       />
 
-      {/* Overview Button (only when not searching) */}
+      {/* Main Pages Navigation Section (Console, Docs, Learn) */}
       {!searchQuery && (
         <>
-          <div className="nav-section-header">{isMyanmar ? 'အစပျိုးရန်' : 'GETTING STARTED'}</div>
-          <button
-            type="button"
-            className={`nav-overview-btn ${selectedEndpointId === null ? 'active' : ''}`}
-            onClick={onSelectOverview}
-          >
-            <BookOpen size={16} />
-            <span>{t('overviewNav')}</span>
-          </button>
+          <div className="nav-section-header">{isMyanmar ? 'အဓိက ကဏ္ဍများ' : 'NAVIGATION & PAGES'}</div>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginBottom: '0.5rem' }}>
+            {/* Console / Overview Button */}
+            <button
+              type="button"
+              className={`nav-overview-btn ${currentView === 'console' && selectedEndpointId === null ? 'active' : ''}`}
+              onClick={() => {
+                if (onSelectView) onSelectView('console');
+                onSelectOverview();
+              }}
+            >
+              <SlidersHorizontal size={16} />
+              <span>{t('overviewNav')} (Console)</span>
+            </button>
+
+            {/* Complete Docs Button */}
+            <button
+              type="button"
+              className={`nav-overview-btn ${currentView === 'docs' ? 'active' : ''}`}
+              onClick={() => {
+                if (onSelectView) onSelectView('docs');
+              }}
+            >
+              <BookOpen size={16} className="text-emerald-500" />
+              <span>Documentation Guide (/docs)</span>
+            </button>
+
+            {/* Learn Academy Button */}
+            <button
+              type="button"
+              className={`nav-overview-btn ${currentView === 'learn' ? 'active' : ''}`}
+              onClick={() => {
+                if (onSelectView) onSelectView('learn');
+              }}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <GraduationCap size={17} className="text-amber-500" />
+                <span>Learn REST API (/learn)</span>
+              </div>
+              <span className="nav-tab-badge" style={{ fontSize: '0.6rem' }}>Interactive</span>
+            </button>
+          </div>
         </>
       )}
 
       {/* Modules List Header */}
-      <div className="nav-section-header" style={{ marginTop: searchQuery ? '0.25rem' : '1.25rem' }}>
+      <div className="nav-section-header" style={{ marginTop: searchQuery ? '0.25rem' : '1rem' }}>
         {searchQuery ? (
           <div className="search-results-count">
             <span>{isMyanmar ? `ရလဒ်များ (${totalMatchingEndpoints})` : `RESULTS (${totalMatchingEndpoints})`}</span>
@@ -198,14 +240,17 @@ export const ApiSidebar: React.FC<ApiSidebarProps> = ({
                 {isExpanded && (
                   <div className="endpoints-list">
                     {module.endpoints.map((endpoint) => {
-                      const isSelected = endpoint.id === selectedEndpointId;
+                      const isSelected = endpoint.id === selectedEndpointId && currentView === 'console';
 
                       return (
                         <button
                           key={endpoint.id}
                           type="button"
                           className={`endpoint-nav-item ${isSelected ? 'active' : ''}`}
-                          onClick={() => onSelectEndpoint(endpoint.id)}
+                          onClick={() => {
+                            if (onSelectView) onSelectView('console');
+                            onSelectEndpoint(endpoint.id);
+                          }}
                           title={`${endpoint.method} ${endpoint.path} — ${endpoint.name}`}
                         >
                           <MethodBadge method={endpoint.method} size="sm" />
