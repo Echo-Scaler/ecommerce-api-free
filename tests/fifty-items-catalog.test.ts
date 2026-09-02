@@ -41,8 +41,11 @@ async function verifyFiftyItemsCatalog() {
   }
   console.log('\n✓ Verified ID sequence 1 to 50 across all resources.');
 
-  // 3. Test API Client with limit=50
+  // 3. Test API Client with limit=50 and collection endpoints
   const sampleToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.sample-token';
+  const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.admin-token';
+
+  // Endpoint 1: Products
   const resProducts = await executeApiRequest({
     path: '/api/v1/products',
     method: 'GET',
@@ -53,6 +56,7 @@ async function verifyFiftyItemsCatalog() {
   }
   console.log(`✓ GET /api/v1/products?limit=50 returned ${resProducts.data.data.length} items`);
 
+  // Endpoint 2: Categories
   const resCategories = await executeApiRequest({
     path: '/api/v1/categories',
     method: 'GET'
@@ -62,6 +66,7 @@ async function verifyFiftyItemsCatalog() {
   }
   console.log(`✓ GET /api/v1/categories returned ${resCategories.data.data.length} items`);
 
+  // Endpoint 3: Orders
   const resOrders = await executeApiRequest({
     path: '/api/v1/orders',
     method: 'GET',
@@ -73,7 +78,63 @@ async function verifyFiftyItemsCatalog() {
   }
   console.log(`✓ GET /api/v1/orders?limit=50 returned ${resOrders.data.data.length} items`);
 
-  console.log('\n🎉 50 Items per resource verified successfully!');
+  // Endpoint 4: Customer Addresses
+  const resAddresses = await executeApiRequest({
+    path: '/api/v1/customers/addresses',
+    method: 'GET',
+    bearerToken: sampleToken
+  });
+  if (resAddresses.data?.data?.length !== 50) {
+    throw new Error(`Expected 50 addresses returned, got ${resAddresses.data?.data?.length}`);
+  }
+  console.log(`✓ GET /api/v1/customers/addresses returned ${resAddresses.data.data.length} items`);
+
+  // Endpoint 5: Shopping Cart Items
+  const resCart = await executeApiRequest({
+    path: '/api/v1/cart',
+    method: 'GET',
+    bearerToken: sampleToken
+  });
+  if (resCart.data?.data?.items?.length !== 50) {
+    throw new Error(`Expected 50 cart items returned, got ${resCart.data?.data?.items?.length}`);
+  }
+  console.log(`✓ GET /api/v1/cart returned ${resCart.data.data.items.length} items (Total cart items: ${resCart.data.data.total_items})`);
+
+  // Endpoint 6: Product Search
+  const resSearch = await executeApiRequest({
+    path: '/api/v1/search',
+    method: 'GET',
+    queryParams: { q: '' }
+  });
+  if (resSearch.data?.data?.length !== 50) {
+    throw new Error(`Expected 50 search products returned, got ${resSearch.data?.data?.length}`);
+  }
+  console.log(`✓ GET /api/v1/search returned ${resSearch.data.data.length} items`);
+
+  // Endpoint 7: Search Suggestions
+  const resSuggestions = await executeApiRequest({
+    path: '/api/v1/search/suggestions',
+    method: 'GET',
+    queryParams: { q: '' }
+  });
+  if (resSuggestions.data?.suggestions?.length !== 50) {
+    throw new Error(`Expected 50 suggestions returned, got ${resSuggestions.data?.suggestions?.length}`);
+  }
+  console.log(`✓ GET /api/v1/search/suggestions returned ${resSuggestions.data.suggestions.length} items`);
+
+  // Endpoint 8: Low Stock Inventory
+  const resLowStock = await executeApiRequest({
+    path: '/api/v1/inventory/low-stock',
+    method: 'GET',
+    bearerToken: adminToken,
+    queryParams: { threshold: 50 }
+  });
+  if (resLowStock.data?.data?.length !== 50) {
+    throw new Error(`Expected 50 low stock items returned, got ${resLowStock.data?.data?.length}`);
+  }
+  console.log(`✓ GET /api/v1/inventory/low-stock returned ${resLowStock.data.data.length} items`);
+
+  console.log('\n🎉 ALL 8 GET Collection Endpoints (50+ records each) verified successfully!');
 }
 
 verifyFiftyItemsCatalog().catch((err) => {

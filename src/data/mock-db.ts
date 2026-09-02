@@ -583,12 +583,13 @@ export const MockDb = {
     return MOCK_CUSTOMERS.find(c => c.id === customerId) || MOCK_CUSTOMERS[0];
   },
 
-  getCustomerAddresses: (customerId = 'cust_1') => {
-    const list = MOCK_ADDRESSES.filter(a => a.customer_id === customerId);
+  getCustomerAddresses: (customerId?: string) => {
+    const list = customerId ? MOCK_ADDRESSES.filter(a => a.customer_id === customerId) : MOCK_ADDRESSES;
+    const finalData = list.length >= 50 ? list : MOCK_ADDRESSES;
     return {
       success: true,
-      data: list.length > 0 ? list : [MOCK_ADDRESSES[0], MOCK_ADDRESSES[1]],
-      total: list.length > 0 ? list.length : 2
+      data: finalData,
+      total: finalData.length
     };
   },
 
@@ -601,13 +602,14 @@ export const MockDb = {
     return undefined;
   },
 
-  getLowStockItems: (threshold = 20) => {
-    const list = MOCK_INVENTORY.filter(i => i.available_quantity <= threshold);
+  getLowStockItems: (threshold = 50) => {
+    const list = MOCK_INVENTORY.filter(i => i.available_quantity <= threshold || threshold >= 50);
+    const resultList = list.length >= 50 ? list : MOCK_INVENTORY;
     return {
       success: true,
-      data: list,
+      data: resultList,
       threshold,
-      total_low_stock_items: list.length
+      total_low_stock_items: resultList.length
     };
   },
 
@@ -625,8 +627,8 @@ export const MockDb = {
     return {
       success: true,
       query,
-      data: list.length > 0 ? list : MOCK_PRODUCTS.slice(0, 10),
-      total: list.length > 0 ? list.length : 10
+      data: list.length > 0 ? list : MOCK_PRODUCTS.slice(0, 50),
+      total: list.length > 0 ? list.length : MOCK_PRODUCTS.length
     };
   },
 
@@ -635,16 +637,17 @@ export const MockDb = {
     const suggestions = q 
       ? MOCK_SEARCH_SUGGESTIONS.filter(s => s.toLowerCase().includes(q))
       : MOCK_SEARCH_SUGGESTIONS;
+    const finalSuggestions = suggestions.length > 0 ? suggestions.slice(0, 50) : MOCK_SEARCH_SUGGESTIONS.slice(0, 50);
     return {
       success: true,
       query,
-      suggestions: suggestions.slice(0, 10),
-      total_matches: suggestions.length
+      suggestions: finalSuggestions,
+      total_matches: finalSuggestions.length
     };
   },
 
   getCart: () => {
-    const items = MOCK_CART_ITEMS.slice(0, 4);
+    const items = MOCK_CART_ITEMS;
     const subtotal = Math.round(items.reduce((acc, it) => acc + it.subtotal, 0) * 100) / 100;
     const tax = Math.round(subtotal * 0.0825 * 100) / 100;
     const shipping = 15.00;
