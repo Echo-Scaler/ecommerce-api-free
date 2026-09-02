@@ -1,6 +1,7 @@
 import React from 'react';
 import { ParsedApiError } from '../../lib/api-errors';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { 
   AlertTriangle, 
   ShieldAlert, 
@@ -20,6 +21,7 @@ interface ApiErrorDisplayProps {
 
 export const ApiErrorDisplay: React.FC<ApiErrorDisplayProps> = ({ error }) => {
   const { openAuthModal } = useAuth();
+  const { isMyanmar } = useLanguage();
 
   const getErrorIcon = () => {
     switch (error.type) {
@@ -49,7 +51,7 @@ export const ApiErrorDisplay: React.FC<ApiErrorDisplayProps> = ({ error }) => {
           {getErrorIcon()}
         </div>
         <div className="api-error-title-group">
-          <div className="api-error-type-tag">DIAGNOSTIC ERROR REPORT</div>
+          <div className="api-error-type-tag">{isMyanmar ? 'အမှား အသေးစိတ် စစ်ဆေးမှု အစီရင်ခံစာ' : 'DIAGNOSTIC ERROR REPORT'}</div>
           <h3 className="api-error-title">{error.title}</h3>
         </div>
       </div>
@@ -59,7 +61,7 @@ export const ApiErrorDisplay: React.FC<ApiErrorDisplayProps> = ({ error }) => {
 
         {error.details && (
           <div className="api-error-details-row">
-            <span className="error-details-label">Cause:</span>
+            <span className="error-details-label">{isMyanmar ? 'အကြောင်းရင်း:' : 'Cause:'}</span>
             <span className="error-details-text">{error.details}</span>
           </div>
         )}
@@ -67,7 +69,7 @@ export const ApiErrorDisplay: React.FC<ApiErrorDisplayProps> = ({ error }) => {
         {/* Validation Errors List */}
         {error.validationErrors && error.validationErrors.length > 0 && (
           <div className="api-error-validation-list">
-            <div className="validation-header">Field Validation Errors:</div>
+            <div className="validation-header">{isMyanmar ? 'အချက်အလက် စစ်ဆေးမှု အမှားများ:' : 'Field Validation Errors:'}</div>
             {error.validationErrors.map((valErr, idx) => (
               <div key={idx} className="validation-item">
                 <code className="validation-field">{valErr.field}</code>
@@ -81,7 +83,7 @@ export const ApiErrorDisplay: React.FC<ApiErrorDisplayProps> = ({ error }) => {
         <div className="api-error-fix-box">
           <div className="fix-box-header">
             <HelpCircle size={15} />
-            <span>Recommended Fix:</span>
+            <span>{isMyanmar ? 'အကြံပြုထားသော ဖြေရှင်းနည်း:' : 'Recommended Fix:'}</span>
           </div>
           <div className="fix-box-content">
             <p className="fix-box-text">{error.suggestedFix}</p>
@@ -92,7 +94,7 @@ export const ApiErrorDisplay: React.FC<ApiErrorDisplayProps> = ({ error }) => {
                 className="error-fix-action-btn"
                 onClick={openAuthModal}
               >
-                <span>Open Authentication Manager</span>
+                <span>{isMyanmar ? 'စစ်မှန်ကြောင်း အတည်ပြုစနစ်ကို ဖွင့်မည်' : 'Open Authentication Manager'}</span>
                 <ArrowRight size={14} />
               </button>
             )}
@@ -102,3 +104,4 @@ export const ApiErrorDisplay: React.FC<ApiErrorDisplayProps> = ({ error }) => {
     </div>
   );
 };
+

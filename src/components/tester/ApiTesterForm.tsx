@@ -186,12 +186,12 @@ export const ApiTesterForm: React.FC<ApiTesterFormProps> = ({
           {isLoading ? (
             <>
               <span className="spinner-mini"></span>
-              <span>Sending...</span>
+              <span>{t('sendingRequestBtn')}</span>
             </>
           ) : (
             <>
               <Send size={15} />
-              <span>Send Request</span>
+              <span>{t('sendRequestBtn')}</span>
             </>
           )}
         </button>
@@ -205,21 +205,23 @@ export const ApiTesterForm: React.FC<ApiTesterFormProps> = ({
               <>
                 <ShieldCheck size={16} className="text-emerald-400" />
                 <span>
-                  Using active Bearer Token (<code className="auth-token-subtle">Bearer {token?.substring(0, 10)}...</code>)
+                  {isMyanmar 
+                    ? <>လက်ရှိ Bearer Token ကို အသုံးပြုထားပါသည် (<code className="auth-token-subtle">Bearer {token?.substring(0, 10)}...</code>)</>
+                    : <>Using active Bearer Token (<code className="auth-token-subtle">Bearer {token?.substring(0, 10)}...</code>)</>}
                 </span>
               </>
             ) : (
               <>
                 <ShieldAlert size={16} className="text-amber-400" />
                 <span className="text-amber-300 font-medium">
-                  Authentication is required for this endpoint.
+                  {isMyanmar ? 'ဤ Endpoint အတွက် စစ်မှန်ကြောင်း အတည်ပြုချက် လိုအပ်ပါသည်။' : 'Authentication is required for this endpoint.'}
                 </span>
               </>
             )
           ) : (
             <>
               <CheckCircle2 size={16} className="text-emerald-400" />
-              <span className="text-secondary">This endpoint does not require authentication.</span>
+              <span className="text-secondary">{isMyanmar ? 'ဤ Endpoint အတွက် အတည်ပြုချက် မလိုအပ်ပါ။' : 'This endpoint does not require authentication.'}</span>
             </>
           )}
         </div>
@@ -229,7 +231,7 @@ export const ApiTesterForm: React.FC<ApiTesterFormProps> = ({
             className="tester-auth-action-btn"
             onClick={openAuthModal}
           >
-            Add Bearer Token
+            {isMyanmar ? 'Bearer တိုကင် ထည့်မည်' : 'Add Bearer Token'}
           </button>
         )}
       </div>
@@ -238,8 +240,10 @@ export const ApiTesterForm: React.FC<ApiTesterFormProps> = ({
       {pathParamDefs.length > 0 && (
         <div className="tester-param-card">
           <div className="tester-card-header">
-            <h4 className="tester-card-title">Path Parameters</h4>
-            <span className="tester-card-subtitle">{pathParamDefs.length} variable(s) in URL path</span>
+            <h4 className="tester-card-title">{isMyanmar ? 'Path ပါရာမီတာများ' : 'Path Parameters'}</h4>
+            <span className="tester-card-subtitle">
+              {isMyanmar ? `URL လမ်းကြောင်းရှိ တန်ဖိုး ${pathParamDefs.length} ခု` : `${pathParamDefs.length} variable(s) in URL path`}
+            </span>
           </div>
           <div className="tester-inputs-grid">
             {pathParamDefs.map((p) => (
@@ -270,8 +274,8 @@ export const ApiTesterForm: React.FC<ApiTesterFormProps> = ({
       {queryParamDefs.length > 0 && (
         <div className="tester-param-card">
           <div className="tester-card-header">
-            <h4 className="tester-card-title">Query Parameters</h4>
-            <span className="tester-card-subtitle">URL search parameters</span>
+            <h4 className="tester-card-title">{isMyanmar ? 'Query ပါရာမီတာများ' : 'Query Parameters'}</h4>
+            <span className="tester-card-subtitle">{isMyanmar ? 'URL ရှာဖွေမှု ပါရာမီတာများ' : 'URL search parameters'}</span>
           </div>
           <div className="tester-inputs-grid">
             {queryParamDefs.map((p) => (
@@ -302,7 +306,7 @@ export const ApiTesterForm: React.FC<ApiTesterFormProps> = ({
         <div className="tester-param-card">
           <div className="tester-card-header">
             <div className="tester-title-with-actions">
-              <h4 className="tester-card-title">Request Body (JSON)</h4>
+              <h4 className="tester-card-title">{isMyanmar ? 'ပေးပို့ရမည့် အချက်အလက် (Request Body JSON)' : 'Request Body (JSON)'}</h4>
               <span className="content-type-badge">application/json</span>
             </div>
             <div className="tester-body-tools">
@@ -310,19 +314,19 @@ export const ApiTesterForm: React.FC<ApiTesterFormProps> = ({
                 type="button"
                 className="tester-tool-btn"
                 onClick={handleFormatJson}
-                title="Format / Beautify JSON"
+                title={isMyanmar ? 'JSON ပုံစံညှိမည်' : 'Format / Beautify JSON'}
               >
                 <Sparkles size={13} />
-                <span>Format JSON</span>
+                <span>{isMyanmar ? 'JSON ပုံစံညှိမည်' : 'Format JSON'}</span>
               </button>
               <button
                 type="button"
                 className="tester-tool-btn"
                 onClick={handleReset}
-                title="Reset to default payload template"
+                title={isMyanmar ? 'မူလအတိုင်း ပြန်ထားမည်' : 'Reset to default payload template'}
               >
                 <RotateCcw size={13} />
-                <span>Reset Body</span>
+                <span>{isMyanmar ? 'မူလအတိုင်း ပြန်ထားမည်' : 'Reset Body'}</span>
               </button>
             </div>
           </div>
@@ -349,14 +353,14 @@ export const ApiTesterForm: React.FC<ApiTesterFormProps> = ({
       {/* Custom Headers Section */}
       <div className="tester-param-card">
         <div className="tester-card-header">
-          <h4 className="tester-card-title">HTTP Headers</h4>
+          <h4 className="tester-card-title">{isMyanmar ? 'HTTP Headers များ' : 'HTTP Headers'}</h4>
           <button
             type="button"
             className="tester-tool-btn"
             onClick={handleAddHeader}
           >
             <Plus size={13} />
-            <span>Add Header</span>
+            <span>{isMyanmar ? 'Header အသစ်ထည့်မည်' : 'Add Header'}</span>
           </button>
         </div>
 

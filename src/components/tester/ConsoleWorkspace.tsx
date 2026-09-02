@@ -237,12 +237,12 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
 
             {/* Feature tags */}
             <div className="banner-tags">
-              <span className="btag btag-green">✓ JSON Responses</span>
-              <span className="btag btag-blue">✓ Bearer & API Key Auth</span>
-              <span className="btag btag-purple">✓ Rate Limited (1000 req/hr)</span>
-              <span className="btag btag-orange">✓ RESTful Design</span>
-              <span className="btag btag-slate">✓ Pagination &amp; Filtering</span>
-              <span className="btag btag-slate">✓ 50 Records / Resource</span>
+              <span className="btag btag-green">✓ {isMyanmar ? 'JSON တုံ့ပြန်မှုများ' : 'JSON Responses'}</span>
+              <span className="btag btag-blue">✓ {isMyanmar ? 'Bearer & API Key အတည်ပြုချက်' : 'Bearer & API Key Auth'}</span>
+              <span className="btag btag-purple">✓ {isMyanmar ? 'Rate Limited (၁၀၀၀ req/hr)' : 'Rate Limited (1000 req/hr)'}</span>
+              <span className="btag btag-orange">✓ {isMyanmar ? 'RESTful ဒီဇိုင်း' : 'RESTful Design'}</span>
+              <span className="btag btag-slate">✓ {isMyanmar ? 'Pagination & စစ်ထုတ်မှုများ' : 'Pagination & Filtering'}</span>
+              <span className="btag btag-slate">✓ {isMyanmar ? 'ဒေတာ ၅၀ စီ ပါဝင်မှု' : '50 Records / Resource'}</span>
             </div>
 
             {/* Base URL bar */}
@@ -253,12 +253,12 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
                 {copiedBaseUrl ? (
                   <>
                     <Check size={12} className="text-emerald-400" />
-                    <span>Copied!</span>
+                    <span>{isMyanmar ? 'ကူးယူပြီး!' : 'Copied!'}</span>
                   </>
                 ) : (
                   <>
                     <Copy size={12} />
-                    <span>Copy</span>
+                    <span>{isMyanmar ? 'ကူးယူမည်' : 'Copy'}</span>
                   </>
                 )}
               </button>
@@ -285,7 +285,7 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
               </div>
               <div className="bstat-card">
                 <span className="bstat-icon">💚</span>
-                <span className="bstat-value bstat-green">Online</span>
+                <span className="bstat-value bstat-green">{isMyanmar ? 'အွန်လိုင်း' : 'Online'}</span>
                 <span className="bstat-label">{isMyanmar ? 'အခြေအနေ' : 'Status'}</span>
               </div>
             </div>
@@ -374,56 +374,56 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
                 className="chip-btn"
                 onClick={() => selectPreset('GET', '/api/v1/products?limit=5', undefined, 'get-products')}
               >
-                📊 Top 5 Products
+                {isMyanmar ? '📊 ထိပ်တန်း ကုန်ပစ္စည်း ၅ ခု' : '📊 Top 5 Products'}
               </button>
               <button 
                 type="button" 
                 className="chip-btn highlight"
                 onClick={() => selectPreset('GET', '/api/v1/products/30', undefined, 'get-product-by-id')}
               >
-                📦 Product ID 30
+                {isMyanmar ? '📦 ကုန်ပစ္စည်း ID 30' : '📦 Product ID 30'}
               </button>
               <button 
                 type="button" 
                 className="chip-btn"
                 onClick={() => selectPreset('GET', '/api/v1/search?q=sony', undefined, 'search-products')}
               >
-                🔎 Search "sony"
+                {isMyanmar ? '🔎 "sony" ရှာဖွေမည်' : '🔎 Search "sony"'}
               </button>
               <button 
                 type="button" 
                 className="chip-btn"
                 onClick={() => selectPreset('GET', '/api/v1/products?category_id=cat_1', undefined, 'get-products')}
               >
-                🏷️ Audio Category
+                {isMyanmar ? '🏷️ အသံပိုင်းဆိုင်ရာ ကဏ္ဍ' : '🏷️ Audio Category'}
               </button>
               <button 
                 type="button" 
                 className="chip-btn"
                 onClick={() => selectPreset('GET', '/api/v1/categories/30', undefined, 'get-category-by-id')}
               >
-                📁 Category ID 30
+                {isMyanmar ? '📁 ကဏ္ဍ ID 30' : '📁 Category ID 30'}
               </button>
               <button 
                 type="button" 
                 className="chip-btn"
                 onClick={() => selectPreset('GET', '/api/v1/orders/30', undefined, 'get-order-by-id')}
               >
-                📑 Order ID 30
+                {isMyanmar ? '📑 အမှာစာ ID 30' : '📑 Order ID 30'}
               </button>
               <button 
                 type="button" 
                 className="chip-btn"
                 onClick={() => selectPreset('GET', '/api/v1/cart', undefined, 'get-cart')}
               >
-                🛒 Active Cart
+                {isMyanmar ? '🛒 လက်ရှိ ခြင်းတောင်း' : '🛒 Active Cart'}
               </button>
               <button 
                 type="button" 
                 className="chip-btn"
                 onClick={() => selectPreset('GET', '/api/v1/inventory/low-stock?threshold=20', undefined, 'get-low-stock-items')}
               >
-                📉 Low Stock (&lt; 20)
+                {isMyanmar ? '📉 စတော့နည်း ပစ္စည်းများ (< 20)' : '📉 Low Stock (< 20)'}
               </button>
             </div>
           </div>
@@ -511,14 +511,14 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
               )}
               {activeCodeTab === 'postman' && (
                 <div className="postman-guide-card">
-                  <p><strong>Method 1: Header Method (Recommended)</strong></p>
+                  <p><strong>{isMyanmar ? 'နည်းလမ်း ၁: Header နည်းလမ်း (အကြံပြုထားသည်)' : 'Method 1: Header Method (Recommended)'}</strong></p>
                   <ul>
                     <li>Header: <code>x-api-key</code> &rarr; Value: <code>{apiKey || 'demo-key-12345'}</code></li>
                     <li>Header: <code>Authorization</code> &rarr; Value: <code>Bearer {apiKey || 'demo-key-12345'}</code></li>
                   </ul>
-                  <p><strong>Method 2: Authorization Tab</strong></p>
+                  <p><strong>{isMyanmar ? 'နည်းလမ်း ၂: Authorization Tab နည်းလမ်း' : 'Method 2: Authorization Tab'}</strong></p>
                   <ul>
-                    <li>Type: Select <strong>Bearer Token</strong> or <strong>API Key</strong></li>
+                    <li>Type: {isMyanmar ? 'Bearer Token သို့မဟုတ် API Key ကို ရွေးချယ်ပါ' : 'Select Bearer Token or API Key'}</li>
                     <li>Key: <code>x-api-key</code>, Value: <code>{apiKey || 'demo-key-12345'}</code>, Add to: <code>Header</code></li>
                   </ul>
                 </div>
@@ -600,7 +600,7 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
             <div className="request-auth-bar">
               <label className="auth-bar-label">
                 <Key size={13} />
-                <span>API Key Header (<code>x-api-key</code> / <code>Bearer</code>):</span>
+                <span>{isMyanmar ? 'API Key Header (x-api-key / Bearer):' : 'API Key Header (x-api-key / Bearer):'}</span>
               </label>
               <div className="auth-input-wrapper">
                 <input
@@ -614,9 +614,9 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
                   type="button"
                   className="manage-key-btn"
                   onClick={openAuthModal}
-                  title="Manage Token or Presets"
+                  title={isMyanmar ? 'တိုကင် သို့မဟုတ် Presets စီမံမည်' : 'Manage Token or Presets'}
                 >
-                  ⚡ Presets
+                  ⚡ {isMyanmar ? 'တိုကင်များ' : 'Presets'}
                 </button>
               </div>
             </div>
@@ -625,7 +625,7 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
             {['POST', 'PUT', 'PATCH'].includes(selectedMethod) && (
               <div className="request-body-section">
                 <div className="body-section-header">
-                  <label className="body-label">JSON Request Body:</label>
+                  <label className="body-label">{isMyanmar ? 'JSON ပေးပို့မည့် အချက်အလက် (Body):' : 'JSON Request Body:'}</label>
                   <button
                     type="button"
                     className="btn-format-json"
@@ -637,7 +637,7 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
                       } catch {}
                     }}
                   >
-                    Format JSON
+                    {isMyanmar ? 'JSON ပုံစံညှိမည်' : 'Format JSON'}
                   </button>
                 </div>
                 <textarea
@@ -661,22 +661,22 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
 
                 <div className="badges-list">
                   <span className={`status-pill ${response ? (response.status < 400 ? 'status-ok' : 'status-err') : 'status-idle'}`}>
-                    {response ? `${response.status} ${response.statusText}` : 'Status: --'}
+                    {response ? `${response.status} ${response.statusText}` : (isMyanmar ? 'အခြေအနေ: --' : 'Status: --')}
                   </span>
 
                   <span className="time-pill">
                     <Clock size={12} />
-                    <span>{response ? `${response.durationMs} ms` : 'Time: -- ms'}</span>
+                    <span>{response ? `${response.durationMs} ms` : (isMyanmar ? 'ကြာချိန်: -- ms' : 'Time: -- ms')}</span>
                   </span>
 
                   {response && (
                     <span className="speed-pill">
-                      ⚡ {response.durationMs < 100 ? 'Fast' : 'Normal'}
+                      ⚡ {response.durationMs < 100 ? (isMyanmar ? 'မြန်ဆန်' : 'Fast') : (isMyanmar ? 'ပုံမှန်' : 'Normal')}
                     </span>
                   )}
 
                   <span className="ratelimit-pill">
-                    🛡️ Rate Limit: 994/1000
+                    🛡️ {isMyanmar ? 'ကန့်သတ်ချက်: 994/1000' : 'Rate Limit: 994/1000'}
                   </span>
 
                   <span className="size-pill">
@@ -690,17 +690,17 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
                   type="button"
                   className="btn-action-sm"
                   onClick={handleCopyJson}
-                  title="Copy JSON to Clipboard"
+                  title={isMyanmar ? 'JSON ကို ကူးယူမည်' : 'Copy JSON to Clipboard'}
                 >
                   {copiedJson ? (
                     <>
                       <Check size={13} className="text-emerald-400" />
-                      <span className="text-emerald-400">Copied!</span>
+                      <span className="text-emerald-400">{isMyanmar ? 'ကူးယူပြီး!' : 'Copied!'}</span>
                     </>
                   ) : (
                     <>
                       <Copy size={13} />
-                      <span>Copy JSON</span>
+                      <span>{isMyanmar ? 'JSON ကူးယူမည်' : 'Copy JSON'}</span>
                     </>
                   )}
                 </button>
@@ -709,10 +709,10 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
                   type="button"
                   className="btn-action-sm"
                   onClick={handleDownloadJson}
-                  title="Download .json file"
+                  title={isMyanmar ? '.json ဖိုင်အဖြစ် ဒေါင်းလုဒ်ဆွဲမည်' : 'Download .json file'}
                 >
                   <Download size={13} />
-                  <span>Download</span>
+                  <span>{isMyanmar ? 'ဒေါင်းလုဒ်' : 'Download'}</span>
                 </button>
               </div>
             </div>

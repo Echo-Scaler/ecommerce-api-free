@@ -115,7 +115,7 @@ export const EndpointDocView: React.FC<EndpointDocViewProps> = ({
               type="button"
               className="copy-path-btn"
               onClick={handleCopyPath}
-              title="Copy endpoint path"
+              title={isMyanmar ? 'Endpoint လမ်းကြောင်းကို ကူးယူမည်' : 'Copy endpoint path'}
             >
               {copiedUrl ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
             </button>
@@ -137,7 +137,7 @@ export const EndpointDocView: React.FC<EndpointDocViewProps> = ({
             {endpoint.roles && endpoint.roles.length > 0 && (
               <span className="role-pill">
                 <ShieldAlert size={12} />
-                <span>Roles: {endpoint.roles.join(', ')}</span>
+                <span>{isMyanmar ? 'ခွင့်ပြုချက် အဆင့်များ:' : 'Roles:'} {endpoint.roles.join(', ')}</span>
               </span>
             )}
 

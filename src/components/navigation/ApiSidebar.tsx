@@ -134,7 +134,7 @@ export const ApiSidebar: React.FC<ApiSidebarProps> = ({
               }}
             >
               <SlidersHorizontal size={15} />
-              <span>Platform Overview</span>
+              <span>{t('overviewNav')}</span>
             </button>
 
             {/* Documentation Button */}
@@ -146,7 +146,7 @@ export const ApiSidebar: React.FC<ApiSidebarProps> = ({
               }}
             >
               <BookOpen size={15} className="text-emerald-500" />
-              <span>Documentation</span>
+              <span>{t('navDocs')}</span>
             </button>
 
             {/* Learn Center Button */}
@@ -160,9 +160,9 @@ export const ApiSidebar: React.FC<ApiSidebarProps> = ({
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                 <GraduationCap size={16} className="text-amber-500" />
-                <span>Learning Center</span>
+                <span>{isMyanmar ? 'လေ့လာရန် စင်တာ' : 'Learning Center'}</span>
               </div>
-              <span className="nav-tab-badge" style={{ fontSize: '0.6rem', padding: '0.1rem 0.4rem' }}>Live</span>
+              <span className="nav-tab-badge" style={{ fontSize: '0.6rem', padding: '0.1rem 0.4rem' }}>{isMyanmar ? 'တိုက်ရိုက်' : 'Live'}</span>
             </button>
           </div>
         </>
@@ -194,7 +194,11 @@ export const ApiSidebar: React.FC<ApiSidebarProps> = ({
           <SearchX size={32} className="empty-search-icon" />
           <div className="empty-search-title">{t('noEndpointsFound')}</div>
           <div className="empty-search-subtitle">
-            No matches for &ldquo;<span className="font-mono">{searchQuery}</span>&rdquo;
+            {isMyanmar ? (
+              <>「<span className="font-mono">{searchQuery}</span>」နှင့် ကိုက်ညီသော API မရှိပါ</>
+            ) : (
+              <>No matches for &ldquo;<span className="font-mono">{searchQuery}</span>&rdquo;</>
+            )}
           </div>
           <button
             type="button"

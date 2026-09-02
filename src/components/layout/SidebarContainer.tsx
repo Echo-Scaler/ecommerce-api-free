@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import { X } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface SidebarContainerProps {
   isOpen: boolean;
@@ -12,6 +13,8 @@ export const SidebarContainer: React.FC<SidebarContainerProps> = ({
   onClose,
   children
 }) => {
+  const { isMyanmar } = useLanguage();
+
   return (
     <>
       {/*
@@ -28,7 +31,7 @@ export const SidebarContainer: React.FC<SidebarContainerProps> = ({
 
       <aside className={`app-sidebar ${isOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-mobile-header">
-          <span className="sidebar-mobile-title">API Explorer Navigation</span>
+          <span className="sidebar-mobile-title">{isMyanmar ? 'API လမ်းညွှန် မီနူး' : 'API Explorer Navigation'}</span>
           <button
             className="sidebar-close-btn"
             onClick={onClose}

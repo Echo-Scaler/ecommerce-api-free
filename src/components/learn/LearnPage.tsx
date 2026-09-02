@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { LEARN_LESSONS } from '../../data/learn-lessons';
 import { executeApiRequest } from '../../lib/api-client';
 import { ApiResponseExecution } from '../../types/api';
+import { useLanguage } from '../../context/LanguageContext';
 import { 
   BookOpen, 
   Code2, 
@@ -29,6 +30,7 @@ interface LearnPageProps {
 const STORAGE_PROGRESS_KEY = 'ecommerce_api_learn_completed_lessons';
 
 export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => {
+  const { t, isMyanmar } = useLanguage();
   const [selectedLessonId, setSelectedLessonId] = useState<string>(LEARN_LESSONS[0].id);
   const [activeTab, setActiveTab] = useState<'theory' | 'exercise' | 'quiz'>('theory');
   
@@ -149,27 +151,25 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
         <div className="learn-hero-left">
           <div className="learn-hero-pill">
             <Sparkles size={14} />
-            <span>Interactive REST Academy</span>
+            <span>{t('learnHeroBadge')}</span>
           </div>
-          <h1 className="learn-hero-title">REST API Learning Center</h1>
-          <p className="learn-hero-subtitle">
-            Master professional e-commerce API design, authentication, state machines, and rate limiting with hands-on live exercises and quizzes.
-          </p>
+          <h1 className="learn-hero-title">{t('learnHeroTitle')}</h1>
+          <p className="learn-hero-subtitle">{t('learnHeroSubtitle')}</p>
         </div>
 
         <div className="learn-hero-progress-card">
           <div className="progress-card-top">
-            <span className="progress-card-label">Course Progress</span>
-            <span className="progress-card-badge">{completedLessonIds.length} / {LEARN_LESSONS.length} Completed</span>
+            <span className="progress-card-label">{t('learnProgressLabel')}</span>
+            <span className="progress-card-badge">{completedLessonIds.length} / {LEARN_LESSONS.length} {isMyanmar ? 'ပြီးစီးပါပြီ' : 'Completed'}</span>
           </div>
           <div className="progress-bar-track">
             <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }} />
           </div>
           <div className="progress-card-footer">
-            <span>{progressPercent}% Mastered</span>
+            <span>{progressPercent}% {isMyanmar ? 'တတ်မြောက်ပြီး' : 'Mastered'}</span>
             {progressPercent === 100 && (
               <span className="all-completed-badge">
-                <Award size={14} /> Certified
+                <Award size={14} /> {isMyanmar ? 'လက်မှတ်ရရှိပြီး' : 'Certified'}
               </span>
             )}
           </div>
@@ -181,8 +181,8 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
         {/* Left Sidebar: Modules & Lessons */}
         <aside className="learn-modules-sidebar">
           <div className="modules-sidebar-header">
-            <h3>Curriculum Modules</h3>
-            <span className="sidebar-count">{LEARN_LESSONS.length} Lessons</span>
+            <h3>{t('learnCurriculumTitle')}</h3>
+            <span className="sidebar-count">{LEARN_LESSONS.length} {isMyanmar ? 'သင်ခန်းစာ' : 'Lessons'}</span>
           </div>
 
           <nav className="lesson-nav-list">
@@ -202,8 +202,8 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
                   </div>
                   <div className="lesson-item-text-col">
                     <div className="lesson-item-meta">
-                      <span className="module-tag">Module {lesson.moduleNum}</span>
-                      <span className="time-tag"><Clock size={11} /> {lesson.durationMin}m</span>
+                      <span className="module-tag">{isMyanmar ? `မော်ဂျူး ${lesson.moduleNum}` : `Module ${lesson.moduleNum}`}</span>
+                      <span className="time-tag"><Clock size={11} /> {lesson.durationMin}{isMyanmar ? 'မိနစ်' : 'm'}</span>
                     </div>
                     <div className="lesson-item-title">{lesson.title}</div>
                   </div>
@@ -225,11 +225,11 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
           {/* Lesson Header */}
           <div className="lesson-view-header">
             <div className="lesson-view-meta">
-              <span className="module-pill">Module {currentLesson.moduleNum} of {LEARN_LESSONS.length}</span>
-              <span className="duration-pill"><Clock size={12} /> ~{currentLesson.durationMin} minutes</span>
+              <span className="module-pill">{isMyanmar ? `မော်ဂျူး ${currentLesson.moduleNum} / ${LEARN_LESSONS.length}` : `Module ${currentLesson.moduleNum} of ${LEARN_LESSONS.length}`}</span>
+              <span className="duration-pill"><Clock size={12} /> ~{currentLesson.durationMin} {isMyanmar ? 'မိနစ်' : 'minutes'}</span>
               {isLessonCompleted && (
                 <span className="completed-pill">
-                  <CheckCircle2 size={13} /> Completed
+                  <CheckCircle2 size={13} /> {isMyanmar ? 'ပြီးစီးပြီး' : 'Completed'}
                 </span>
               )}
             </div>
@@ -244,7 +244,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
                 onClick={() => setActiveTab('theory')}
               >
                 <BookOpen size={16} />
-                <span>📖 Theory & Architecture</span>
+                <span>{t('learnTabTheory')}</span>
               </button>
               <button
                 type="button"
@@ -252,7 +252,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
                 onClick={() => setActiveTab('exercise')}
               >
                 <Code2 size={16} />
-                <span>✏️ Live Hands-on Exercise</span>
+                <span>{t('learnTabExercise')}</span>
               </button>
               <button
                 type="button"
@@ -260,7 +260,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
                 onClick={() => setActiveTab('quiz')}
               >
                 <BrainCircuit size={16} />
-                <span>🧠 Knowledge Quiz ({currentLesson.quiz.questions.length})</span>
+                <span>{isMyanmar ? `🧠 ဉာဏ်စမ်း စစ်ဆေးမှု (${currentLesson.quiz.questions.length})` : `🧠 Knowledge Quiz (${currentLesson.quiz.questions.length})`}</span>
               </button>
             </div>
           </div>
@@ -317,7 +317,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
                   className="btn-next-tab"
                   onClick={() => setActiveTab('exercise')}
                 >
-                  <span>Ready for Live Exercise</span>
+                  <span>{t('learnBtnReadyExercise')}</span>
                   <ArrowRight size={16} />
                 </button>
               </div>
@@ -330,11 +330,11 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
               <div className="exercise-card">
                 <div className="exercise-header">
                   <div className="exercise-title-row">
-                    <span className="exercise-badge">Hands-on Challenge</span>
+                    <span className="exercise-badge">{t('learnChallengeTitle')}</span>
                     <h3 className="exercise-title">{currentLesson.exercise.title}</h3>
                   </div>
                   <div className="exercise-goal-box">
-                    <strong>Goal:</strong> {currentLesson.exercise.goal}
+                    <strong>{t('learnGoalLabel')}</strong> {currentLesson.exercise.goal}
                   </div>
                 </div>
 
@@ -353,21 +353,21 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
                   <div className="exercise-input-group">
                     <label className="exercise-input-label">
                       <ShieldCheck size={14} className="text-emerald-500" />
-                      <span>Authorization Header (Bearer Token):</span>
+                      <span>{isMyanmar ? 'စစ်မှန်ကြောင်း အတည်ပြု တိုကင် (Bearer Token):' : 'Authorization Header (Bearer Token):'}</span>
                     </label>
                     <input
                       type="text"
                       className="exercise-text-input"
                       value={exerciseToken}
                       onChange={(e) => setExerciseToken(e.target.value)}
-                      placeholder="Enter Bearer JWT token..."
+                      placeholder={isMyanmar ? 'Bearer JWT တိုကင် ရိုက်ထည့်ပါ...' : 'Enter Bearer JWT token...'}
                     />
                   </div>
                 )}
 
                 {currentLesson.exercise.defaultQueryParams && (
                   <div className="exercise-params-preview">
-                    <span className="params-label">Query Parameters:</span>
+                    <span className="params-label">{isMyanmar ? 'Query ပါရာမီတာများ:' : 'Query Parameters:'}</span>
                     <div className="params-tags">
                       {Object.entries(currentLesson.exercise.defaultQueryParams).map(([k, v]) => (
                         <span key={k} className="param-tag"><code>{k}</code> = <code>{v}</code></span>
@@ -387,12 +387,12 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
                     {isRunningExercise ? (
                       <>
                         <span className="spinner" />
-                        <span>Executing against API...</span>
+                        <span>{t('learnRunningBtn')}</span>
                       </>
                     ) : (
                       <>
                         <Play size={16} className="fill-current" />
-                        <span>Run Live Request</span>
+                        <span>{t('learnRunLiveBtn')}</span>
                       </>
                     )}
                   </button>
@@ -402,10 +402,10 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
                       type="button"
                       className="btn-open-console"
                       onClick={() => onNavigateToConsole()}
-                      title="Open full interactive tester console"
+                      title={isMyanmar ? 'ကွန်ဆိုးလ်အပြည့်တွင် ဖွင့်မည်' : 'Open full interactive tester console'}
                     >
                       <ExternalLink size={14} />
-                      <span>Open in Full Tester Console</span>
+                      <span>{t('learnOpenFullConsoleBtn')}</span>
                     </button>
                   )}
                 </div>
@@ -428,7 +428,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
                         onClick={handleCopyResponse}
                       >
                         {copiedResponse ? <Check size={14} /> : <Copy size={14} />}
-                        <span>{copiedResponse ? 'Copied' : 'Copy JSON'}</span>
+                        <span>{copiedResponse ? (isMyanmar ? 'ကူးယူပြီး' : 'Copied') : (isMyanmar ? 'JSON ကူးယူမည်' : 'Copy JSON')}</span>
                       </button>
                     </div>
 
@@ -450,7 +450,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
                   className="btn-next-tab"
                   onClick={() => setActiveTab('quiz')}
                 >
-                  <span>Test Your Knowledge in Quiz</span>
+                  <span>{t('learnBtnReadyQuiz')}</span>
                   <ArrowRight size={16} />
                 </button>
               </div>
@@ -462,9 +462,9 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
             <div className="lesson-tab-content quiz-content">
               <div className="quiz-card">
                 <div className="quiz-card-header">
-                  <div className="quiz-header-badge">Module Assessment</div>
+                  <div className="quiz-header-badge">{t('learnAssessmentTitle')}</div>
                   <h3 className="quiz-card-title">{currentLesson.quiz.title}</h3>
-                  <p className="quiz-card-desc">Answer all questions correctly to test your understanding of this module.</p>
+                  <p className="quiz-card-desc">{t('learnAssessmentDesc')}</p>
                 </div>
 
                 <div className="quiz-questions-list">
@@ -512,7 +512,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
 
                         {quizSubmitted && (
                           <div className={`quiz-explanation-box ${isCorrect ? 'explanation-correct' : 'explanation-incorrect'}`}>
-                            <strong>{isCorrect ? '✓ Correct!' : '✗ Incorrect:'}</strong> {q.explanation}
+                            <strong>{isCorrect ? (isMyanmar ? '✓ မှန်ကန်ပါသည်!' : '✓ Correct!') : (isMyanmar ? '✗ မှားယွင်းနေပါသည်:' : '✗ Incorrect:')}</strong> {q.explanation}
                           </div>
                         )}
                       </div>
@@ -530,20 +530,20 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
                       disabled={Object.keys(selectedAnswers).length < currentLesson.quiz.questions.length}
                     >
                       <BrainCircuit size={16} />
-                      <span>Check My Answers ({Object.keys(selectedAnswers).length} / {currentLesson.quiz.questions.length})</span>
+                      <span>{isMyanmar ? `အဖြေများ စစ်ဆေးမည် (${Object.keys(selectedAnswers).length} / ${currentLesson.quiz.questions.length})` : `Check My Answers (${Object.keys(selectedAnswers).length} / ${currentLesson.quiz.questions.length})`}</span>
                     </button>
                   ) : (
                     <div className="quiz-score-banner">
                       <div className="score-badge-col">
                         <span className={`score-badge ${scoreResult.passed ? 'score-pass' : 'score-retry'}`}>
-                          {scoreResult.correct} / {scoreResult.total} Correct ({Math.round((scoreResult.correct / scoreResult.total) * 100)}%)
+                          {isMyanmar ? `${scoreResult.correct} / ${scoreResult.total} ခု မှန်ကန်သည် (${Math.round((scoreResult.correct / scoreResult.total) * 100)}%)` : `${scoreResult.correct} / ${scoreResult.total} Correct (${Math.round((scoreResult.correct / scoreResult.total) * 100)}%)`}
                         </span>
                       </div>
                       <div className="score-msg-col">
                         {scoreResult.passed ? (
-                          <span>🎉 Outstanding! You have completely mastered this lesson!</span>
+                          <span>{isMyanmar ? '🎉 ထူးချွန်ပါသည်! သင်သည် ဤသင်ခန်းစာကို အပြည့်အဝ တတ်မြောက်သွားပါပြီ!' : '🎉 Outstanding! You have completely mastered this lesson!'}</span>
                         ) : (
-                          <span>Keep practicing! Review the explanations above and try again.</span>
+                          <span>{isMyanmar ? 'ဆက်လက် လေ့ကျင့်ပါ! အထက်ပါ ရှင်းလင်းချက်များကို ပြန်လည်ဖတ်ရှုပြီး ထပ်မံကြိုးစားကြည့်ပါ။' : 'Keep practicing! Review the explanations above and try again.'}</span>
                         )}
                       </div>
                       <button
@@ -555,7 +555,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
                         }}
                       >
                         <RotateCcw size={14} />
-                        <span>Retry Quiz</span>
+                        <span>{t('learnRetryQuizBtn')}</span>
                       </button>
                     </div>
                   )}
@@ -577,7 +577,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
               }}
             >
               <ArrowLeft size={16} />
-              <span>Previous Lesson</span>
+              <span>{t('learnBtnPrevLesson')}</span>
             </button>
 
             <button
@@ -586,7 +586,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
               onClick={() => toggleCompleteLesson(currentLesson.id)}
             >
               <CheckCircle2 size={16} />
-              <span>{isLessonCompleted ? 'Completed ✓' : 'Mark as Complete'}</span>
+              <span>{isLessonCompleted ? t('learnBtnCompletedDone') : t('learnBtnMarkComplete')}</span>
             </button>
 
             <button
@@ -599,7 +599,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
                 }
               }}
             >
-              <span>Next Lesson</span>
+              <span>{t('learnBtnNextLesson')}</span>
               <ArrowRight size={16} />
             </button>
           </div>

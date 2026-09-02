@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ApiResponseExecution } from '../../types/api';
 import { parseApiError } from '../../lib/api-errors';
 import { ApiErrorDisplay } from './ApiErrorDisplay';
+import { useLanguage } from '../../context/LanguageContext';
 import { 
   Check, 
   Copy, 
@@ -23,6 +24,7 @@ export const ApiResponseViewer: React.FC<ApiResponseViewerProps> = ({
   response,
   isLoading = false
 }) => {
+  const { isMyanmar } = useLanguage();
   const [activeTab, setActiveTab] = useState<'body' | 'headers' | 'diagnostics'>('body');
   const [copied, setCopied] = useState(false);
 
@@ -32,8 +34,8 @@ export const ApiResponseViewer: React.FC<ApiResponseViewerProps> = ({
       <div className="response-viewer-card loading-state">
         <div className="response-loading-spinner-wrapper">
           <div className="response-loading-spinner" />
-          <div className="response-loading-title">Executing API Request...</div>
-          <div className="response-loading-sub">Connecting to server and awaiting response payload</div>
+          <div className="response-loading-title">{isMyanmar ? 'API Request ပို့ဆောင်နေပါသည်...' : 'Executing API Request...'}</div>
+          <div className="response-loading-sub">{isMyanmar ? 'ဆာဗာသို့ ချိတ်ဆက်၍ တုံ့ပြန်မှုရလဒ်ကို စောင့်ဆိုင်းနေပါသည်' : 'Connecting to server and awaiting response payload'}</div>
         </div>
       </div>
     );
@@ -44,9 +46,17 @@ export const ApiResponseViewer: React.FC<ApiResponseViewerProps> = ({
     return (
       <div className="response-viewer-card empty-state">
         <Terminal size={36} className="response-empty-icon" />
-        <div className="response-empty-title">Response Viewer Ready</div>
+        <div className="response-empty-title">{isMyanmar ? 'တုံ့ပြန်မှု စောင့်ကြည့်စနစ် အသင့်ဖြစ်ပါပြီ' : 'Response Viewer Ready'}</div>
         <div className="response-empty-sub">
-          Click <strong>&ldquo;Send Request&rdquo;</strong> above to execute this endpoint and inspect live HTTP responses, status codes, latency, and payload headers.
+          {isMyanmar ? (
+            <>
+              ဤ Endpoint ကို စမ်းသပ်ရန် အပေါ်ရှိ <strong>&ldquo;Request ပို့မည်&rdquo;</strong> ခလုတ်ကို နှိပ်၍ HTTP တုံ့ပြန်မှု၊ Status ကုဒ်၊ ကြာချိန်နှင့် Headers များကို စစ်ဆေးပါ။
+            </>
+          ) : (
+            <>
+              Click <strong>&ldquo;Send Request&rdquo;</strong> above to execute this endpoint and inspect live HTTP responses, status codes, latency, and payload headers.
+            </>
+          )}
         </div>
       </div>
     );
@@ -105,17 +115,17 @@ export const ApiResponseViewer: React.FC<ApiResponseViewerProps> = ({
               ) : (
                 <CheckCircle2 size={14} />
               )}
-              <span>Status: {response.status} {response.statusText}</span>
+              <span>{isMyanmar ? 'အခြေအနေ:' : 'Status:'} {response.status} {response.statusText}</span>
             </span>
 
             <span className="response-latency-badge">
               <Clock size={13} />
-              <span>Time: {response.durationMs} ms</span>
+              <span>{isMyanmar ? 'ကြာချိန်:' : 'Time:'} {response.durationMs} ms</span>
             </span>
 
             <span className="response-size-badge">
               <Layers size={13} />
-              <span>Size: {payloadSizeKb} KB</span>
+              <span>{isMyanmar ? 'ပမာဏ:' : 'Size:'} {payloadSizeKb} KB</span>
             </span>
           </div>
         </div>
@@ -126,17 +136,17 @@ export const ApiResponseViewer: React.FC<ApiResponseViewerProps> = ({
             type="button"
             className="response-action-btn"
             onClick={handleCopyJson}
-            title="Copy JSON Response to Clipboard"
+            title={isMyanmar ? 'JSON တုံ့ပြန်မှုကို ကူးယူမည်' : 'Copy JSON Response to Clipboard'}
           >
             {copied ? (
               <>
                 <Check size={14} className="text-emerald-400" />
-                <span className="text-emerald-400">Copied!</span>
+                <span className="text-emerald-400">{isMyanmar ? 'ကူးယူပြီးပါပြီ!' : 'Copied!'}</span>
               </>
             ) : (
               <>
                 <Copy size={14} />
-                <span>Copy JSON</span>
+                <span>{isMyanmar ? 'JSON ကူးယူမည်' : 'Copy JSON'}</span>
               </>
             )}
           </button>
@@ -145,10 +155,10 @@ export const ApiResponseViewer: React.FC<ApiResponseViewerProps> = ({
             type="button"
             className="response-action-btn"
             onClick={handleDownloadJson}
-            title="Download Response as .json File"
+            title={isMyanmar ? '.json ဖိုင်အဖြစ် ဒေါင်းလုဒ်ဆွဲမည်' : 'Download Response as .json File'}
           >
             <Download size={14} />
-            <span>Download</span>
+            <span>{isMyanmar ? 'ဒေါင်းလုဒ်' : 'Download'}</span>
           </button>
         </div>
       </div>
@@ -161,7 +171,7 @@ export const ApiResponseViewer: React.FC<ApiResponseViewerProps> = ({
             className={`response-view-tab ${activeTab === 'body' ? 'active' : ''}`}
             onClick={() => setActiveTab('body')}
           >
-            <span>Response Body</span>
+            <span>{isMyanmar ? 'တုံ့ပြန်မှု ရလဒ် (Body)' : 'Response Body'}</span>
             <span className="tab-pill-count font-mono">{response.status}</span>
           </button>
 
@@ -170,7 +180,7 @@ export const ApiResponseViewer: React.FC<ApiResponseViewerProps> = ({
             className={`response-view-tab ${activeTab === 'headers' ? 'active' : ''}`}
             onClick={() => setActiveTab('headers')}
           >
-            <span>Headers</span>
+            <span>{isMyanmar ? 'Headers များ' : 'Headers'}</span>
             <span className="tab-pill-count font-mono">{headerEntries.length}</span>
           </button>
 
@@ -181,7 +191,7 @@ export const ApiResponseViewer: React.FC<ApiResponseViewerProps> = ({
               onClick={() => setActiveTab('diagnostics')}
             >
               <Activity size={14} />
-              <span>Error Diagnostics</span>
+              <span>{isMyanmar ? 'အမှား ရှာဖွေစစ်ဆေးချက်' : 'Error Diagnostics'}</span>
             </button>
           )}
         </div>
@@ -219,8 +229,8 @@ export const ApiResponseViewer: React.FC<ApiResponseViewerProps> = ({
             <table className="response-headers-table">
               <thead>
                 <tr>
-                  <th>Header Key</th>
-                  <th>Value</th>
+                  <th>{isMyanmar ? 'Header အမည်' : 'Header Key'}</th>
+                  <th>{isMyanmar ? 'တန်ဖိုး' : 'Value'}</th>
                 </tr>
               </thead>
               <tbody>
@@ -237,7 +247,7 @@ export const ApiResponseViewer: React.FC<ApiResponseViewerProps> = ({
               </tbody>
             </table>
           ) : (
-            <div className="response-empty-headers">No custom response headers returned.</div>
+            <div className="response-empty-headers">{isMyanmar ? 'သီးခြား response headers မရှိပါ။' : 'No custom response headers returned.'}</div>
           )}
         </div>
       )}

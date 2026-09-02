@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ApiEndpoint } from '../../types/api';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { generateCurlSnippet, generateFetchSnippet, generateAxiosSnippet } from '../../lib/code-generator';
 import { CodeBlock } from '../common/CodeBlock';
 import { Code, Terminal, FileCode, ShieldCheck } from 'lucide-react';
@@ -11,6 +12,7 @@ interface CodeExamplesDocProps {
 
 export const CodeExamplesDoc: React.FC<CodeExamplesDocProps> = ({ endpoint }) => {
   const { token } = useAuth();
+  const { isMyanmar } = useLanguage();
   const [activeTab, setActiveTab] = useState<'fetch' | 'axios' | 'curl'>('curl');
   const [includeToken, setIncludeToken] = useState(true);
 
@@ -25,7 +27,7 @@ export const CodeExamplesDoc: React.FC<CodeExamplesDocProps> = ({ endpoint }) =>
       <div className="doc-section-header-row">
         <div className="code-examples-heading-group">
           <Code size={18} className="text-blue-400" />
-          <h2 className="doc-section-heading">Code Examples</h2>
+          <h2 className="doc-section-heading">{isMyanmar ? 'ကုဒ်ဖြင့် ချိတ်ဆက်မှု နမူနာများ' : 'Code Examples'}</h2>
         </div>
 
         {endpoint.authRequired && token && (
@@ -36,7 +38,7 @@ export const CodeExamplesDoc: React.FC<CodeExamplesDocProps> = ({ endpoint }) =>
               onChange={(e) => setIncludeToken(e.target.checked)}
             />
             <ShieldCheck size={13} className="text-emerald-400" />
-            <span>Include Active Token</span>
+            <span>{isMyanmar ? 'လက်ရှိ တိုကင်ကို ထည့်သွင်းမည်' : 'Include Active Token'}</span>
           </label>
         )}
       </div>

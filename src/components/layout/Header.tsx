@@ -28,7 +28,7 @@ export const Header: React.FC<HeaderProps> = ({
   onSelectView 
 }) => {
   const { token, openAuthModal } = useAuth();
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage, t, isMyanmar } = useLanguage();
   const [copiedKey, setCopiedKey] = React.useState(false);
 
   const handleCopyKey = async () => {
@@ -99,22 +99,22 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <GraduationCap size={15} />
             <span>{t('navLearn')}</span>
-            <span className="nav-tab-badge">Interactive</span>
+            <span className="nav-tab-badge">{isMyanmar ? 'တိုက်ရိုက်' : 'Interactive'}</span>
           </button>
         </nav>
 
         <div className="header-right">
           {/* Active API Key Pill (like freecountries.vercel.app) */}
-          <div className="api-key-pill hide-on-tablet" title="Active API Authentication Key">
+          <div className="api-key-pill hide-on-tablet" title={isMyanmar ? 'အသုံးပြုနေသော API Authentication Key' : 'Active API Authentication Key'}>
             <span className="key-dot" />
             <code>{token ? (token.length > 15 ? `${token.substring(0, 13)}...` : token) : 'demo-key-12345'}</code>
             <button 
               type="button" 
               className="key-copy-btn" 
               onClick={handleCopyKey}
-              title="Copy Active API Key"
+              title={isMyanmar ? 'API Key ကို ကူးယူမည်' : 'Copy Active API Key'}
             >
-              {copiedKey ? '✓' : 'Copy'}
+              {copiedKey ? '✓' : (isMyanmar ? 'ကူးယူ' : 'Copy')}
             </button>
           </div>
 
@@ -122,9 +122,9 @@ export const Header: React.FC<HeaderProps> = ({
             type="button" 
             className="auth-header-btn unauthenticated" 
             onClick={openAuthModal}
-            title="Generate custom key or select presets"
+            title={isMyanmar ? 'တိုကင် သတ်မှတ်ရန် သို့မဟုတ် Presets ရွေးချယ်ရန်' : 'Generate custom key or select presets'}
           >
-            <span>⚡ Key / Presets</span>
+            <span>⚡ {isMyanmar ? 'တိုကင် / Presets' : 'Key / Presets'}</span>
           </button>
 
           <div className="header-divider hide-on-mobile" />
@@ -135,7 +135,7 @@ export const Header: React.FC<HeaderProps> = ({
               type="button"
               className="header-quick-tester-btn"
               onClick={() => onSelectView('console')}
-              title="Open Interactive API Console"
+              title={isMyanmar ? 'တိုက်ရိုက် API ကွန်ဆိုးလ်ကို ဖွင့်မည်' : 'Open Interactive API Console'}
             >
               <Sparkles size={13} />
               <span>{t('navConsole')}</span>
@@ -206,7 +206,7 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <GraduationCap size={14} />
           <span>{t('navLearn')}</span>
-          <span className="nav-tab-badge" style={{ fontSize: '0.6rem', padding: '0.1rem 0.35rem' }}>Live</span>
+          <span className="nav-tab-badge" style={{ fontSize: '0.6rem', padding: '0.1rem 0.35rem' }}>{isMyanmar ? 'တိုက်ရိုက်' : 'Live'}</span>
         </button>
       </div>
     </>

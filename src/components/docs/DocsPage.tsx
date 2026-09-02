@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { API_MODULES } from '../../data/api-modules';
+import { useLanguage } from '../../context/LanguageContext';
 import { 
   BookOpen, 
   Key, 
@@ -7,9 +8,9 @@ import {
   Check, 
   Layers, 
   ArrowUpRight, 
-  Search,
-  Sparkles,
-  CheckCircle2
+  Search, 
+  Sparkles, 
+  CheckCircle2 
 } from 'lucide-react';
 
 interface DocsPageProps {
@@ -17,19 +18,20 @@ interface DocsPageProps {
 }
 
 export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
+  const { t, isMyanmar } = useLanguage();
   const [activeSection, setActiveSection] = useState<string>('overview');
   const [copiedCodeId, setCopiedCodeId] = useState<string | null>(null);
   const [docsSearchQuery, setDocsSearchQuery] = useState<string>('');
 
   const docSections = [
-    { id: 'overview', title: '1. API Overview' },
-    { id: 'authentication', title: '2. Authentication & Roles' },
-    { id: 'endpoints', title: '3. Complete Endpoint Reference' },
-    { id: 'query-params', title: '4. Query Options & Filters' },
-    { id: 'postman-guide', title: '5. Postman & Code SDKs' },
-    { id: 'status-codes', title: '6. Status & Error Codes' },
-    { id: 'rate-limiting', title: '7. Rate Limiting Guide' },
-    { id: 'best-practices', title: '8. Best Practices' }
+    { id: 'overview', title: t('docsSecOverview') },
+    { id: 'authentication', title: t('docsSecAuth') },
+    { id: 'endpoints', title: t('docsSecEndpoints') },
+    { id: 'query-params', title: t('docsSecQueryParams') },
+    { id: 'postman-guide', title: t('docsSecSdks') },
+    { id: 'status-codes', title: t('docsSecStatusCodes') },
+    { id: 'rate-limiting', title: t('docsSecRateLimit') },
+    { id: 'best-practices', title: t('docsSecBestPractices') }
   ];
 
   // ScrollSpy listener attached to .app-main-content and window
@@ -97,28 +99,26 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
         <div className="docs-hero-left">
           <div className="docs-hero-pill">
             <BookOpen size={14} />
-            <span>Developer Reference Guide</span>
+            <span>{t('docsHeroBadge')}</span>
           </div>
-          <h1 className="docs-hero-title">E-Commerce REST API Documentation</h1>
-          <p className="docs-hero-subtitle">
-            Complete technical specification for 8 e-commerce REST modules, 30 endpoints, Bearer authorization, 50-item mock datasets, query pagination, and rate limit quotas.
-          </p>
+          <h1 className="docs-hero-title">{t('docsHeroTitle')}</h1>
+          <p className="docs-hero-subtitle">{t('docsHeroSubtitle')}</p>
         </div>
 
         <div className="docs-hero-meta-card">
           <div className="docs-meta-item">
             <span className="meta-val">8</span>
-            <span className="meta-lbl">API Modules</span>
+            <span className="meta-lbl">{isMyanmar ? 'API ကဏ္ဍများ' : 'API Modules'}</span>
           </div>
           <div className="docs-meta-divider" />
           <div className="docs-meta-item">
             <span className="meta-val">30</span>
-            <span className="meta-lbl">Endpoints</span>
+            <span className="meta-lbl">{isMyanmar ? 'Endpoints' : 'Endpoints'}</span>
           </div>
           <div className="docs-meta-divider" />
           <div className="docs-meta-item">
             <span className="meta-val">50+</span>
-            <span className="meta-lbl">Items / List</span>
+            <span className="meta-lbl">{isMyanmar ? 'ဒေတာ / စာရင်း' : 'Items / List'}</span>
           </div>
         </div>
       </div>
@@ -129,7 +129,7 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
         <nav className="docs-sticky-sidebar">
           <div className="sidebar-index-title">
             <Layers size={16} />
-            <span>Documentation Index</span>
+            <span>{t('docsIndexTitle')}</span>
           </div>
 
           <div className="docs-nav-links-list">
@@ -147,14 +147,14 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
 
           <div className="sidebar-cta-card">
             <Sparkles size={16} className="text-emerald-500" />
-            <h4>Live Interactive Tester</h4>
-            <p>Send real requests and inspect headers directly in the browser.</p>
+            <h4>{t('docsLiveTesterTitle')}</h4>
+            <p>{t('docsLiveTesterDesc')}</p>
             <button
               type="button"
               className="btn-sidebar-console"
               onClick={() => onNavigateToConsole && onNavigateToConsole()}
             >
-              <span>Launch API Console</span>
+              <span>{t('docsLaunchConsoleBtn')}</span>
               <ArrowUpRight size={14} />
             </button>
           </div>
@@ -164,13 +164,15 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
         <main className="docs-main-content">
           {/* 1. API Overview */}
           <section id="overview" className="docs-section-card">
-            <h2 className="section-title">1. API Overview & Architecture</h2>
+            <h2 className="section-title">{t('docsSecOverview')}</h2>
             <p className="section-intro">
-              The <strong>E-Commerce REST API</strong> is a comprehensive developer API built to power modern retail applications, storefronts, and warehouse workflows. All endpoints return formatted JSON data and follow RESTful resource semantics.
+              {isMyanmar 
+                ? 'အီးကောမတ်စ် REST API သည် ခေတ်မီ အရောင်းဆိုင် အက်ပ်များ၊ အွန်လိုင်းစတိုးများနှင့် ဂိုဒေါင်လုပ်ငန်းစဉ်များကို ချိတ်ဆက်ရန် တည်ဆောက်ထားသော ပြည့်စုံသည့် API ဖြစ်သည်။ Endpoints အားလုံးသည် ပုံစံတကျ JSON ဒေတာများကိုသာ ပြန်လည်ပေးပို့ပြီး RESTful စံနှုန်းများကို လိုက်နာထားပါသည်။'
+                : 'The E-Commerce REST API is a comprehensive developer API built to power modern retail applications, storefronts, and warehouse workflows. All endpoints return formatted JSON data and follow RESTful resource semantics.'}
             </p>
 
             <div className="base-url-box">
-              <span className="base-url-label">Production & Sandbox Base URL:</span>
+              <span className="base-url-label">{isMyanmar ? 'ပင်မ Base URL:' : 'Production & Sandbox Base URL:'}</span>
               <div className="base-url-row">
                 <code className="base-url-code">https://api.ecommerce.example.com/api/v1</code>
                 <button
@@ -186,53 +188,67 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
             <div className="feature-grid-3">
               <div className="feature-mini-card">
                 <div className="feature-mini-icon bg-emerald-100 text-emerald-700">📦</div>
-                <h4>50-Item Test Datasets</h4>
-                <p>Every collection endpoint returns 50 realistic products, categories, orders, customers, and cart items.</p>
+                <h4>{isMyanmar ? 'နမူနာ ဒေတာ ၅၀ စီ ပါဝင်မှု' : '50-Item Test Datasets'}</h4>
+                <p>
+                  {isMyanmar 
+                    ? 'Collection endpoint တိုင်းတွင် လက်တွေ့ကျသော ကုန်ပစ္စည်း၊ ကဏ္ဍ၊ အမှာစာ၊ ဝယ်ယူသူနှင့် ခြင်းတောင်းပစ္စည်း ၅၀ စီ ပြန်လည်ပေးပို့ပါသည်။'
+                    : 'Every collection endpoint returns 50 realistic products, categories, orders, customers, and cart items.'}
+                </p>
               </div>
               <div className="feature-mini-card">
                 <div className="feature-mini-icon bg-blue-100 text-blue-700">🔐</div>
-                <h4>Bearer Authentication</h4>
-                <p>Role-based access guards (Admin, Customer, Guest) with JWT token verification.</p>
+                <h4>{isMyanmar ? 'Bearer အတည်ပြုချက် စနစ်' : 'Bearer Authentication'}</h4>
+                <p>
+                  {isMyanmar 
+                    ? 'JWT တိုကင် စစ်ဆေးမှုဖြင့် အခန်းကဏ္ဍအလိုက် ခွင့်ပြုချက်များ (Admin, Customer, Guest) ကို ထိန်းချုပ်ထားပါသည်။'
+                    : 'Role-based access guards (Admin, Customer, Guest) with JWT token verification.'}
+                </p>
               </div>
               <div className="feature-mini-card">
                 <div className="feature-mini-icon bg-amber-100 text-amber-700">⚡</div>
-                <h4>Dynamic Query Filters</h4>
-                <p>Full support for page, limit, price range filtering, full-text search, and multi-field sorting.</p>
+                <h4>{isMyanmar ? 'Query စစ်ထုတ်မှု စနစ်' : 'Dynamic Query Filters'}</h4>
+                <p>
+                  {isMyanmar 
+                    ? 'စာမျက်နှာ (page)၊ အရေအတွက် (limit)၊ ဈေးနှုန်း အကွာအဝေး၊ စာသားရှာဖွေခြင်းနှင့် စီစဉ်ခြင်းများကို အပြည့်အဝ ထောက်ပံ့ပေးပါသည်။'
+                    : 'Full support for page, limit, price range filtering, full-text search, and multi-field sorting.'}
+                </p>
               </div>
             </div>
           </section>
 
           {/* 2. Authentication */}
           <section id="authentication" className="docs-section-card">
-            <h2 className="section-title">2. Authentication & Authorization</h2>
+            <h2 className="section-title">{t('docsSecAuth')}</h2>
             <p className="section-intro">
-              Protected endpoints require authentication via an HTTP <code>Authorization: Bearer &lt;token&gt;</code> header.
+              {isMyanmar 
+                ? 'လုံခြုံရေးတပ်ထားသော Endpoints များကို အသုံးပြုရန် HTTP Authorization: Bearer <token> header ဖြင့် စစ်မှန်ကြောင်း အတည်ပြုရန် လိုအပ်ပါသည်။'
+                : 'Protected endpoints require authentication via an HTTP Authorization: Bearer <token> header.'}
             </p>
 
             <div className="table-responsive">
               <table className="docs-table">
                 <thead>
                   <tr>
-                    <th>Role</th>
-                    <th>Permissions</th>
-                    <th>Sample Bearer Token</th>
+                    <th>{isMyanmar ? 'အခန်းကဏ္ဍ (Role)' : 'Role'}</th>
+                    <th>{isMyanmar ? 'လုပ်ပိုင်ခွင့်များ (Permissions)' : 'Permissions'}</th>
+                    <th>{isMyanmar ? 'နမူနာ Bearer တိုကင်' : 'Sample Bearer Token'}</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td><strong>Admin</strong></td>
-                    <td>Full CRUD access to Catalog, Categories, Inventory adjustments, and Order statuses.</td>
+                    <td>{isMyanmar ? 'ကုန်ပစ္စည်းစာရင်း၊ ကဏ္ဍများ၊ စတော့ချိန်ညှိမှုနှင့် အမှာစာအခြေအနေများကို အပြည့်အဝ စီမံခန့်ခွဲနိုင်ခြင်း (Full CRUD)။' : 'Full CRUD access to Catalog, Categories, Inventory adjustments, and Order statuses.'}</td>
                     <td><code>Bearer eyJhbGciOi...admin-token</code></td>
                   </tr>
                   <tr>
                     <td><strong>Customer</strong></td>
-                    <td>Manage Shopping Cart, Place Orders, view Addresses, and update Profile.</td>
+                    <td>{isMyanmar ? 'ခြင်းတောင်းစီမံခြင်း၊ အမှာစာတင်ခြင်း၊ လိပ်စာများနှင့် ကိုယ်ရေးအချက်အလက်များကို ကြည့်ရှုပြင်ဆင်နိုင်ခြင်း။' : 'Manage Shopping Cart, Place Orders, view Addresses, and update Profile.'}</td>
                     <td><code>Bearer eyJhbGciOi...customer-token</code></td>
                   </tr>
                   <tr>
                     <td><strong>Public / Guest</strong></td>
-                    <td>Read-only access to Products, Categories, and Search suggestions.</td>
-                    <td><em>No Header Required</em></td>
+                    <td>{isMyanmar ? 'ကုန်ပစ္စည်းများ၊ ကဏ္ဍများနှင့် ရှာဖွေမှု အကြံပြုချက်များကို ဖတ်ရှုရုံသာ (Read-only) အသုံးပြုနိုင်ခြင်း။' : 'Read-only access to Products, Categories, and Search suggestions.'}</td>
+                    <td><em>{isMyanmar ? 'Header မလိုအပ်ပါ' : 'No Header Required'}</em></td>
                   </tr>
                 </tbody>
               </table>
@@ -241,7 +257,9 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
             <div className="theory-callout callout-tip" style={{ marginTop: '1.25rem' }}>
               <div className="callout-icon"><Sparkles size={16} /></div>
               <div className="callout-text">
-                Use the <strong>Authorize</strong> button in the top navigation to switch preset tokens instantly between Admin and Customer roles.
+                {isMyanmar 
+                  ? 'အပေါ်ဘက် မီနူးရှိ "ခွင့်ပြုချက် / Presets" ခလုတ်ကို နှိပ်၍ အက်ဒမင်နှင့် ဝယ်ယူသူ တိုကင်များကို ချက်ချင်း ပြောင်းလဲအသုံးပြုနိုင်ပါသည်။'
+                  : 'Use the Authorize button in the top navigation to switch preset tokens instantly between Admin and Customer roles.'}
               </div>
             </div>
           </section>
@@ -249,7 +267,11 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
           {/* 3. Complete API Endpoint Reference */}
           <section id="endpoints" className="docs-section-card">
             <div className="section-title-row">
-              <h2 className="section-title">3. Complete API Endpoint Reference ({API_MODULES.length} Modules / 30 Endpoints)</h2>
+              <h2 className="section-title">
+                {isMyanmar 
+                  ? `၃။ ပြည့်စုံသော API Endpoint လမ်းညွှန် (မော်ဂျူး ${API_MODULES.length} ခု / Endpoints ၃၀ ခု)` 
+                  : `3. Complete API Endpoint Reference (${API_MODULES.length} Modules / 30 Endpoints)`}
+              </h2>
             </div>
             
             {/* Live Filter in Docs */}
@@ -257,7 +279,7 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
               <Search size={16} className="text-gray-400" />
               <input
                 type="text"
-                placeholder="Filter endpoints by name, path, or verb..."
+                placeholder={isMyanmar ? 'အမည်၊ လမ်းကြောင်း သို့မဟုတ် HTTP verb ဖြင့် ရှာဖွေရန်...' : 'Filter endpoints by name, path, or verb...'}
                 value={docsSearchQuery}
                 onChange={(e) => setDocsSearchQuery(e.target.value)}
                 className="docs-search-input"
@@ -268,7 +290,7 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
                   className="docs-search-clear"
                   onClick={() => setDocsSearchQuery('')}
                 >
-                  Clear
+                  {isMyanmar ? 'ရှင်းမည်' : 'Clear'}
                 </button>
               )}
             </div>
@@ -280,8 +302,8 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
               return (
                 <div key={module.id} className="module-doc-block">
                   <div className="module-doc-header">
-                    <h3 className="module-doc-title">{module.name} Module</h3>
-                    <span className="module-doc-count">{moduleEndpoints.length} Endpoints</span>
+                    <h3 className="module-doc-title">{module.name} {isMyanmar ? 'မော်ဂျူး' : 'Module'}</h3>
+                    <span className="module-doc-count">{isMyanmar ? `Endpoints ${moduleEndpoints.length} ခု` : `${moduleEndpoints.length} Endpoints`}</span>
                   </div>
                   <p className="module-doc-desc">{module.description}</p>
 
@@ -299,7 +321,7 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
                           <div className="endpoint-actions-group">
                             {ep.authRequired && (
                               <span className="auth-indicator-pill">
-                                <Key size={12} /> Auth Required
+                                <Key size={12} /> {isMyanmar ? 'တိုကင် လိုအပ်သည်' : 'Auth Required'}
                               </span>
                             )}
                             {onNavigateToConsole && (
@@ -307,9 +329,9 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
                                 type="button"
                                 className="btn-test-in-console"
                                 onClick={() => onNavigateToConsole(ep.id)}
-                                title="Open this endpoint in interactive tester"
+                                title={isMyanmar ? 'ဤ endpoint ကို ကွန်ဆိုးလ်တွင် စမ်းသပ်မည်' : 'Open this endpoint in interactive tester'}
                               >
-                                <span>🚀 Test in Console</span>
+                                <span>{isMyanmar ? '🚀 ကွန်ဆိုးလ်တွင် စမ်းသပ်မည်' : '🚀 Test in Console'}</span>
                               </button>
                             )}
                           </div>
@@ -321,11 +343,11 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
 
                           {ep.parameters && ep.parameters.length > 0 && (
                             <div className="endpoint-params-box">
-                              <span className="params-mini-title">Parameters:</span>
+                              <span className="params-mini-title">{isMyanmar ? 'ပါရာမီတာများ:' : 'Parameters:'}</span>
                               <div className="params-mini-list">
                                 {ep.parameters.map((p) => (
                                   <span key={p.name} className="param-mini-pill">
-                                    <strong>{p.name}</strong> ({p.location}): <em>{p.type}</em> {p.required ? '• Required' : ''}
+                                    <strong>{p.name}</strong> ({p.location}): <em>{p.type}</em> {p.required ? (isMyanmar ? '• မဖြစ်မနေ' : '• Required') : ''}
                                   </span>
                                 ))}
                               </div>
@@ -335,14 +357,14 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
                           {ep.responseExamples && ep.responseExamples[0] && (
                             <div className="endpoint-example-preview">
                               <div className="example-preview-header">
-                                <span>Response: {ep.responseExamples[0].statusCode} {ep.responseExamples[0].statusText}</span>
+                                <span>{isMyanmar ? 'တုံ့ပြန်မှု:' : 'Response:'} {ep.responseExamples[0].statusCode} {ep.responseExamples[0].statusText}</span>
                                 <button
                                   type="button"
                                   className="btn-copy-mini"
                                   onClick={() => copyToClipboard(JSON.stringify(ep.responseExamples[0].body, null, 2), ep.id)}
                                 >
                                   {copiedCodeId === ep.id ? <Check size={12} /> : <Copy size={12} />}
-                                  <span>{copiedCodeId === ep.id ? 'Copied' : 'Copy'}</span>
+                                  <span>{copiedCodeId === ep.id ? (isMyanmar ? 'ကူးယူပြီး' : 'Copied') : (isMyanmar ? 'ကူးယူမည်' : 'Copy')}</span>
                                 </button>
                               </div>
                               <pre className="example-pre">
@@ -361,20 +383,22 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
 
           {/* 4. Query Options Guide */}
           <section id="query-params" className="docs-section-card">
-            <h2 className="section-title">4. Query Parameters & Filtering Guide</h2>
+            <h2 className="section-title">{t('docsSecQueryParams')}</h2>
             <p className="section-intro">
-              Tailor API collection responses using standard query parameters:
+              {isMyanmar 
+                ? 'အောက်ပါ စံသတ်မှတ်ထားသော query ပါရာမီတာများကို အသုံးပြု၍ API မှ ပြန်လည်ပေးပို့မည့် အချက်အလက်များကို လိုသလို ချိန်ညှိနိုင်ပါသည်:'
+                : 'Tailor API collection responses using standard query parameters:'}
             </p>
 
             <div className="table-responsive">
               <table className="docs-table">
                 <thead>
                   <tr>
-                    <th>Parameter</th>
-                    <th>Type</th>
-                    <th>Applicable Endpoints</th>
-                    <th>Description</th>
-                    <th>Example</th>
+                    <th>{isMyanmar ? 'ပါရာမီတာ' : 'Parameter'}</th>
+                    <th>{isMyanmar ? 'အမျိုးအစား' : 'Type'}</th>
+                    <th>{isMyanmar ? 'သက်ဆိုင်သော Endpoints' : 'Applicable Endpoints'}</th>
+                    <th>{isMyanmar ? 'ဖော်ပြချက်' : 'Description'}</th>
+                    <th>{isMyanmar ? 'နမူနာ' : 'Example'}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -382,63 +406,63 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
                     <td><code>page</code></td>
                     <td>Number</td>
                     <td><code>/products</code>, <code>/orders</code></td>
-                    <td>Page number for pagination (1-indexed, Default: 1)</td>
+                    <td>{isMyanmar ? 'စာမျက်နှာခွဲခြားမှုအတွက် စာမျက်နှာနံပါတ် (၁ မှ စတင်သည်၊ မူလ: ၁)' : 'Page number for pagination (1-indexed, Default: 1)'}</td>
                     <td><code>?page=2</code></td>
                   </tr>
                   <tr>
                     <td><code>limit</code></td>
                     <td>Number</td>
                     <td><code>/products</code>, <code>/orders</code></td>
-                    <td>Number of records per page (Default: 50, Max: 50)</td>
+                    <td>{isMyanmar ? 'တစ်မျက်နှာလျှင် ပြသလိုသော ဒေတာအရေအတွက် (မူလ: ၅၀၊ အများဆုံး: ၅၀)' : 'Number of records per page (Default: 50, Max: 50)'}</td>
                     <td><code>?limit=50</code></td>
                   </tr>
                   <tr>
                     <td><code>sort</code></td>
                     <td>String</td>
                     <td><code>/products</code></td>
-                    <td>Sort by field and direction (<code>price:asc</code>, <code>price:desc</code>)</td>
+                    <td>{isMyanmar ? 'သတ်မှတ်အကွက်နှင့် ဦးတည်ချက်အလိုက် စီစဉ်ခြင်း (price:asc, price:desc)' : 'Sort by field and direction (price:asc, price:desc)'}</td>
                     <td><code>?sort=price:asc</code></td>
                   </tr>
                   <tr>
                     <td><code>category_id</code></td>
                     <td>String</td>
                     <td><code>/products</code></td>
-                    <td>Filter products by category UUID</td>
+                    <td>{isMyanmar ? 'ကဏ္ဍ ID ဖြင့် ကုန်ပစ္စည်းများကို စစ်ထုတ်ခြင်း' : 'Filter products by category UUID'}</td>
                     <td><code>?category_id=cat_1</code></td>
                   </tr>
                   <tr>
                     <td><code>q</code></td>
                     <td>String</td>
                     <td><code>/search</code>, <code>/search/suggestions</code></td>
-                    <td>Full-text search query across title and SKU</td>
+                    <td>{isMyanmar ? 'ကုန်ပစ္စည်းအမည်နှင့် SKU တို့တွင် စာသားအပြည့်အစုံ ရှာဖွေခြင်း' : 'Full-text search query across title and SKU'}</td>
                     <td><code>?q=wireless+headphones</code></td>
                   </tr>
                   <tr>
                     <td><code>min_price</code></td>
                     <td>Number</td>
                     <td><code>/search</code></td>
-                    <td>Minimum price boundary filter</td>
+                    <td>{isMyanmar ? 'အနည်းဆုံး ဈေးနှုန်း သတ်မှတ်ချက်' : 'Minimum price boundary filter'}</td>
                     <td><code>?min_price=50</code></td>
                   </tr>
                   <tr>
                     <td><code>max_price</code></td>
                     <td>Number</td>
                     <td><code>/search</code></td>
-                    <td>Maximum price boundary filter</td>
+                    <td>{isMyanmar ? 'အများဆုံး ဈေးနှုန်း သတ်မှတ်ချက်' : 'Maximum price boundary filter'}</td>
                     <td><code>?max_price=300</code></td>
                   </tr>
                   <tr>
                     <td><code>status</code></td>
                     <td>String</td>
                     <td><code>/orders</code></td>
-                    <td>Filter orders by status (<code>pending</code>, <code>shipped</code>, etc.)</td>
+                    <td>{isMyanmar ? 'အမှာစာ အခြေအနေဖြင့် စစ်ထုတ်ခြင်း (pending, shipped စသည်)' : 'Filter orders by status (pending, shipped, etc.)'}</td>
                     <td><code>?status=delivered</code></td>
                   </tr>
                   <tr>
                     <td><code>threshold</code></td>
                     <td>Number</td>
                     <td><code>/inventory/low-stock</code></td>
-                    <td>Inventory stock quantity threshold</td>
+                    <td>{isMyanmar ? 'စတော့လက်ကျန် နည်းပါးမှု အရေအတွက် သတ်မှတ်ချက်' : 'Inventory stock quantity threshold'}</td>
                     <td><code>?threshold=20</code></td>
                   </tr>
                 </tbody>
@@ -448,9 +472,11 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
 
           {/* 5. Postman & Integration Guide */}
           <section id="postman-guide" className="docs-section-card">
-            <h2 className="section-title">5. Integration & Code SDKs</h2>
+            <h2 className="section-title">{t('docsSecSdks')}</h2>
             <p className="section-intro">
-              Execute API calls in any frontend or backend environment:
+              {isMyanmar 
+                ? 'မည်သည့် frontend သို့မဟုတ် backend ပတ်ဝန်းကျင်တွင်မဆို API ခေါ်ဆိုမှုများကို အောက်ပါအတိုင်း အလွယ်တကူ ပြုလုပ်နိုင်ပါသည်:'
+                : 'Execute API calls in any frontend or backend environment:'}
             </p>
 
             <div className="code-tabs-container">
@@ -470,7 +496,7 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onNavigateToConsole }) => {
   .then(data => console.log(data));`, 'fetch-sdk')}
                   >
                     {copiedCodeId === 'fetch-sdk' ? <Check size={14} /> : <Copy size={14} />}
-                    <span>{copiedCodeId === 'fetch-sdk' ? 'Copied' : 'Copy'}</span>
+                    <span>{copiedCodeId === 'fetch-sdk' ? (isMyanmar ? 'ကူးယူပြီး' : 'Copied') : (isMyanmar ? 'ကူးယူမည်' : 'Copy')}</span>
                   </button>
                 </div>
                 <pre className="code-pre">
@@ -504,7 +530,7 @@ const response = await api.get('/products', { params: { limit: 50 } });
 console.log(response.data);`, 'axios-sdk')}
                   >
                     {copiedCodeId === 'axios-sdk' ? <Check size={14} /> : <Copy size={14} />}
-                    <span>{copiedCodeId === 'axios-sdk' ? 'Copied' : 'Copy'}</span>
+                    <span>{copiedCodeId === 'axios-sdk' ? (isMyanmar ? 'ကူးယူပြီး' : 'Copied') : (isMyanmar ? 'ကူးယူမည်' : 'Copy')}</span>
                   </button>
                 </div>
                 <pre className="code-pre">
@@ -526,51 +552,51 @@ console.log(response.data);`}</code>
 
           {/* 6. Status & Error Codes */}
           <section id="status-codes" className="docs-section-card">
-            <h2 className="section-title">6. HTTP Status & Error Codes</h2>
+            <h2 className="section-title">{t('docsSecStatusCodes')}</h2>
             <div className="table-responsive">
               <table className="docs-table">
                 <thead>
                   <tr>
-                    <th>Status Code</th>
-                    <th>Reason</th>
-                    <th>Description</th>
+                    <th>{isMyanmar ? 'Status ကုဒ်' : 'Status Code'}</th>
+                    <th>{isMyanmar ? 'အကြောင်းပြချက်' : 'Reason'}</th>
+                    <th>{isMyanmar ? 'ဖော်ပြချက်' : 'Description'}</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td><span className="status-badge-mini bg-emerald-100 text-emerald-800">200 OK</span></td>
-                    <td>Success</td>
-                    <td>Request executed successfully.</td>
+                    <td>{isMyanmar ? 'အောင်မြင်သည်' : 'Success'}</td>
+                    <td>{isMyanmar ? 'တောင်းဆိုမှု အောင်မြင်စွာ ဆောင်ရွက်ပြီးစီးပါသည်။' : 'Request executed successfully.'}</td>
                   </tr>
                   <tr>
                     <td><span className="status-badge-mini bg-emerald-100 text-emerald-800">201 Created</span></td>
-                    <td>Created</td>
-                    <td>Resource successfully created (e.g. Order checkout).</td>
+                    <td>{isMyanmar ? 'ဖန်တီးပြီးပြီ' : 'Created'}</td>
+                    <td>{isMyanmar ? 'အသစ်ဖန်တီးမှု အောင်မြင်ပါသည် (ဥပမာ - အမှာစာ တင်ခြင်း)။' : 'Resource successfully created (e.g. Order checkout).'}</td>
                   </tr>
                   <tr>
                     <td><span className="status-badge-mini bg-amber-100 text-amber-800">400 Bad Request</span></td>
-                    <td>Malformed Request</td>
-                    <td>Invalid JSON payload or missing parameters.</td>
+                    <td>{isMyanmar ? 'မှားယွင်းသော Request' : 'Malformed Request'}</td>
+                    <td>{isMyanmar ? 'JSON ပုံစံ မှားယွင်းနေခြင်း သို့မဟုတ် လိုအပ်သော ပါရာမီတာများ မပြည့်စုံခြင်း။' : 'Invalid JSON payload or missing parameters.'}</td>
                   </tr>
                   <tr>
                     <td><span className="status-badge-mini bg-red-100 text-red-800">401 Unauthorized</span></td>
-                    <td>Missing Token</td>
-                    <td>Bearer authentication token is missing or invalid.</td>
+                    <td>{isMyanmar ? 'တိုကင် မရှိပါ' : 'Missing Token'}</td>
+                    <td>{isMyanmar ? 'Bearer authentication တိုကင် မရှိပါ သို့မဟုတ် သက်တမ်းကုန်ဆုံးနေပါသည်။' : 'Bearer authentication token is missing or invalid.'}</td>
                   </tr>
                   <tr>
                     <td><span className="status-badge-mini bg-purple-100 text-purple-800">403 Forbidden</span></td>
-                    <td>Forbidden Role</td>
-                    <td>Admin privileges required for this endpoint.</td>
+                    <td>{isMyanmar ? 'ခွင့်ပြုချက် မရှိပါ' : 'Forbidden Role'}</td>
+                    <td>{isMyanmar ? 'ဤ Endpoint ကို အသုံးပြုရန် အက်ဒမင် (Admin) လုပ်ပိုင်ခွင့် လိုအပ်ပါသည်။' : 'Admin privileges required for this endpoint.'}</td>
                   </tr>
                   <tr>
                     <td><span className="status-badge-mini bg-gray-100 text-gray-800">404 Not Found</span></td>
-                    <td>Resource Missing</td>
-                    <td>Product, Order, or Category ID not found in database.</td>
+                    <td>{isMyanmar ? 'ရှာမတွေ့ပါ' : 'Resource Missing'}</td>
+                    <td>{isMyanmar ? 'ကုန်ပစ္စည်း၊ အမှာစာ သို့မဟုတ် ကဏ္ဍ ID ကို ဒေတာဘေ့စ်တွင် ရှာမတွေ့ပါ။' : 'Product, Order, or Category ID not found in database.'}</td>
                   </tr>
                   <tr>
                     <td><span className="status-badge-mini bg-orange-100 text-orange-800">429 Rate Limit</span></td>
-                    <td>Quota Exceeded</td>
-                    <td>Exceeded 100 requests per 15-minute sliding window.</td>
+                    <td>{isMyanmar ? 'ကန့်သတ်ချက် ကျော်လွန်သည်' : 'Quota Exceeded'}</td>
+                    <td>{isMyanmar ? '၁၅ မိနစ်အတွင်း အကြိမ် ၁၀၀ ထက်ကျော်လွန်၍ အသုံးပြုမိပါသည်။' : 'Exceeded 100 requests per 15-minute sliding window.'}</td>
                   </tr>
                 </tbody>
               </table>
@@ -579,34 +605,36 @@ console.log(response.data);`}</code>
 
           {/* 7. Rate Limiting Guide */}
           <section id="rate-limiting" className="docs-section-card">
-            <h2 className="section-title">7. Rate Limiting & Quotas Guide</h2>
+            <h2 className="section-title">{t('docsSecRateLimit')}</h2>
             <p className="section-intro">
-              The API enforces rate limits to guarantee system stability and high availability across all clients:
+              {isMyanmar 
+                ? 'စနစ် တည်ငြိမ်မှုနှင့် မြန်ဆန်မှုကို ထိန်းသိမ်းရန်အတွက် API ခေါ်ဆိုမှုများကို ကန့်သတ်ချက်များ သတ်မှတ်ထားပါသည်:'
+                : 'The API enforces rate limits to guarantee system stability and high availability across all clients:'}
             </p>
 
             <div className="table-responsive">
               <table className="docs-table">
                 <thead>
                   <tr>
-                    <th>Response Header</th>
-                    <th>Description</th>
-                    <th>Example</th>
+                    <th>{isMyanmar ? 'Response Header' : 'Response Header'}</th>
+                    <th>{isMyanmar ? 'ဖော်ပြချက်' : 'Description'}</th>
+                    <th>{isMyanmar ? 'နမူနာ' : 'Example'}</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td><code>X-RateLimit-Limit</code></td>
-                    <td>Maximum allowed requests per window</td>
+                    <td>{isMyanmar ? 'သတ်မှတ်ချိန်အတွင်း အများဆုံး ခေါ်ဆိုနိုင်သည့် အကြိမ်ရေ' : 'Maximum allowed requests per window'}</td>
                     <td><code>100</code></td>
                   </tr>
                   <tr>
                     <td><code>X-RateLimit-Remaining</code></td>
-                    <td>Remaining requests available in current window</td>
+                    <td>{isMyanmar ? 'လက်ရှိ ကျန်ရှိနေသေးသော ခေါ်ဆိုနိုင်သည့် အကြိမ်ရေ' : 'Remaining requests available in current window'}</td>
                     <td><code>94</code></td>
                   </tr>
                   <tr>
                     <td><code>Retry-After</code></td>
-                    <td>Seconds to wait before retrying when throttled (429)</td>
+                    <td>{isMyanmar ? 'ကန့်သတ်ချက် ကျော်လွန်ပါက (429) ပြန်လည်မခေါ်ဆိုမီ စောင့်ဆိုင်းရမည့် စက္ကန့်' : 'Seconds to wait before retrying when throttled (429)'}</td>
                     <td><code>60</code></td>
                   </tr>
                 </tbody>
@@ -616,27 +644,27 @@ console.log(response.data);`}</code>
 
           {/* 8. Best Practices */}
           <section id="best-practices" className="docs-section-card">
-            <h2 className="section-title">8. Best Practices & Security</h2>
+            <h2 className="section-title">{t('docsSecBestPractices')}</h2>
             <div className="best-practices-grid">
               <div className="bp-card">
                 <CheckCircle2 size={18} className="text-emerald-500" />
                 <div>
-                  <h4>Cache Static Catalog Data</h4>
-                  <p>Store product category trees in browser storage to avoid repeated redundant calls.</p>
+                  <h4>{isMyanmar ? 'မပြောင်းလဲသော ဒေတာများကို Cache သိမ်းဆည်းထားပါ' : 'Cache Static Catalog Data'}</h4>
+                  <p>{isMyanmar ? 'ထပ်ခါထပ်ခါ ခေါ်ဆိုမှုများကို လျှော့ချရန် ကုန်ပစ္စည်း ကဏ္ဍများကို browser storage တွင် သိမ်းဆည်း အသုံးပြုပါ။' : 'Store product category trees in browser storage to avoid repeated redundant calls.'}</p>
                 </div>
               </div>
               <div className="bp-card">
                 <CheckCircle2 size={18} className="text-emerald-500" />
                 <div>
-                  <h4>Use Bearer Tokens Safely</h4>
-                  <p>Never commit secret tokens to version control; pass tokens strictly via headers over TLS.</p>
+                  <h4>{isMyanmar ? 'Bearer တိုကင်များကို လုံခြုံစွာ ကိုင်တွယ်ပါ' : 'Use Bearer Tokens Safely'}</h4>
+                  <p>{isMyanmar ? 'လျှို့ဝှက်တိုကင်များကို Git သို့ မတင်ပါနှင့်။ HTTPS လုံခြုံရေးမှတစ်ဆင့်သာ Header တွင် ထည့်သွင်းပေးပို့ပါ။' : 'Never commit secret tokens to version control; pass tokens strictly via headers over TLS.'}</p>
                 </div>
               </div>
               <div className="bp-card">
                 <CheckCircle2 size={18} className="text-emerald-500" />
                 <div>
-                  <h4>Handle Exponential Backoff</h4>
-                  <p>Implement retry handlers with progressive delays when receiving HTTP 429 or 503 responses.</p>
+                  <h4>{isMyanmar ? 'တုံ့ပြန်မှု နှောင့်နှေးမှုများကို စနစ်တကျ စီမံပါ (Exponential Backoff)' : 'Handle Exponential Backoff'}</h4>
+                  <p>{isMyanmar ? 'HTTP 429 သို့မဟုတ် 503 ရရှိပါက ချက်ချင်း ထပ်မခေါ်ဘဲ စက္ကန့်အနည်းငယ် ခြားပြီးမှ ပြန်လည်ကြိုးစားသည့် စနစ် ထည့်သွင်းပါ။' : 'Implement retry handlers with progressive delays when receiving HTTP 429 or 503 responses.'}</p>
                 </div>
               </div>
             </div>

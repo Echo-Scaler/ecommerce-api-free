@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { ResponseExample } from '../../types/api';
 import { CodeBlock } from '../common/CodeBlock';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface ResponseExampleDocProps {
   examples: ResponseExample[];
 }
 
 export const ResponseExampleDoc: React.FC<ResponseExampleDocProps> = ({ examples }) => {
+  const { isMyanmar } = useLanguage();
   const [activeTab, setActiveTab] = useState(0);
 
   if (!examples || examples.length === 0) {
@@ -26,7 +28,7 @@ export const ResponseExampleDoc: React.FC<ResponseExampleDocProps> = ({ examples
   return (
     <div className="doc-section">
       <div className="doc-section-header-row">
-        <h3 className="doc-section-heading">Response Examples</h3>
+        <h3 className="doc-section-heading">{isMyanmar ? 'တုံ့ပြန်မှု ရလဒ် နမူနာများ (Response Examples)' : 'Response Examples'}</h3>
         <span className="content-type-badge">application/json</span>
       </div>
 
@@ -49,7 +51,7 @@ export const ResponseExampleDoc: React.FC<ResponseExampleDocProps> = ({ examples
 
       {/* Response Description */}
       <div className="response-description-bar">
-        <span className="response-desc-label">Condition:</span>
+        <span className="response-desc-label">{isMyanmar ? 'အခြေအနေ သတ်မှတ်ချက်:' : 'Condition:'}</span>
         <span className="response-desc-text">{selectedExample.description}</span>
       </div>
 
@@ -57,8 +59,9 @@ export const ResponseExampleDoc: React.FC<ResponseExampleDocProps> = ({ examples
       <CodeBlock 
         code={jsonString} 
         language="json" 
-        title={`HTTP ${selectedExample.statusCode} Response Body`} 
+        title={isMyanmar ? `HTTP ${selectedExample.statusCode} တုံ့ပြန်မှု ရလဒ်` : `HTTP ${selectedExample.statusCode} Response Body`} 
       />
     </div>
   );
 };
+
