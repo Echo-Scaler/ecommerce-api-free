@@ -42,15 +42,20 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={onToggleSidebar}
               aria-label="Toggle Navigation Sidebar"
             >
-              <Menu size={20} />
+              <Menu size={18} />
             </button>
           )}
 
-          <div className="brand-badge" onClick={() => onSelectView('console')} style={{ cursor: 'pointer' }}>
+          <div 
+            className="brand-badge" 
+            onClick={() => onSelectView('console')} 
+            style={{ cursor: 'pointer' }}
+            title="E-Commerce API Platform"
+          >
             <div className="brand-icon-wrapper">
-              <ShoppingBag size={20} className="brand-icon" />
+              <ShoppingBag size={18} className="brand-icon" />
             </div>
-            <div>
+            <div className="brand-text-col">
               <div className="brand-title">
                 {t('brandTitle')} <span className="brand-highlight">{t('brandHighlight')}</span>
               </div>
@@ -58,7 +63,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          <div className="version-pill">v2.0.0 REST</div>
+          <div className="version-pill">v2.0</div>
         </div>
 
         {/* Center: Primary View Navigation Tabs */}
@@ -68,7 +73,7 @@ export const Header: React.FC<HeaderProps> = ({
             className={`header-nav-tab ${currentView === 'console' ? 'active' : ''}`}
             onClick={() => onSelectView('console')}
           >
-            <SlidersHorizontal size={15} />
+            <SlidersHorizontal size={14} />
             <span>Console</span>
           </button>
 
@@ -77,8 +82,8 @@ export const Header: React.FC<HeaderProps> = ({
             className={`header-nav-tab ${currentView === 'docs' ? 'active' : ''}`}
             onClick={() => onSelectView('docs')}
           >
-            <BookOpen size={15} />
-            <span>Documentation (/docs)</span>
+            <BookOpen size={14} />
+            <span>Documentation</span>
           </button>
 
           <button
@@ -86,8 +91,8 @@ export const Header: React.FC<HeaderProps> = ({
             className={`header-nav-tab ${currentView === 'learn' ? 'active' : ''}`}
             onClick={() => onSelectView('learn')}
           >
-            <GraduationCap size={16} />
-            <span>Learn (/learn)</span>
+            <GraduationCap size={15} />
+            <span>Learn</span>
             <span className="nav-tab-badge">Interactive</span>
           </button>
         </nav>
@@ -96,7 +101,6 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="env-selector">
             <span className="status-dot"></span>
             <span className="env-label">{t('liveSandbox')}</span>
-            <span className="env-url">api.ecommerce.example.com</span>
           </div>
 
           <div className="header-divider" />
@@ -108,14 +112,14 @@ export const Header: React.FC<HeaderProps> = ({
               className="header-quick-tester-btn"
               onClick={() => onSelectView('console')}
             >
-              <Sparkles size={14} />
+              <Sparkles size={13} />
               <span>Console</span>
             </button>
           )}
 
           {/* Language Switcher (EN / မြန်မာ) */}
           <div className="lang-switcher-wrapper">
-            <Globe size={14} className="globe-icon" />
+            <Globe size={13} className="globe-icon" />
             <button
               type="button"
               onClick={() => setLanguage('en')}
@@ -145,12 +149,12 @@ export const Header: React.FC<HeaderProps> = ({
           >
             {isAuthenticated ? (
               <>
-                <ShieldCheck size={16} className="text-emerald-400" />
+                <ShieldCheck size={14} className="text-emerald-400" />
                 <span>{t('tokenActive')}</span>
               </>
             ) : (
               <>
-                <Key size={15} />
+                <Key size={14} />
                 <span>{t('authorize')}</span>
               </>
             )}
@@ -163,9 +167,9 @@ export const Header: React.FC<HeaderProps> = ({
             className="header-link-btn"
             title="View Source on GitHub"
           >
-            <Terminal size={15} />
+            <Terminal size={14} />
             <span>{t('github')}</span>
-            <ExternalLink size={12} />
+            <ExternalLink size={11} />
           </a>
         </div>
       </header>
@@ -177,7 +181,7 @@ export const Header: React.FC<HeaderProps> = ({
           className={`mobile-view-tab ${currentView === 'console' ? 'active' : ''}`}
           onClick={() => onSelectView('console')}
         >
-          <SlidersHorizontal size={14} />
+          <SlidersHorizontal size={13} />
           <span>Console</span>
         </button>
 
@@ -186,8 +190,8 @@ export const Header: React.FC<HeaderProps> = ({
           className={`mobile-view-tab ${currentView === 'docs' ? 'active' : ''}`}
           onClick={() => onSelectView('docs')}
         >
-          <BookOpen size={14} />
-          <span>Docs (/docs)</span>
+          <BookOpen size={13} />
+          <span>Documentation</span>
         </button>
 
         <button
@@ -195,8 +199,9 @@ export const Header: React.FC<HeaderProps> = ({
           className={`mobile-view-tab ${currentView === 'learn' ? 'active' : ''}`}
           onClick={() => onSelectView('learn')}
         >
-          <GraduationCap size={15} />
-          <span>Learn (/learn)</span>
+          <GraduationCap size={14} />
+          <span>Learn</span>
+          <span className="nav-tab-badge" style={{ fontSize: '0.6rem', padding: '0.1rem 0.35rem' }}>Live</span>
         </button>
       </div>
     </>

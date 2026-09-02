@@ -139,14 +139,14 @@ const AppContent: React.FC = () => {
                   }}>
                     {t('platformTag')}
                   </span>
-                  <h1 style={{ fontSize: '2.2rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.25, marginBottom: '1rem' }}>
+                  <h1 style={{ fontSize: '2.1rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.25, marginBottom: '0.85rem' }}>
                     {t('platformTitle')}
                   </h1>
                   <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
                     {t('platformDesc')}
                   </p>
 
-                  <div style={{ display: 'flex', gap: '0.85rem', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
                     <button
                       type="button"
                       onClick={() => setSelectedEndpointId('get-products')}
@@ -156,18 +156,18 @@ const AppContent: React.FC = () => {
                         gap: '0.5rem',
                         backgroundColor: 'var(--brand-primary)',
                         color: '#ffffff',
-                        padding: '0.75rem 1.35rem',
+                        padding: '0.7rem 1.3rem',
                         borderRadius: 'var(--radius-md)',
                         fontWeight: 700,
-                        fontSize: '0.9rem',
+                        fontSize: '0.875rem',
                         border: 'none',
                         cursor: 'pointer',
                         boxShadow: '0 4px 10px rgba(65,90,36,0.25)'
                       }}
                     >
-                      <SlidersHorizontal size={17} />
+                      <SlidersHorizontal size={16} />
                       <span>{t('exploreProductsBtn')}</span>
-                      <ArrowRight size={16} />
+                      <ArrowRight size={15} />
                     </button>
 
                     <button
@@ -179,17 +179,17 @@ const AppContent: React.FC = () => {
                         gap: '0.5rem',
                         backgroundColor: '#ffffff',
                         color: 'var(--text-primary)',
-                        padding: '0.75rem 1.35rem',
+                        padding: '0.7rem 1.3rem',
                         borderRadius: 'var(--radius-md)',
                         fontWeight: 600,
-                        fontSize: '0.9rem',
+                        fontSize: '0.875rem',
                         border: '1px solid var(--border-medium)',
                         cursor: 'pointer',
                         boxShadow: 'var(--shadow-sm)'
                       }}
                     >
-                      <BookOpen size={17} className="text-emerald-600" />
-                      <span>Documentation Guide (/docs)</span>
+                      <BookOpen size={16} className="text-emerald-600" />
+                      <span>View Documentation</span>
                     </button>
 
                     <button
@@ -201,17 +201,17 @@ const AppContent: React.FC = () => {
                         gap: '0.5rem',
                         backgroundColor: 'var(--brand-sage-light)',
                         color: 'var(--brand-primary)',
-                        padding: '0.75rem 1.35rem',
+                        padding: '0.7rem 1.3rem',
                         borderRadius: 'var(--radius-md)',
                         fontWeight: 700,
-                        fontSize: '0.9rem',
+                        fontSize: '0.875rem',
                         border: '1px solid var(--border-subtle)',
                         cursor: 'pointer'
                       }}
                     >
-                      <GraduationCap size={18} />
-                      <span>Learn REST API (/learn)</span>
-                      <span className="nav-tab-badge" style={{ marginLeft: '0.25rem' }}>Interactive</span>
+                      <GraduationCap size={17} />
+                      <span>Interactive Academy</span>
+                      <span className="nav-tab-badge" style={{ marginLeft: '0.2rem' }}>6 Lessons</span>
                     </button>
                   </div>
                 </div>
@@ -236,10 +236,10 @@ const AppContent: React.FC = () => {
                   }}
                 >
                   <div>
-                    <div style={{ width: '44px', height: '44px', borderRadius: 'var(--radius-md)', background: 'var(--brand-sage-light)', color: 'var(--brand-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
-                      <SlidersHorizontal size={22} />
+                    <div style={{ width: '42px', height: '42px', borderRadius: 'var(--radius-md)', background: 'var(--brand-sage-light)', color: 'var(--brand-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+                      <SlidersHorizontal size={20} />
                     </div>
-                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.4rem' }}>
+                    <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
                       ⚡ Interactive API Console
                     </h3>
                     <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '1.25rem' }}>
@@ -248,7 +248,7 @@ const AppContent: React.FC = () => {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--brand-primary)', fontWeight: 700, fontSize: '0.85rem' }}>
                     <span>Launch API Tester</span>
-                    <ArrowRight size={15} />
+                    <ArrowRight size={14} />
                   </div>
                 </div>
 
@@ -269,19 +269,19 @@ const AppContent: React.FC = () => {
                   }}
                 >
                   <div>
-                    <div style={{ width: '44px', height: '44px', borderRadius: 'var(--radius-md)', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
-                      <BookOpen size={22} />
+                    <div style={{ width: '42px', height: '42px', borderRadius: 'var(--radius-md)', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+                      <BookOpen size={20} />
                     </div>
-                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.4rem' }}>
-                      📖 Documentation Reference (/docs)
+                    <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
+                      📖 Comprehensive Documentation
                     </h3>
                     <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '1.25rem' }}>
-                      Comprehensive guide with ScrollSpy index, parameter tables, Fetch/Axios SDKs, status codes, and rate limits.
+                      Comprehensive reference with ScrollSpy index, parameter tables, Fetch/Axios SDKs, and status codes.
                     </p>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#10b981', fontWeight: 700, fontSize: '0.85rem' }}>
                     <span>Explore Documentation</span>
-                    <ArrowRight size={15} />
+                    <ArrowRight size={14} />
                   </div>
                 </div>
 
@@ -302,19 +302,19 @@ const AppContent: React.FC = () => {
                   }}
                 >
                   <div>
-                    <div style={{ width: '44px', height: '44px', borderRadius: 'var(--radius-md)', background: 'rgba(237, 178, 0, 0.15)', color: '#b45309', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
-                      <GraduationCap size={22} />
+                    <div style={{ width: '42px', height: '42px', borderRadius: 'var(--radius-md)', background: 'rgba(237, 178, 0, 0.15)', color: '#b45309', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+                      <GraduationCap size={20} />
                     </div>
-                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.4rem' }}>
-                      🎓 REST API Learning Center (/learn)
+                    <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
+                      🎓 REST API Learning Academy
                     </h3>
                     <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '1.25rem' }}>
-                      6 step-by-step interactive lessons with hands-on live code exercises and knowledge assessment quizzes.
+                      6 step-by-step interactive lessons with theory, hands-on live code exercises, and assessment quizzes.
                     </p>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#b45309', fontWeight: 700, fontSize: '0.85rem' }}>
                     <span>Start Learning Lessons</span>
-                    <ArrowRight size={15} />
+                    <ArrowRight size={14} />
                   </div>
                 </div>
               </section>

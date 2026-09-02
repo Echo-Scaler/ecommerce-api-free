@@ -118,12 +118,12 @@ export const ApiSidebar: React.FC<ApiSidebarProps> = ({
         placeholder={t('searchPlaceholder')}
       />
 
-      {/* Main Pages Navigation Section (Console, Docs, Learn) */}
+      {/* Main Navigation Pages Section */}
       {!searchQuery && (
         <>
           <div className="nav-section-header">{isMyanmar ? 'အဓိက ကဏ္ဍများ' : 'NAVIGATION & PAGES'}</div>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginBottom: '0.5rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', marginBottom: '0.5rem' }}>
             {/* Console / Overview Button */}
             <button
               type="button"
@@ -133,11 +133,11 @@ export const ApiSidebar: React.FC<ApiSidebarProps> = ({
                 onSelectOverview();
               }}
             >
-              <SlidersHorizontal size={16} />
-              <span>{t('overviewNav')} (Console)</span>
+              <SlidersHorizontal size={15} />
+              <span>Platform Overview</span>
             </button>
 
-            {/* Complete Docs Button */}
+            {/* Documentation Button */}
             <button
               type="button"
               className={`nav-overview-btn ${currentView === 'docs' ? 'active' : ''}`}
@@ -145,11 +145,11 @@ export const ApiSidebar: React.FC<ApiSidebarProps> = ({
                 if (onSelectView) onSelectView('docs');
               }}
             >
-              <BookOpen size={16} className="text-emerald-500" />
-              <span>Documentation Guide (/docs)</span>
+              <BookOpen size={15} className="text-emerald-500" />
+              <span>Documentation</span>
             </button>
 
-            {/* Learn Academy Button */}
+            {/* Learn Center Button */}
             <button
               type="button"
               className={`nav-overview-btn ${currentView === 'learn' ? 'active' : ''}`}
@@ -159,10 +159,10 @@ export const ApiSidebar: React.FC<ApiSidebarProps> = ({
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                <GraduationCap size={17} className="text-amber-500" />
-                <span>Learn REST API (/learn)</span>
+                <GraduationCap size={16} className="text-amber-500" />
+                <span>Learning Center</span>
               </div>
-              <span className="nav-tab-badge" style={{ fontSize: '0.6rem' }}>Interactive</span>
+              <span className="nav-tab-badge" style={{ fontSize: '0.6rem', padding: '0.1rem 0.4rem' }}>Live</span>
             </button>
           </div>
         </>
