@@ -1,24 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { AuthProvider } from './context/AuthContext';
-import { LanguageProvider, useLanguage } from './context/LanguageContext';
+import { LanguageProvider } from './context/LanguageContext';
 import { AuthTokenModal } from './components/auth/AuthTokenModal';
 import { AppLayout } from './components/layout/AppLayout';
 import { AppView } from './components/layout/Header';
 import { ApiSidebar } from './components/navigation/ApiSidebar';
-import { EndpointDocView } from './components/documentation/EndpointDocView';
 import { DocsPage } from './components/docs/DocsPage';
 import { LearnPage } from './components/learn/LearnPage';
 import { API_MODULES } from './data/api-modules';
-import { 
-  ArrowRight, 
-  Layers, 
-  Zap, 
-  Shield, 
-  Database, 
-  GraduationCap, 
-  BookOpen, 
-  SlidersHorizontal
-} from 'lucide-react';
+import { ConsoleWorkspace } from './components/tester/ConsoleWorkspace';
 
 const AppContent: React.FC = () => {
   // Parse initial view from URL path / hash / query
@@ -32,12 +22,7 @@ const AppContent: React.FC = () => {
     return 'console';
   });
 
-  const [selectedEndpointId, setSelectedEndpointId] = useState<string | null>(null);
-  const { t } = useLanguage();
-
-  const allEndpoints = API_MODULES.flatMap((m) => m.endpoints);
-  const selectedEndpoint = allEndpoints.find((e) => e.id === selectedEndpointId);
-  const currentModule = API_MODULES.find((m) => m.id === selectedEndpoint?.moduleId);
+  const [selectedEndpointId, setSelectedEndpointId] = useState<string | null>('get-products');
 
   // Sync URL changes
   const handleSelectView = (view: AppView) => {
@@ -107,300 +92,13 @@ const AppContent: React.FC = () => {
         <LearnPage onNavigateToConsole={navigateToConsoleEndpoint} />
       )}
 
-      {/* View 3: Console & Interactive Tester */}
+      {/* View 3: Interactive Request Console */}
       {currentView === 'console' && (
-        <>
-          {selectedEndpoint && currentModule ? (
-            <EndpointDocView
-              endpoint={selectedEndpoint}
-              module={currentModule}
-            />
-          ) : (
-            /* Platform Overview View */
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-              {/* Welcome Banner */}
-              <section style={{
-                background: 'linear-gradient(135deg, rgba(65, 90, 36, 0.08), rgba(201, 225, 180, 0.25))',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: 'var(--radius-lg)',
-                padding: '2.25rem',
-                position: 'relative',
-                overflow: 'hidden'
-              }}>
-                <div style={{ maxWidth: '840px' }}>
-                  <span style={{
-                    display: 'inline-block',
-                    fontSize: '0.75rem',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.08em',
-                    color: 'var(--brand-primary)',
-                    marginBottom: '0.5rem'
-                  }}>
-                    {t('platformTag')}
-                  </span>
-                  <h1 style={{ fontSize: '2.1rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.25, marginBottom: '0.85rem' }}>
-                    {t('platformTitle')}
-                  </h1>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-                    {t('platformDesc')}
-                  </p>
-
-                  <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedEndpointId('get-products')}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        backgroundColor: 'var(--brand-primary)',
-                        color: '#ffffff',
-                        padding: '0.7rem 1.3rem',
-                        borderRadius: 'var(--radius-md)',
-                        fontWeight: 700,
-                        fontSize: '0.875rem',
-                        border: 'none',
-                        cursor: 'pointer',
-                        boxShadow: '0 4px 10px rgba(65,90,36,0.25)'
-                      }}
-                    >
-                      <SlidersHorizontal size={16} />
-                      <span>{t('exploreProductsBtn')}</span>
-                      <ArrowRight size={15} />
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => handleSelectView('docs')}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        backgroundColor: '#ffffff',
-                        color: 'var(--text-primary)',
-                        padding: '0.7rem 1.3rem',
-                        borderRadius: 'var(--radius-md)',
-                        fontWeight: 600,
-                        fontSize: '0.875rem',
-                        border: '1px solid var(--border-medium)',
-                        cursor: 'pointer',
-                        boxShadow: 'var(--shadow-sm)'
-                      }}
-                    >
-                      <BookOpen size={16} className="text-emerald-600" />
-                      <span>View Documentation</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => handleSelectView('learn')}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        backgroundColor: 'var(--brand-sage-light)',
-                        color: 'var(--brand-primary)',
-                        padding: '0.7rem 1.3rem',
-                        borderRadius: 'var(--radius-md)',
-                        fontWeight: 700,
-                        fontSize: '0.875rem',
-                        border: '1px solid var(--border-subtle)',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      <GraduationCap size={17} />
-                      <span>Interactive Academy</span>
-                      <span className="nav-tab-badge" style={{ marginLeft: '0.2rem' }}>6 Lessons</span>
-                    </button>
-                  </div>
-                </div>
-              </section>
-
-              {/* Major Portal Sections Showcase (Console, Docs, Learn) */}
-              <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.25rem' }}>
-                {/* Card 1: Console */}
-                <div 
-                  onClick={() => setSelectedEndpointId('get-products')}
-                  style={{
-                    backgroundColor: 'var(--bg-card)',
-                    border: '1px solid var(--border-subtle)',
-                    borderRadius: 'var(--radius-lg)',
-                    padding: '1.5rem',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    boxShadow: 'var(--shadow-sm)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <div>
-                    <div style={{ width: '42px', height: '42px', borderRadius: 'var(--radius-md)', background: 'var(--brand-sage-light)', color: 'var(--brand-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
-                      <SlidersHorizontal size={20} />
-                    </div>
-                    <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
-                      ⚡ Interactive API Console
-                    </h3>
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '1.25rem' }}>
-                      Test 30 live endpoints directly with real-time response viewer, JSON payload editor, and latency metrics.
-                    </p>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--brand-primary)', fontWeight: 700, fontSize: '0.85rem' }}>
-                    <span>Launch API Tester</span>
-                    <ArrowRight size={14} />
-                  </div>
-                </div>
-
-                {/* Card 2: Docs */}
-                <div 
-                  onClick={() => handleSelectView('docs')}
-                  style={{
-                    backgroundColor: 'var(--bg-card)',
-                    border: '1px solid var(--border-subtle)',
-                    borderRadius: 'var(--radius-lg)',
-                    padding: '1.5rem',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    boxShadow: 'var(--shadow-sm)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <div>
-                    <div style={{ width: '42px', height: '42px', borderRadius: 'var(--radius-md)', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
-                      <BookOpen size={20} />
-                    </div>
-                    <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
-                      📖 Comprehensive Documentation
-                    </h3>
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '1.25rem' }}>
-                      Comprehensive reference with ScrollSpy index, parameter tables, Fetch/Axios SDKs, and status codes.
-                    </p>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#10b981', fontWeight: 700, fontSize: '0.85rem' }}>
-                    <span>Explore Documentation</span>
-                    <ArrowRight size={14} />
-                  </div>
-                </div>
-
-                {/* Card 3: Learn */}
-                <div 
-                  onClick={() => handleSelectView('learn')}
-                  style={{
-                    backgroundColor: 'var(--bg-card)',
-                    border: '1px solid var(--border-subtle)',
-                    borderRadius: 'var(--radius-lg)',
-                    padding: '1.5rem',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    boxShadow: 'var(--shadow-sm)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <div>
-                    <div style={{ width: '42px', height: '42px', borderRadius: 'var(--radius-md)', background: 'rgba(237, 178, 0, 0.15)', color: '#b45309', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
-                      <GraduationCap size={20} />
-                    </div>
-                    <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
-                      🎓 REST API Learning Academy
-                    </h3>
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '1.25rem' }}>
-                      6 step-by-step interactive lessons with theory, hands-on live code exercises, and assessment quizzes.
-                    </p>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#b45309', fontWeight: 700, fontSize: '0.85rem' }}>
-                    <span>Start Learning Lessons</span>
-                    <ArrowRight size={14} />
-                  </div>
-                </div>
-              </section>
-
-              {/* Module Cards Grid */}
-              <section>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                  <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                    {t('apiModulesHeading')} ({API_MODULES.length})
-                  </h2>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                    30 Total Production Endpoints
-                  </span>
-                </div>
-                
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
-                  {API_MODULES.map((m) => (
-                    <div
-                      key={m.id}
-                      onClick={() => setSelectedEndpointId(m.endpoints[0]?.id || null)}
-                      style={{
-                        backgroundColor: 'var(--bg-card)',
-                        border: '1px solid var(--border-subtle)',
-                        borderRadius: 'var(--radius-md)',
-                        padding: '1.25rem',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between'
-                      }}
-                    >
-                      <div>
-                        <h3 style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
-                          {m.name}
-                        </h3>
-                        <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.4, marginBottom: '1rem' }}>
-                          {m.description}
-                        </p>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--brand-primary)', fontWeight: 600 }}>
-                        <span>{m.endpoints.length} {t('endpointsCount')}</span>
-                        <ArrowRight size={14} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* Platform Highlights */}
-              <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
-                <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
-                  <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', background: 'var(--brand-sage-light)', color: 'var(--brand-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
-                    <Layers size={18} />
-                  </div>
-                  <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>30 REST Endpoints</h3>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Full coverage across all e-commerce domains and catalog flows.</p>
-                </div>
-
-                <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
-                  <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', background: 'rgba(168, 85, 247, 0.1)', color: '#a855f7', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
-                    <Shield size={18} />
-                  </div>
-                  <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>{t('highlight2Title')}</h3>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{t('highlight2Desc')}</p>
-                </div>
-
-                <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
-                  <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
-                    <Zap size={18} />
-                  </div>
-                  <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>{t('highlight3Title')}</h3>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{t('highlight3Desc')}</p>
-                </div>
-
-                <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
-                  <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', background: 'rgba(237, 178, 0, 0.15)', color: '#b45309', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
-                    <Database size={18} />
-                  </div>
-                  <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>50+ Items per Collection</h3>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Realistic datasets for thorough end-to-end API testing.</p>
-                </div>
-              </section>
-            </div>
-          )}
-        </>
+        <ConsoleWorkspace
+          initialEndpointId={selectedEndpointId}
+          onNavigateToDocs={() => handleSelectView('docs')}
+          onNavigateToLearn={() => handleSelectView('learn')}
+        />
       )}
       <AuthTokenModal />
     </AppLayout>

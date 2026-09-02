@@ -2,10 +2,8 @@ import React from 'react';
 import { 
   ShoppingBag, 
   Terminal, 
-  ShieldCheck, 
   Menu, 
   ExternalLink, 
-  Key, 
   Globe, 
   BookOpen, 
   GraduationCap, 
@@ -29,8 +27,19 @@ export const Header: React.FC<HeaderProps> = ({
   currentView, 
   onSelectView 
 }) => {
-  const { isAuthenticated, openAuthModal } = useAuth();
+  const { token, openAuthModal } = useAuth();
   const { language, setLanguage, t } = useLanguage();
+  const [copiedKey, setCopiedKey] = React.useState(false);
+
+  const handleCopyKey = async () => {
+    try {
+      await navigator.clipboard.writeText(token || 'demo-key-12345');
+      setCopiedKey(true);
+      setTimeout(() => setCopiedKey(false), 2000);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <>
@@ -98,10 +107,29 @@ export const Header: React.FC<HeaderProps> = ({
         </nav>
 
         <div className="header-right">
-          <div className="env-selector" title="API Base URL: https://api.ecommerce.example.com">
-            <span className="status-dot"></span>
-            <span className="env-label">{t('liveSandbox')}</span>
+          {/* Active API Key Pill (like freecountries.vercel.app) */}
+          <div className="api-key-pill hide-on-tablet" title="Active API Authentication Key">
+            <span className="key-dot" />
+            <code>{token ? (token.length > 15 ? `${token.substring(0, 13)}...` : token) : 'demo-key-12345'}</code>
+            <button 
+              type="button" 
+              className="key-copy-btn" 
+              onClick={handleCopyKey}
+              title="Copy Active API Key"
+            >
+              {copiedKey ? '✓' : 'Copy'}
+            </button>
           </div>
+
+          <button 
+            type="button" 
+            className="auth-header-btn unauthenticated" 
+            onClick={openAuthModal}
+            title="Generate custom key or select presets"
+            style={{ padding: '0.25rem 0.6rem', fontSize: '0.75rem' }}
+          >
+            <span>⚡ Key / Presets</span>
+          </button>
 
           <div className="header-divider hide-on-mobile" />
 
@@ -140,26 +168,6 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           <div className="header-divider hide-on-mobile" />
-
-          {/* Interactive Auth Button */}
-          <button 
-            type="button" 
-            className={`auth-header-btn ${isAuthenticated ? 'authenticated' : 'unauthenticated'}`}
-            onClick={openAuthModal}
-            title="Configure Bearer Token for API Authentication"
-          >
-            {isAuthenticated ? (
-              <>
-                <ShieldCheck size={14} className="text-emerald-400" />
-                <span className="auth-btn-label">{t('tokenActive')}</span>
-              </>
-            ) : (
-              <>
-                <Key size={14} />
-                <span className="auth-btn-label">{t('authorize')}</span>
-              </>
-            )}
-          </button>
 
           <a 
             href="https://github.com/Echo-Scaler/ecommerce-api-free" 
