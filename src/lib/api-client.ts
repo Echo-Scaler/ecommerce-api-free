@@ -1,5 +1,6 @@
 import { HttpMethod, ApiResponseExecution, ApiEndpoint } from '../types/api';
 import { API_MODULES } from '../data/api-modules';
+import { MockDb } from '../data/mock-db';
 
 export interface RequestOptions {
   path: string;
@@ -174,17 +175,17 @@ export const executeApiRequest = async (options: RequestOptions): Promise<ApiRes
     }
 
     // When remote network is unreachable or sandbox simulation is active,
-    // generate an authentic simulation response based on endpoint definition
+    // generate an authentic simulation response based on endpoint definition and 50-item MockDb
     const simulatedDuration = Math.round((endTime - startTime) + (Math.random() * 80 + 120));
     return generateSimulatedResponse(options, simulatedDuration);
   }
 };
 
 /**
- * Intelligent simulation generator for interactive testing
+ * Intelligent simulation generator for interactive testing backed by 50-item MockDb
  */
 function generateSimulatedResponse(options: RequestOptions, durationMs: number): ApiResponseExecution {
-  const { endpointId, method, path, bearerToken, body, pathParams } = options;
+  const { endpointId, method, path, bearerToken, body, pathParams, queryParams } = options;
 
   // Find endpoint definition
   let matchedEndpoint: ApiEndpoint | undefined;
@@ -280,12 +281,69 @@ function generateSimulatedResponse(options: RequestOptions, durationMs: number):
     }
   }
 
-  // Use the primary 200/201 response example from definition
+  // Dynamic Mock Database Response Handler
+  let responseData: any = null;
+  const currentEndpointId = matchedEndpoint?.id || endpointId;
+
+  if (currentEndpointId === 'get-products' || (method === 'GET' && path === '/api/v1/products')) {
+    const page = queryParams?.page ? Number(queryParams.page) : 1;
+    const limit = queryParams?.limit ? Number(queryParams.limit) : 50;
+    const categoryId = queryParams?.category_id ? String(queryParams.category_id) : undefined;
+    const sort = queryParams?.sort ? String(queryParams.sort) : undefined;
+    responseData = MockDb.getProducts(page, limit, categoryId, sort);
+  } else if (currentEndpointId === 'get-product-by-id' || (method === 'GET' && path.startsWith('/api/v1/products/'))) {
+    const id = pathParams?.id || 'prod_1';
+    const item = MockDb.getProductById(id);
+    if (item) {
+      responseData = { success: true, data: item };
+    } else {
+      responseData = { success: false, error: `Product with ID ${id} not found` };
+    }
+  } else if (currentEndpointId === 'get-categories' || (method === 'GET' && path === '/api/v1/categories')) {
+    responseData = MockDb.getCategories();
+  } else if (currentEndpointId === 'get-category-by-id' || (method === 'GET' && path.startsWith('/api/v1/categories/'))) {
+    const id = pathParams?.id || 'cat_1';
+    const cat = MockDb.getCategoryById(id);
+    responseData = cat ? { success: true, data: cat } : { success: false, error: `Category ${id} not found` };
+  } else if (currentEndpointId === 'get-orders' || (method === 'GET' && path === '/api/v1/orders')) {
+    const status = queryParams?.status ? String(queryParams.status) : undefined;
+    const limit = queryParams?.limit ? Number(queryParams.limit) : 50;
+    responseData = MockDb.getOrders(status, limit);
+  } else if (currentEndpointId === 'get-order-by-id' || (method === 'GET' && path.startsWith('/api/v1/orders/'))) {
+    const id = pathParams?.id || 'ord_1';
+    const ord = MockDb.getOrderById(id);
+    responseData = ord ? { success: true, data: ord } : { success: false, error: `Order ${id} not found` };
+  } else if (currentEndpointId === 'get-customer-profile' || (method === 'GET' && path === '/api/v1/customers/profile')) {
+    responseData = { success: true, data: MockDb.getCustomerProfile() };
+  } else if (currentEndpointId === 'get-customer-addresses' || (method === 'GET' && path === '/api/v1/customers/addresses')) {
+    responseData = MockDb.getCustomerAddresses();
+  } else if (currentEndpointId === 'get-cart' || (method === 'GET' && path === '/api/v1/cart')) {
+    responseData = MockDb.getCart();
+  } else if (currentEndpointId === 'search-products' || (method === 'GET' && path === '/api/v1/search')) {
+    const q = queryParams?.q ? String(queryParams.q) : '';
+    const minPrice = queryParams?.min_price ? Number(queryParams.min_price) : undefined;
+    const maxPrice = queryParams?.max_price ? Number(queryParams.max_price) : undefined;
+    responseData = MockDb.search(q, minPrice, maxPrice);
+  } else if (currentEndpointId === 'search-suggestions' || (method === 'GET' && path === '/api/v1/search/suggestions')) {
+    const q = queryParams?.q ? String(queryParams.q) : '';
+    responseData = MockDb.getSearchSuggestions(q);
+  } else if (currentEndpointId === 'get-inventory-by-product' || (method === 'GET' && path.startsWith('/api/v1/inventory/') && path !== '/api/v1/inventory/low-stock')) {
+    const productId = pathParams?.productId || pathParams?.id || 'prod_1';
+    const inv = MockDb.getInventory(productId);
+    responseData = inv ? { success: true, data: inv } : { success: false, error: `Inventory for product ${productId} not found` };
+  } else if (currentEndpointId === 'get-low-stock-items' || (method === 'GET' && path === '/api/v1/inventory/low-stock')) {
+    const threshold = queryParams?.threshold ? Number(queryParams.threshold) : 20;
+    responseData = MockDb.getLowStockItems(threshold);
+  }
+
+  // Fallback to responseExamples if not covered by dynamic DB
   const successExample = matchedEndpoint?.responseExamples.find((ex) => ex.statusCode >= 200 && ex.statusCode < 300);
-  const responseData = successExample ? JSON.parse(JSON.stringify(successExample.body)) : { success: true, message: 'Request executed successfully' };
+  if (!responseData) {
+    responseData = successExample ? JSON.parse(JSON.stringify(successExample.body)) : { success: true, message: 'Request executed successfully' };
+  }
 
   if (parsedBody && typeof responseData === 'object' && responseData.data) {
-    if (typeof responseData.data === 'object') {
+    if (typeof responseData.data === 'object' && !Array.isArray(responseData.data)) {
       responseData.data = {
         ...responseData.data,
         ...parsedBody,
@@ -295,8 +353,8 @@ function generateSimulatedResponse(options: RequestOptions, durationMs: number):
     }
   }
 
-  const statusCode = successExample ? successExample.statusCode : (method === 'POST' ? 201 : 200);
-  const statusText = successExample ? successExample.statusText : (statusCode === 201 ? 'Created' : 'OK');
+  const statusCode = (responseData && responseData.success === false) ? 404 : (successExample ? successExample.statusCode : (method === 'POST' ? 201 : 200));
+  const statusText = statusCode === 201 ? 'Created' : (statusCode === 404 ? 'Not Found' : 'OK');
 
   return {
     status: statusCode,
@@ -306,10 +364,11 @@ function generateSimulatedResponse(options: RequestOptions, durationMs: number):
       'content-type': 'application/json; charset=utf-8',
       'x-powered-by': 'Antigravity-Ecommerce-API',
       'x-response-time': `${durationMs}ms`,
-      'x-ratelimit-remaining': '994'
+      'x-ratelimit-remaining': '994',
+      'x-total-count': '50'
     },
     data: responseData,
     timestamp: new Date().toISOString(),
-    isError: false
+    isError: statusCode >= 400
   };
 }
