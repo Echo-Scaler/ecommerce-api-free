@@ -285,38 +285,40 @@ function generateSimulatedResponse(options: RequestOptions, durationMs: number):
   let responseData: any = null;
   const currentEndpointId = matchedEndpoint?.id || endpointId;
 
-  if (currentEndpointId === 'get-products' || (method === 'GET' && path === '/api/v1/products')) {
+  if (currentEndpointId === 'get-products' || (method === 'GET' && (path === '/api/v1/products' || path.startsWith('/api/v1/products?')))) {
     const page = queryParams?.page ? Number(queryParams.page) : 1;
     const limit = queryParams?.limit ? Number(queryParams.limit) : 50;
     const categoryId = queryParams?.category_id ? String(queryParams.category_id) : undefined;
     const sort = queryParams?.sort ? String(queryParams.sort) : undefined;
     responseData = MockDb.getProducts(page, limit, categoryId, sort);
   } else if (currentEndpointId === 'get-product-by-id' || (method === 'GET' && path.startsWith('/api/v1/products/'))) {
-    const id = pathParams?.id || 'prod_1';
+    const id = pathParams?.id || path.split('/api/v1/products/')[1] || 'prod_1';
     const item = MockDb.getProductById(id);
     if (item) {
       responseData = { success: true, data: item };
     } else {
-      responseData = { success: false, error: `Product with ID ${id} not found` };
+      responseData = { success: false, error: `Product with ID or SKU '${id}' not found` };
     }
-  } else if (currentEndpointId === 'get-categories' || (method === 'GET' && path === '/api/v1/categories')) {
+  } else if (currentEndpointId === 'get-categories' || (method === 'GET' && (path === '/api/v1/categories' || path.startsWith('/api/v1/categories?')))) {
     responseData = MockDb.getCategories();
   } else if (currentEndpointId === 'get-category-by-id' || (method === 'GET' && path.startsWith('/api/v1/categories/'))) {
-    const id = pathParams?.id || 'cat_1';
+    const id = pathParams?.id || path.split('/api/v1/categories/')[1] || 'cat_1';
     const cat = MockDb.getCategoryById(id);
-    responseData = cat ? { success: true, data: cat } : { success: false, error: `Category ${id} not found` };
-  } else if (currentEndpointId === 'get-orders' || (method === 'GET' && path === '/api/v1/orders')) {
+    responseData = cat ? { success: true, data: cat } : { success: false, error: `Category with ID or Slug '${id}' not found` };
+  } else if (currentEndpointId === 'get-orders' || (method === 'GET' && (path === '/api/v1/orders' || path.startsWith('/api/v1/orders?')))) {
     const status = queryParams?.status ? String(queryParams.status) : undefined;
     const limit = queryParams?.limit ? Number(queryParams.limit) : 50;
     responseData = MockDb.getOrders(status, limit);
   } else if (currentEndpointId === 'get-order-by-id' || (method === 'GET' && path.startsWith('/api/v1/orders/'))) {
-    const id = pathParams?.id || 'ord_1';
+    const id = pathParams?.id || path.split('/api/v1/orders/')[1] || 'ord_1';
     const ord = MockDb.getOrderById(id);
-    responseData = ord ? { success: true, data: ord } : { success: false, error: `Order ${id} not found` };
+    responseData = ord ? { success: true, data: ord } : { success: false, error: `Order with ID or Number '${id}' not found` };
   } else if (currentEndpointId === 'get-customer-profile' || (method === 'GET' && path === '/api/v1/customers/profile')) {
-    responseData = { success: true, data: MockDb.getCustomerProfile() };
+    const customerId = pathParams?.id || (queryParams?.customer_id as string) || 'cust_1';
+    responseData = { success: true, data: MockDb.getCustomerProfile(customerId) };
   } else if (currentEndpointId === 'get-customer-addresses' || (method === 'GET' && path === '/api/v1/customers/addresses')) {
-    responseData = MockDb.getCustomerAddresses();
+    const customerId = queryParams?.customer_id as string | undefined;
+    responseData = MockDb.getCustomerAddresses(customerId);
   } else if (currentEndpointId === 'get-cart' || (method === 'GET' && path === '/api/v1/cart')) {
     responseData = MockDb.getCart();
   } else if (currentEndpointId === 'search-products' || (method === 'GET' && path === '/api/v1/search')) {
@@ -328,11 +330,11 @@ function generateSimulatedResponse(options: RequestOptions, durationMs: number):
     const q = queryParams?.q ? String(queryParams.q) : '';
     responseData = MockDb.getSearchSuggestions(q);
   } else if (currentEndpointId === 'get-inventory-by-product' || (method === 'GET' && path.startsWith('/api/v1/inventory/') && path !== '/api/v1/inventory/low-stock')) {
-    const productId = pathParams?.productId || pathParams?.id || 'prod_1';
+    const productId = pathParams?.productId || pathParams?.id || path.split('/api/v1/inventory/')[1] || 'prod_1';
     const inv = MockDb.getInventory(productId);
-    responseData = inv ? { success: true, data: inv } : { success: false, error: `Inventory for product ${productId} not found` };
+    responseData = inv ? { success: true, data: inv } : { success: false, error: `Inventory for product '${productId}' not found` };
   } else if (currentEndpointId === 'get-low-stock-items' || (method === 'GET' && path === '/api/v1/inventory/low-stock')) {
-    const threshold = queryParams?.threshold ? Number(queryParams.threshold) : 20;
+    const threshold = queryParams?.threshold ? Number(queryParams.threshold) : 50;
     responseData = MockDb.getLowStockItems(threshold);
   }
 

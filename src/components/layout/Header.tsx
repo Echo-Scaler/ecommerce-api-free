@@ -74,7 +74,7 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => onSelectView('console')}
           >
             <SlidersHorizontal size={14} />
-            <span>Console</span>
+            <span>{t('navConsole')}</span>
           </button>
 
           <button
@@ -83,7 +83,7 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => onSelectView('docs')}
           >
             <BookOpen size={14} />
-            <span>Documentation</span>
+            <span>{t('navDocs')}</span>
           </button>
 
           <button
@@ -92,18 +92,18 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => onSelectView('learn')}
           >
             <GraduationCap size={15} />
-            <span>Learn</span>
+            <span>{t('navLearn')}</span>
             <span className="nav-tab-badge">Interactive</span>
           </button>
         </nav>
 
         <div className="header-right">
-          <div className="env-selector">
+          <div className="env-selector" title="API Base URL: https://api.ecommerce.example.com">
             <span className="status-dot"></span>
             <span className="env-label">{t('liveSandbox')}</span>
           </div>
 
-          <div className="header-divider" />
+          <div className="header-divider hide-on-mobile" />
 
           {/* Quick Launch Console Action when in Docs or Learn */}
           {currentView !== 'console' && (
@@ -111,14 +111,15 @@ export const Header: React.FC<HeaderProps> = ({
               type="button"
               className="header-quick-tester-btn"
               onClick={() => onSelectView('console')}
+              title="Open Interactive API Console"
             >
               <Sparkles size={13} />
-              <span>Console</span>
+              <span>{t('navConsole')}</span>
             </button>
           )}
 
           {/* Language Switcher (EN / မြန်မာ) */}
-          <div className="lang-switcher-wrapper">
+          <div className="lang-switcher-wrapper" role="group" aria-label="Language Selector">
             <Globe size={13} className="globe-icon" />
             <button
               type="button"
@@ -138,7 +139,7 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           </div>
 
-          <div className="header-divider" />
+          <div className="header-divider hide-on-mobile" />
 
           {/* Interactive Auth Button */}
           <button 
@@ -150,12 +151,12 @@ export const Header: React.FC<HeaderProps> = ({
             {isAuthenticated ? (
               <>
                 <ShieldCheck size={14} className="text-emerald-400" />
-                <span>{t('tokenActive')}</span>
+                <span className="auth-btn-label">{t('tokenActive')}</span>
               </>
             ) : (
               <>
                 <Key size={14} />
-                <span>{t('authorize')}</span>
+                <span className="auth-btn-label">{t('authorize')}</span>
               </>
             )}
           </button>
@@ -164,11 +165,11 @@ export const Header: React.FC<HeaderProps> = ({
             href="https://github.com/Echo-Scaler/ecommerce-api-free" 
             target="_blank" 
             rel="noopener noreferrer" 
-            className="header-link-btn"
+            className="header-link-btn hide-on-tablet"
             title="View Source on GitHub"
           >
             <Terminal size={14} />
-            <span>{t('github')}</span>
+            <span className="github-btn-label">{t('github')}</span>
             <ExternalLink size={11} />
           </a>
         </div>
@@ -182,7 +183,7 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={() => onSelectView('console')}
         >
           <SlidersHorizontal size={13} />
-          <span>Console</span>
+          <span>{t('navConsole')}</span>
         </button>
 
         <button
@@ -191,7 +192,7 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={() => onSelectView('docs')}
         >
           <BookOpen size={13} />
-          <span>Documentation</span>
+          <span>{t('navDocs')}</span>
         </button>
 
         <button
@@ -200,7 +201,7 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={() => onSelectView('learn')}
         >
           <GraduationCap size={14} />
-          <span>Learn</span>
+          <span>{t('navLearn')}</span>
           <span className="nav-tab-badge" style={{ fontSize: '0.6rem', padding: '0.1rem 0.35rem' }}>Live</span>
         </button>
       </div>

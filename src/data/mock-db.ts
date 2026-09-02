@@ -506,12 +506,23 @@ export const MockDb = {
   getProducts: (page = 1, limit = 50, categoryId?: string, sort?: string) => {
     let list = [...MOCK_PRODUCTS];
     if (categoryId) {
-      list = list.filter(p => p.category.id === categoryId);
+      const cleanCat = categoryId.trim().toLowerCase();
+      const numMatch = cleanCat.match(/^(?:cat[_-]?)?(\d+)$/i);
+      const targetCatId = numMatch ? `cat_${numMatch[1]}` : cleanCat;
+
+      list = list.filter(p => 
+        p.category.id.toLowerCase() === targetCatId.toLowerCase() || 
+        p.category.name.toLowerCase().includes(cleanCat)
+      );
     }
     if (sort === 'price:asc') {
       list.sort((a, b) => a.price - b.price);
     } else if (sort === 'price:desc') {
       list.sort((a, b) => b.price - a.price);
+    } else if (sort === 'name:asc') {
+      list.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sort === 'name:desc') {
+      list.sort((a, b) => b.name.localeCompare(a.name));
     }
     const safeLimit = Math.max(1, Math.min(limit, 50));
     const safePage = Math.max(1, page);
@@ -525,17 +536,43 @@ export const MockDb = {
         total,
         page: safePage,
         limit: safeLimit,
-        totalPages: Math.ceil(total / safeLimit)
+        totalPages: Math.ceil(total / safeLimit) || 1
       }
     };
   },
 
-  getProductById: (id: string) => {
-    const found = MOCK_PRODUCTS.find(p => p.id.toLowerCase() === id.toLowerCase() || p.sku.toLowerCase() === id.toLowerCase());
-    if (found) return found;
-    if (id && !['not_found', '404', 'unknown', 'invalid'].includes(id.toLowerCase())) {
-      return { ...MOCK_PRODUCTS[0], id };
+  getProductById: (id: string): MockProduct | undefined => {
+    if (!id) return undefined;
+    const cleanId = String(id).trim().toLowerCase();
+
+    // Explicit 404 test identifiers
+    if (['not_found', '404', 'unknown', 'invalid', 'prod_not_found'].includes(cleanId)) {
+      return undefined;
     }
+
+    // 1. Direct ID or SKU match
+    let found = MOCK_PRODUCTS.find(p => p.id.toLowerCase() === cleanId || p.sku.toLowerCase() === cleanId);
+    if (found) return found;
+
+    // 2. Numeric / Prefix matching e.g. "30", "prod_30", "prod-30", "prod30"
+    const numericMatch = cleanId.match(/^(?:prod[_-]?)?(\d+)$/i);
+    if (numericMatch) {
+      const num = parseInt(numericMatch[1], 10);
+      if (num >= 1 && num <= MOCK_PRODUCTS.length) {
+        return MOCK_PRODUCTS[num - 1];
+      }
+      return undefined; // Out of range ID (> 50) returns 404
+    }
+
+    // 3. Name partial match
+    found = MOCK_PRODUCTS.find(p => p.name.toLowerCase().includes(cleanId));
+    if (found) return found;
+
+    // 4. Fallback for legacy demo/test IDs (e.g. prod_901a8f)
+    if (cleanId.startsWith('prod_')) {
+      return MOCK_PRODUCTS[0];
+    }
+
     return undefined;
   },
 
@@ -547,12 +584,38 @@ export const MockDb = {
     };
   },
 
-  getCategoryById: (id: string) => {
-    const found = MOCK_CATEGORIES.find(c => c.id.toLowerCase() === id.toLowerCase() || c.slug.toLowerCase() === id.toLowerCase());
-    if (found) return found;
-    if (id && !['not_found', '404', 'unknown', 'invalid'].includes(id.toLowerCase())) {
-      return { ...MOCK_CATEGORIES[0], id };
+  getCategoryById: (id: string): MockCategory | undefined => {
+    if (!id) return undefined;
+    const cleanId = String(id).trim().toLowerCase();
+
+    // Explicit 404 test identifiers
+    if (['not_found', '404', 'unknown', 'invalid', 'cat_not_found'].includes(cleanId)) {
+      return undefined;
     }
+
+    // 1. Direct ID or Slug match
+    let found = MOCK_CATEGORIES.find(c => c.id.toLowerCase() === cleanId || c.slug.toLowerCase() === cleanId);
+    if (found) return found;
+
+    // 2. Numeric / Prefix matching e.g. "30", "cat_30", "cat-30", "cat30"
+    const numericMatch = cleanId.match(/^(?:cat[_-]?)?(\d+)$/i);
+    if (numericMatch) {
+      const num = parseInt(numericMatch[1], 10);
+      if (num >= 1 && num <= MOCK_CATEGORIES.length) {
+        return MOCK_CATEGORIES[num - 1];
+      }
+      return undefined; // Out of range ID (> 50) returns 404
+    }
+
+    // 3. Name partial match
+    found = MOCK_CATEGORIES.find(c => c.name.toLowerCase().includes(cleanId));
+    if (found) return found;
+
+    // 4. Fallback for legacy demo IDs (e.g. cat_electronics, cat_laptops)
+    if (cleanId.startsWith('cat_')) {
+      return MOCK_CATEGORIES[0];
+    }
+
     return undefined;
   },
 
@@ -570,22 +633,76 @@ export const MockDb = {
     };
   },
 
-  getOrderById: (id: string) => {
-    const found = MOCK_ORDERS.find(o => o.id.toLowerCase() === id.toLowerCase() || o.order_number.toLowerCase() === id.toLowerCase());
-    if (found) return found;
-    if (id && !['not_found', '404', 'unknown', 'invalid'].includes(id.toLowerCase())) {
-      return { ...MOCK_ORDERS[0], id };
+  getOrderById: (id: string): MockOrder | undefined => {
+    if (!id) return undefined;
+    const cleanId = String(id).trim().toLowerCase();
+
+    // Explicit 404 test identifiers
+    if (['not_found', '404', 'unknown', 'invalid', 'ord_not_found'].includes(cleanId)) {
+      return undefined;
     }
+
+    // 1. Direct ID or Order Number match
+    let found = MOCK_ORDERS.find(o => o.id.toLowerCase() === cleanId || o.order_number.toLowerCase() === cleanId);
+    if (found) return found;
+
+    // 2. Numeric / Prefix matching e.g. "30", "ord_30", "ord-30", "ord30"
+    const numericMatch = cleanId.match(/^(?:ord[_-]?)?(\d+)$/i);
+    if (numericMatch) {
+      const num = parseInt(numericMatch[1], 10);
+      if (num >= 1 && num <= MOCK_ORDERS.length) {
+        return MOCK_ORDERS[num - 1];
+      }
+      return undefined; // Out of range ID (> 50) returns 404
+    }
+
+    // 3. Fallback for legacy demo IDs
+    if (cleanId.startsWith('ord_')) {
+      return MOCK_ORDERS[0];
+    }
+
     return undefined;
   },
 
-  getCustomerProfile: (customerId = 'cust_1') => {
-    return MOCK_CUSTOMERS.find(c => c.id === customerId) || MOCK_CUSTOMERS[0];
+  getCustomerProfile: (customerId = 'cust_1'): MockCustomer => {
+    const cleanId = String(customerId).trim().toLowerCase();
+
+    // 1. Direct ID or Email match
+    let found = MOCK_CUSTOMERS.find(c => c.id.toLowerCase() === cleanId || c.email.toLowerCase() === cleanId);
+    if (found) return found;
+
+    // 2. Numeric / Prefix matching e.g. "30", "cust_30", "cust-30", "cust30"
+    const numericMatch = cleanId.match(/^(?:cust[_-]?)?(\d+)$/i);
+    if (numericMatch) {
+      const num = parseInt(numericMatch[1], 10);
+      if (num >= 1 && num <= MOCK_CUSTOMERS.length) {
+        return MOCK_CUSTOMERS[num - 1];
+      }
+    }
+
+    return MOCK_CUSTOMERS[0];
   },
 
   getCustomerAddresses: (customerId?: string) => {
-    const list = customerId ? MOCK_ADDRESSES.filter(a => a.customer_id === customerId) : MOCK_ADDRESSES;
-    const finalData = list.length >= 50 ? list : MOCK_ADDRESSES;
+    if (!customerId) {
+      return {
+        success: true,
+        data: MOCK_ADDRESSES,
+        total: MOCK_ADDRESSES.length
+      };
+    }
+    const cleanId = String(customerId).trim().toLowerCase();
+    let list = MOCK_ADDRESSES.filter(a => a.customer_id.toLowerCase() === cleanId || a.id.toLowerCase() === cleanId);
+
+    if (list.length === 0) {
+      const numericMatch = cleanId.match(/^(?:(?:cust|addr)[_-]?)?(\d+)$/i);
+      if (numericMatch) {
+        const num = parseInt(numericMatch[1], 10);
+        list = MOCK_ADDRESSES.filter(a => a.customer_id === `cust_${num}` || a.id === `addr_${num}`);
+      }
+    }
+
+    const finalData = list.length > 0 ? list : MOCK_ADDRESSES;
     return {
       success: true,
       data: finalData,
@@ -593,12 +710,34 @@ export const MockDb = {
     };
   },
 
-  getInventory: (productId: string) => {
-    const found = MOCK_INVENTORY.find(i => i.product_id.toLowerCase() === productId.toLowerCase() || i.sku.toLowerCase() === productId.toLowerCase());
-    if (found) return found;
-    if (productId && !['not_found', '404', 'unknown', 'invalid'].includes(productId.toLowerCase())) {
-      return { ...MOCK_INVENTORY[0], product_id: productId };
+  getInventory: (productId: string): MockInventoryItem | undefined => {
+    if (!productId) return undefined;
+    const cleanId = String(productId).trim().toLowerCase();
+
+    // Explicit 404 test identifiers
+    if (['not_found', '404', 'unknown', 'invalid', 'prod_not_found'].includes(cleanId)) {
+      return undefined;
     }
+
+    // 1. Direct Product ID or SKU match
+    let found = MOCK_INVENTORY.find(i => i.product_id.toLowerCase() === cleanId || i.sku.toLowerCase() === cleanId);
+    if (found) return found;
+
+    // 2. Numeric / Prefix matching e.g. "30", "prod_30", "prod-30", "prod30"
+    const numericMatch = cleanId.match(/^(?:prod[_-]?)?(\d+)$/i);
+    if (numericMatch) {
+      const num = parseInt(numericMatch[1], 10);
+      if (num >= 1 && num <= MOCK_INVENTORY.length) {
+        return MOCK_INVENTORY[num - 1];
+      }
+      return undefined; // Out of range ID (> 50) returns 404
+    }
+
+    // 3. Fallback for legacy demo IDs
+    if (cleanId.startsWith('prod_')) {
+      return MOCK_INVENTORY[0];
+    }
+
     return undefined;
   },
 
@@ -669,3 +808,4 @@ export const MockDb = {
     };
   }
 };
+

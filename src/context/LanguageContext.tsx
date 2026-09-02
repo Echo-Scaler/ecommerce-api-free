@@ -11,6 +11,9 @@ export interface Translations {
   tokenActive: string;
   authorize: string;
   github: string;
+  navConsole: string;
+  navDocs: string;
+  navLearn: string;
 
   // Overview Page
   platformTag: string;
@@ -82,6 +85,9 @@ const translations: Record<Language, Translations> = {
     tokenActive: 'Token Active',
     authorize: 'Authorize',
     github: 'GitHub',
+    navConsole: 'Console',
+    navDocs: 'Documentation',
+    navLearn: 'Learn',
 
     platformTag: 'RESTful Developer Platform',
     platformTitle: 'E-Commerce API Documentation & Interactive Testing',
@@ -146,6 +152,9 @@ const translations: Record<Language, Translations> = {
     tokenActive: 'တိုကင် အသက်ဝင်သည်',
     authorize: 'ခွင့်ပြုချက်',
     github: 'GitHub',
+    navConsole: 'ကွန်ဆိုးလ်',
+    navDocs: 'စာရွက်စာတမ်း',
+    navLearn: 'လေ့လာရန်',
 
     platformTag: 'RESTful API ပလက်ဖောင်း',
     platformTitle: 'အီးကောမတ်စ် API စာရွက်စာတမ်းများနှင့် တိုက်ရိုက် စမ်းသပ်မှုစနစ်',
@@ -229,6 +238,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   useEffect(() => {
     document.documentElement.lang = language;
+    document.documentElement.classList.toggle('lang-my', language === 'my');
+    if (typeof document !== 'undefined' && document.body) {
+      document.body.classList.toggle('lang-my', language === 'my');
+    }
   }, [language]);
 
   const t = (key: keyof Translations): string => {
