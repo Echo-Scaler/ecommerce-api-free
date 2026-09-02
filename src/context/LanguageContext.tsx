@@ -140,12 +140,12 @@ const translations: Record<Language, Translations> = {
   },
   my: {
     brandTitle: 'အီးကောမတ်စ်',
-    brandHighlight: 'API စာရွက်စာတမ်းများ',
-    brandSubtitle: 'ဆော့ဖ်ဝဲရေးသားသူများအတွက် အပြန်အလှန်သုံး ပလက်ဖောင်း',
+    brandHighlight: 'API',
+    brandSubtitle: 'ဆော့ဖ်ဝဲ ပလက်ဖောင်း',
     liveSandbox: 'တိုက်ရိုက် စမ်းသပ်ခန်း',
-    tokenActive: 'တိုကင် အသက်ဝင်နေသည်',
-    authorize: 'ခွင့်ပြုချက် ရယူရန်',
-    github: 'ဂစ်ဟပ်ဘ် (GitHub)',
+    tokenActive: 'တိုကင် အသက်ဝင်သည်',
+    authorize: 'ခွင့်ပြုချက်',
+    github: 'GitHub',
 
     platformTag: 'RESTful API ပလက်ဖောင်း',
     platformTitle: 'အီးကောမတ်စ် API စာရွက်စာတမ်းများနှင့် တိုက်ရိုက် စမ်းသပ်မှုစနစ်',
