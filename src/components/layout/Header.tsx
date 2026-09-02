@@ -1,29 +1,51 @@
 import React from 'react';
-import { ShoppingBag, Terminal, ShieldCheck, Menu, ExternalLink, Key, Globe } from 'lucide-react';
+import { 
+  ShoppingBag, 
+  Terminal, 
+  ShieldCheck, 
+  Menu, 
+  ExternalLink, 
+  Key, 
+  Globe, 
+  BookOpen, 
+  GraduationCap, 
+  SlidersHorizontal,
+  Sparkles
+} from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
+
+export type AppView = 'console' | 'docs' | 'learn';
 
 interface HeaderProps {
   onToggleSidebar?: () => void;
   isSidebarOpen?: boolean;
+  currentView: AppView;
+  onSelectView: (view: AppView) => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
+export const Header: React.FC<HeaderProps> = ({ 
+  onToggleSidebar, 
+  currentView, 
+  onSelectView 
+}) => {
   const { isAuthenticated, openAuthModal } = useAuth();
   const { language, setLanguage, t } = useLanguage();
 
   return (
     <header className="app-header">
       <div className="header-left">
-        <button 
-          className="mobile-sidebar-toggle" 
-          onClick={onToggleSidebar}
-          aria-label="Toggle Navigation Sidebar"
-        >
-          <Menu size={20} />
-        </button>
+        {currentView === 'console' && (
+          <button 
+            className="mobile-sidebar-toggle" 
+            onClick={onToggleSidebar}
+            aria-label="Toggle Navigation Sidebar"
+          >
+            <Menu size={20} />
+          </button>
+        )}
 
-        <div className="brand-badge">
+        <div className="brand-badge" onClick={() => onSelectView('console')} style={{ cursor: 'pointer' }}>
           <div className="brand-icon-wrapper">
             <ShoppingBag size={20} className="brand-icon" />
           </div>
@@ -35,35 +57,68 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
           </div>
         </div>
 
-        <div className="version-pill">v1.0.0 REST</div>
+        <div className="version-pill">v2.0.0 REST</div>
+
+        {/* Primary View Navigation Tabs */}
+        <nav className="header-nav-tabs" aria-label="Main Navigation">
+          <button
+            type="button"
+            className={`header-nav-tab ${currentView === 'console' ? 'active' : ''}`}
+            onClick={() => onSelectView('console')}
+          >
+            <SlidersHorizontal size={15} />
+            <span>Console</span>
+          </button>
+
+          <button
+            type="button"
+            className={`header-nav-tab ${currentView === 'docs' ? 'active' : ''}`}
+            onClick={() => onSelectView('docs')}
+          >
+            <BookOpen size={15} />
+            <span>Documentation</span>
+          </button>
+
+          <button
+            type="button"
+            className={`header-nav-tab ${currentView === 'learn' ? 'active' : ''}`}
+            onClick={() => onSelectView('learn')}
+          >
+            <GraduationCap size={16} />
+            <span>Learn</span>
+            <span className="nav-tab-badge">Interactive</span>
+          </button>
+        </nav>
       </div>
 
       <div className="header-right">
         <div className="env-selector">
           <span className="status-dot"></span>
           <span className="env-label">{t('liveSandbox')}</span>
-          <span className="env-url">https://api.ecommerce.example.com/v1</span>
+          <span className="env-url">api.ecommerce.example.com</span>
         </div>
 
         <div className="header-divider" />
 
+        {/* Quick Launch Console Action when in Docs or Learn */}
+        {currentView !== 'console' && (
+          <button
+            type="button"
+            className="header-quick-tester-btn"
+            onClick={() => onSelectView('console')}
+          >
+            <Sparkles size={14} />
+            <span>Open Console</span>
+          </button>
+        )}
+
         {/* Language Switcher (EN / မြန်မာ) */}
-        <div className="lang-switcher-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', background: 'var(--bg-card)', padding: '0.25rem 0.4rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
-          <Globe size={15} style={{ color: 'var(--brand-primary)', marginLeft: '0.25rem' }} />
+        <div className="lang-switcher-wrapper">
+          <Globe size={14} className="globe-icon" />
           <button
             type="button"
             onClick={() => setLanguage('en')}
-            style={{
-              padding: '0.25rem 0.5rem',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              borderRadius: 'var(--radius-sm)',
-              border: 'none',
-              cursor: 'pointer',
-              background: language === 'en' ? 'var(--brand-primary)' : 'transparent',
-              color: language === 'en' ? '#ffffff' : 'var(--text-secondary)',
-              transition: 'all 0.15s ease'
-            }}
+            className={`lang-btn ${language === 'en' ? 'active' : ''}`}
             title="Switch language to English"
           >
             EN
@@ -71,17 +126,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
           <button
             type="button"
             onClick={() => setLanguage('my')}
-            style={{
-              padding: '0.25rem 0.5rem',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              borderRadius: 'var(--radius-sm)',
-              border: 'none',
-              cursor: 'pointer',
-              background: language === 'my' ? 'var(--brand-primary)' : 'transparent',
-              color: language === 'my' ? '#ffffff' : 'var(--text-secondary)',
-              transition: 'all 0.15s ease'
-            }}
+            className={`lang-btn ${language === 'my' ? 'active' : ''}`}
             title="ဘာသာစကားကို မြန်မာဘာသာသို့ ပြောင်းမည်"
           >
             မြန်မာ
@@ -115,8 +160,9 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
           target="_blank" 
           rel="noopener noreferrer" 
           className="header-link-btn"
+          title="View Source on GitHub"
         >
-          <Terminal size={16} />
+          <Terminal size={15} />
           <span>{t('github')}</span>
           <ExternalLink size={12} />
         </a>
