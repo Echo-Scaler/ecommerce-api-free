@@ -11,7 +11,11 @@ import {
   Download, 
   Clock, 
   Key, 
-  ExternalLink
+  ExternalLink,
+  Send,
+  Columns,
+  Maximize2,
+  LayoutGrid
 } from 'lucide-react';
 
 interface ConsoleWorkspaceProps {
@@ -35,6 +39,7 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
   const [apiKey, setApiKey] = useState<string>(token || 'demo-key-12345');
   const [requestBody, setRequestBody] = useState<string>('');
   const [activeCodeTab, setActiveCodeTab] = useState<'fetch' | 'axios' | 'curl' | 'postman'>('fetch');
+  const [layoutMode, setLayoutMode] = useState<'split' | 'console' | 'endpoints'>('split');
   
   // Execution state
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -299,15 +304,57 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
         </div>
       </section>
 
-      {/* 2. MAIN CONSOLE WORKSPACE (SPLIT 2-COLUMN LAYOUT) */}
-      <main className="workspace-console-grid">
+      {/* 2. MAIN CONSOLE WORKSPACE HEADER & LAYOUT TOGGLE */}
+      <div className="console-workspace-header-bar">
+        <div className="workspace-title-group">
+          <h2 className="workspace-main-heading">
+            {isMyanmar ? 'API စမ်းသပ်မှုနှင့် အချက်အလက်များ' : 'API Testing & Documentation'}
+          </h2>
+          <span className="workspace-subtitle">
+            {isMyanmar ? 'Endpoints များကို စမ်းသပ်ပြီး တုံ့ပြန်မှုရလဒ်များကို တိုက်ရိုက်ကြည့်ရှုပါ' : 'Select an endpoint to test or enter custom API requests'}
+          </span>
+        </div>
+
+        <div className="console-layout-toggle" role="group" aria-label="Console Layout">
+          <button
+            type="button"
+            className={`layout-toggle-btn ${layoutMode === 'split' ? 'active' : ''}`}
+            onClick={() => setLayoutMode('split')}
+            title={isMyanmar ? 'နှစ်ခြမ်းခွဲ ပုံစံ (Endpoints + Console)' : 'Split View (Endpoints + Console)'}
+          >
+            <Columns size={13} />
+            <span>{isMyanmar ? 'နှစ်ခြမ်းခွဲ' : 'Split'}</span>
+          </button>
+          <button
+            type="button"
+            className={`layout-toggle-btn ${layoutMode === 'console' ? 'active' : ''}`}
+            onClick={() => setLayoutMode('console')}
+            title={isMyanmar ? 'ကွန်ဆိုးလ် အပြည့်အကျယ်' : 'Full Console View'}
+          >
+            <Maximize2 size={13} />
+            <span>{isMyanmar ? 'ကွန်ဆိုးလ်အပြည့်' : 'Full Console'}</span>
+          </button>
+          <button
+            type="button"
+            className={`layout-toggle-btn ${layoutMode === 'endpoints' ? 'active' : ''}`}
+            onClick={() => setLayoutMode('endpoints')}
+            title={isMyanmar ? 'Endpoints စာရင်းသာ' : 'Endpoints Only'}
+          >
+            <LayoutGrid size={13} />
+            <span>{isMyanmar ? 'Endpoints' : 'Endpoints'}</span>
+          </button>
+        </div>
+      </div>
+
+      <main className={`workspace-console-grid layout-${layoutMode}`}>
         {/* LEFT COLUMN: Endpoints, Query Presets & Integration Code Guide */}
-        <section className="docs-panel-console">
-          <div className="panel-header-row">
-            <div>
-              <h2 className="panel-header-title">{isMyanmar ? 'API Endpoints များ' : 'API Endpoints'}</h2>
-              <p className="panel-header-sub">{isMyanmar ? 'စမ်းသပ်လိုသော Endpoint ကို နှိပ်၍ အချက်အလက်များကို ရယူပါ' : 'Click any endpoint card to test it instantly'}</p>
-            </div>
+        {(layoutMode === 'split' || layoutMode === 'endpoints') && (
+          <section className="docs-panel-console">
+            <div className="panel-header-row">
+              <div>
+                <h2 className="panel-header-title">{isMyanmar ? 'API Endpoints များ' : 'API Endpoints'}</h2>
+                <p className="panel-header-sub">{isMyanmar ? 'စမ်းသပ်လိုသော Endpoint ကို နှိပ်၍ အချက်အလက်များကို ရယူပါ' : 'Click any endpoint card to test it instantly'}</p>
+              </div>
             <button 
               type="button" 
               className="view-full-docs-link"
@@ -479,8 +526,10 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
             </div>
           </div>
         </section>
+      )}
 
-        {/* RIGHT COLUMN: Interactive Request Console & Response Viewer */}
+      {/* RIGHT COLUMN: Interactive Request Console & Response Viewer */}
+      {(layoutMode === 'split' || layoutMode === 'console') && (
         <section className="tester-panel-console">
           {/* Header */}
           <div className="panel-header-row">
@@ -495,40 +544,56 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
 
           {/* Request Form Box */}
           <form className="console-request-box" onSubmit={handleSendRequest}>
-            {/* Request Bar */}
-            <div className="request-url-bar">
-              <select
-                className={`method-dropdown method-select-${selectedMethod.toLowerCase()}`}
-                value={selectedMethod}
-                onChange={(e) => setSelectedMethod(e.target.value as HttpMethod)}
-              >
-                <option value="GET">GET</option>
-                <option value="POST">POST</option>
-                <option value="PUT">PUT</option>
-                <option value="PATCH">PATCH</option>
-                <option value="DELETE">DELETE</option>
-              </select>
+            {/* Request Bar with URL and Submit Button */}
+            <div className="request-url-row">
+              <div className="request-url-bar">
+                <select
+                  className={`method-dropdown method-select-${selectedMethod.toLowerCase()}`}
+                  value={selectedMethod}
+                  onChange={(e) => setSelectedMethod(e.target.value as HttpMethod)}
+                  aria-label="HTTP Method"
+                >
+                  <option value="GET">GET</option>
+                  <option value="POST">POST</option>
+                  <option value="PUT">PUT</option>
+                  <option value="PATCH">PATCH</option>
+                  <option value="DELETE">DELETE</option>
+                </select>
 
-              <input
-                type="text"
-                className="path-text-input"
-                value={requestPath}
-                onChange={(e) => setRequestPath(e.target.value)}
-                placeholder="/api/v1/products?limit=5"
-                required
-              />
+                <input
+                  type="text"
+                  className="path-text-input"
+                  value={requestPath}
+                  onChange={(e) => setRequestPath(e.target.value)}
+                  placeholder="/api/v1/products?limit=5"
+                  required
+                  aria-label="API Request URL Path"
+                />
+              </div>
 
               <button
                 type="submit"
                 className="send-request-btn"
                 disabled={isLoading}
+                title={isMyanmar ? 'Request ပေးပို့ရန် နှိပ်ပါ (သို့မဟုတ် Enter ခေါက်ပါ)' : 'Click to send request (or press Enter)'}
               >
                 {isLoading ? (
-                  <span>Executing...</span>
+                  <>
+                    <span className="btn-spinner" />
+                    <span>{isMyanmar ? 'ပေးပို့နေသည်...' : 'Executing...'}</span>
+                  </>
                 ) : (
-                  <span>{isMyanmar ? 'Request ပေးပို့မည် 🚀' : 'Send Request 🚀'}</span>
+                  <>
+                    <Send size={15} />
+                    <span>{isMyanmar ? 'Request ပေးပို့မည်' : 'Send Request'}</span>
+                  </>
                 )}
               </button>
+            </div>
+
+            {/* Hint for how to submit request */}
+            <div className="request-submit-hint">
+              <span>💡 {isMyanmar ? 'Enter ခေါက်၍ဖြစ်စေ၊ အစိမ်းရောင် "Request ပေးပို့မည်" ခလုတ်ကို နှိပ်၍ဖြစ်စေ API ကို စမ်းသပ်နိုင်ပါသည်' : 'Press Enter or click the green "Send Request" button to execute API'}</span>
             </div>
 
             {/* Auth Key Header */}
@@ -660,6 +725,7 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
             </div>
           </div>
         </section>
+      )}
       </main>
     </div>
   );

@@ -155,9 +155,12 @@ code, pre, .font-mono {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  overflow: visible;
-  flex-shrink: 0;
-  min-width: max-content;
+  overflow: hidden;
+  /* Removed min-width: max-content — it prevented the header-left from ever
+     shrinking, causing horizontal overflow on screens narrower than ~480px.
+     flex-shrink: 1 (default) lets it compress when the header is tight. */
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 .mobile-sidebar-toggle {
@@ -183,10 +186,11 @@ code, pre, .font-mono {
   align-items: center;
   gap: 0.55rem;
   text-decoration: none;
-  overflow: visible;
-  min-width: max-content;
+  overflow: hidden;
+  /* Allow shrink so brand can compress on very narrow screens */
+  min-width: 0;
   user-select: none;
-  flex-shrink: 0;
+  flex-shrink: 1;
 }
 
 .brand-icon-wrapper {
@@ -209,7 +213,8 @@ code, pre, .font-mono {
   color: #101828;
   line-height: 1;
   white-space: nowrap;
-  overflow: visible;
+  overflow: hidden;
+  text-overflow: ellipsis;
   display: flex;
   align-items: center;
   gap: 0.35rem;
@@ -285,7 +290,7 @@ code, pre, .font-mono {
   flex-shrink: 0;
 }
 
-/* Bulletproof Language Switcher */
+/* Language Switcher — flexible width to avoid overflow on small screens */
 .lang-switcher-wrapper {
   display: inline-flex !important;
   flex-direction: row !important;
@@ -298,8 +303,10 @@ code, pre, .font-mono {
   padding: 2px 3px !important;
   border-radius: 999px !important;
   flex-shrink: 0 !important;
-  min-width: 106px !important;
-  width: 106px !important;
+  /* Removed hardcoded width: 106px — was causing header overflow risk at <400px.
+     The switcher now sizes to content (EN + Myanmar), which is slightly wider
+     but doesn't cause layout breakage. */
+  min-width: 96px !important;
   height: 32px !important;
   box-sizing: border-box !important;
   white-space: nowrap !important;
@@ -425,7 +432,11 @@ code, pre, .font-mono {
   flex-direction: column;
   height: calc(100vh - var(--header-height));
   z-index: 30;
-  transition: transform 0.25s ease;
+  /* Use cubic-bezier for a snappy but smooth feel.
+     will-change: transform promotes the sidebar to its own GPU layer,
+     eliminating paint jank during the slide animation. */
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
 .sidebar-mobile-header {
@@ -456,8 +467,30 @@ code, pre, .font-mono {
   padding: 1rem;
 }
 
+/* Sidebar backdrop — always rendered in DOM (SidebarContainer.tsx mounts it
+   unconditionally). Visibility is controlled via .sidebar-backdrop-visible class
+   so the CSS opacity/visibility transition fires on BOTH open AND close.
+   Old approach (conditional render) killed the exit animation entirely. */
 .sidebar-backdrop {
   display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(16, 24, 40, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 25;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+  will-change: opacity;
+}
+
+.sidebar-backdrop.sidebar-backdrop-visible {
+  opacity: 1;
+  visibility: visible;
 }
 
 /* API Search Input */
@@ -2806,6 +2839,7 @@ code, pre, .font-mono {
 @media (max-width: 768px) {
   .app-header {
     padding: 0 0.75rem;
+    gap: 0.5rem;
   }
 
   .hide-on-mobile {
@@ -2820,18 +2854,10 @@ code, pre, .font-mono {
     display: none !important;
   }
 
+  /* Backdrop is always in the DOM — show it on mobile via display: block.
+     Opacity/visibility transition is handled by .sidebar-backdrop-visible class. */
   .sidebar-backdrop {
     display: block;
-    position: fixed;
-    top: var(--header-height);
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(16, 24, 40, 0.6);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    z-index: 25;
-    animation: fadeIn 0.2s ease;
   }
 
   .app-sidebar {
@@ -2841,9 +2867,11 @@ code, pre, .font-mono {
     bottom: 0;
     width: 290px;
     min-width: 290px;
+    max-width: 85vw;
     transform: translateX(-100%);
     box-shadow: var(--shadow-lg);
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Inherit transition from base rule (cubic-bezier + will-change already set) */
+    height: auto;
   }
 
   .app-sidebar.sidebar-open {
@@ -2949,6 +2977,22 @@ code, pre, .font-mono {
     overflow-x: auto;
     width: 100%;
   }
+
+  /* Console workspace — ensure full-width panels don't overflow */
+  .console-workspace-wrapper {
+    padding: 0.85rem;
+  }
+
+  /* Response viewer JSON — limit height more aggressively on mobile */
+  .response-json-container {
+    max-height: 320px;
+  }
+
+  /* Auth button — compact on mobile */
+  .auth-header-btn {
+    padding: 0.28rem 0.55rem;
+    font-size: 0.75rem;
+  }
 }
 
 @media (max-width: 540px) {
@@ -2957,17 +3001,25 @@ code, pre, .font-mono {
   }
 
   .auth-header-btn {
-    padding: 0.35rem 0.5rem;
+    padding: 0.25rem 0.45rem;
+    font-size: 0.72rem;
   }
 
   .version-pill {
     display: none;
   }
+
+  /* Mobile view tabs — reduce padding and icon gap at 540px */
+  .mobile-view-tab {
+    padding: 0.45rem 0.4rem;
+    font-size: 0.75rem;
+    gap: 0.25rem;
+  }
 }
 
 @media (max-width: 480px) {
   .brand-title {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
 
   .header-link-btn span {
@@ -2982,6 +3034,87 @@ code, pre, .font-mono {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.35rem;
+  }
+
+  /* Lang switcher — hide globe icon to save space on very small screens */
+  .globe-icon {
+    display: none;
+  }
+}
+
+/* ============================================================
+   MICRO BREAKPOINTS: 375px and 320px
+   These address very small phones (SE, old Android, 320px min).
+   Fixes: brand title overflow, header icon scaling.
+   ============================================================ */
+@media (max-width: 375px) {
+  .app-header {
+    padding: 0 0.5rem;
+    gap: 0.35rem;
+  }
+
+  .brand-title {
+    font-size: 0.85rem;
+  }
+
+  .brand-icon-wrapper {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+  }
+
+  /* Hide version pill at 375px — not at 540px, to keep it visible at 390–414px */
+  .version-pill {
+    display: none;
+  }
+
+  /* Auth button — icon only at very small screens */
+  .auth-header-btn {
+    padding: 0.25rem 0.4rem;
+    font-size: 0.7rem;
+  }
+
+  .mobile-view-tab {
+    padding: 0.4rem 0.3rem;
+    font-size: 0.72rem;
+    gap: 0.2rem;
+  }
+
+  /* Prevent nav-tab-badge from wrapping and stretching tabs */
+  .nav-tab-badge {
+    display: none;
+  }
+}
+
+@media (max-width: 320px) {
+  .app-header {
+    padding: 0 0.4rem;
+    gap: 0.25rem;
+  }
+
+  .brand-icon-wrapper {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+  }
+
+  .brand-title {
+    font-size: 0.8rem;
+  }
+
+  .header-right {
+    gap: 0.25rem;
+  }
+
+  /* Lang switcher minimum at 320px */
+  .lang-switcher-wrapper {
+    min-width: 80px !important;
+    height: 28px !important;
+  }
+
+  .lang-btn {
+    font-size: 0.68rem !important;
+    padding: 0 4px !important;
   }
 }
 
@@ -3043,7 +3176,12 @@ code, pre, .font-mono {
   border-bottom: 1px solid var(--border-subtle);
   padding: 0.4rem 0.75rem;
   gap: 0.35rem;
-  z-index: 30;
+  /* Sticky below the header so the tab bar stays visible when the user
+     scrolls content on mobile/tablet. z-index must be > sidebar-backdrop (25)
+     but below the sidebar itself (30). */
+  position: sticky;
+  top: var(--header-height);
+  z-index: 35;
 }
 
 .mobile-view-tab {
@@ -3062,6 +3200,8 @@ code, pre, .font-mono {
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
+  /* Prevent tabs from becoming unreadably small on narrow screens */
+  min-width: 0;
 }
 
 .mobile-view-tab.active {
@@ -5190,17 +5330,104 @@ code, pre, .font-mono {
 }
 
 /* ==========================================================================
+   WORKSPACE HEADER BAR & VIEW CONTROLS
+   ========================================================================== */
+.console-workspace-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding: 0.85rem 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  flex-wrap: wrap;
+}
+
+.workspace-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.workspace-main-heading {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.workspace-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.console-layout-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 0.25rem;
+}
+
+.layout-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.layout-toggle-btn:hover {
+  color: var(--text-primary);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.layout-toggle-btn.active {
+  background: var(--brand-primary);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(65, 90, 36, 0.25);
+}
+
+/* ==========================================================================
    2-COLUMN WORKSPACE (DOCS / PRESETS LEFT, TESTER / RESPONSE RIGHT)
    ========================================================================== */
 .workspace-console-grid {
   display: grid;
-  grid-template-columns: 1fr 1.15fr;
+  grid-template-columns: 1fr 1.2fr;
   gap: 1.5rem;
   align-items: flex-start;
+  min-width: 0;
 }
 
-@media (max-width: 1024px) {
-  .workspace-console-grid {
+.workspace-console-grid.layout-console {
+  grid-template-columns: 1fr;
+}
+
+.workspace-console-grid.layout-endpoints {
+  grid-template-columns: 1fr;
+}
+
+.workspace-console-grid.layout-split {
+  grid-template-columns: 1fr 1.2fr;
+}
+
+@media (max-width: 1180px) {
+  .workspace-console-grid,
+  .workspace-console-grid.layout-split {
     grid-template-columns: 1fr;
   }
 }
@@ -5210,6 +5437,10 @@ code, pre, .font-mono {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  /* min-width: 0 is required for grid children to not overflow their column.
+     Without this, a flex child inside a grid cell can exceed the cell width,
+     pushing content (like the Send button) off screen. */
+  min-width: 0;
 }
 
 .panel-header-row {
@@ -5489,23 +5720,34 @@ code, pre, .font-mono {
   flex-direction: column;
   gap: 0.85rem;
   box-shadow: var(--shadow-sm);
+  /* min-width: 0 prevents the box from overflowing its grid column */
+  min-width: 0;
+}
+
+.request-url-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  min-width: 0;
 }
 
 .request-url-bar {
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   background: var(--bg-primary);
   border: 1.5px solid var(--border-medium);
   border-radius: var(--radius-md);
-  padding: 0.35rem 0.5rem;
+  padding: 0.4rem 0.65rem;
+  min-width: 0;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-@media (max-width: 640px) {
-  .request-url-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
+.request-url-bar:focus-within {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(65, 90, 36, 0.12);
 }
 
 .method-dropdown {
@@ -5517,10 +5759,15 @@ code, pre, .font-mono {
   border: 1px solid var(--border-medium);
   background: #ffffff;
   cursor: pointer;
+  /* Never shrink the method dropdown — it must always be fully visible */
+  flex-shrink: 0;
 }
 
 .path-text-input {
   flex: 1;
+  /* min-width: 0 lets the input shrink below its content width inside flex,
+     preventing it from pushing the Send button off screen */
+  min-width: 0;
   font-family: var(--font-mono);
   font-size: 0.85rem;
   color: var(--text-primary);
@@ -5535,28 +5782,66 @@ code, pre, .font-mono {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
+  gap: 0.5rem;
   background: var(--brand-primary);
   color: #ffffff;
   border: none;
-  border-radius: var(--radius-sm);
-  padding: 0.55rem 1.15rem;
+  border-radius: var(--radius-md);
+  padding: 0.65rem 1.35rem;
   font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
   box-shadow: 0 2px 6px rgba(65, 90, 36, 0.25);
+  flex-shrink: 0;
 }
 
 .send-request-btn:hover:not(:disabled) {
   background: var(--brand-primary-hover);
   transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(65, 90, 36, 0.35);
+}
+
+.send-request-btn:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .send-request-btn:disabled {
-  opacity: 0.6;
+  opacity: 0.65;
   cursor: not-allowed;
+}
+
+.btn-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
+}
+
+.request-submit-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding-left: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .request-url-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
+  }
+  .send-request-btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
 }
 
 /* Auth Bar in Request Box */
@@ -5564,7 +5849,9 @@ code, pre, .font-mono {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: 0.5rem;
+  /* flex-wrap: wrap is kept so items stack on very small screens,
+     but the label is now shorter so wrapping happens less often */
   flex-wrap: wrap;
   background: var(--bg-primary);
   border: 1px solid var(--border-subtle);
@@ -5579,6 +5866,10 @@ code, pre, .font-mono {
   font-size: 0.775rem;
   font-weight: 600;
   color: var(--text-secondary);
+  /* Prevent the label from ever taking up full width and pushing
+     the input wrapper to a new line unnecessarily */
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .auth-input-wrapper {
@@ -5586,7 +5877,12 @@ code, pre, .font-mono {
   align-items: center;
   gap: 0.4rem;
   flex: 1;
-  max-width: 320px;
+  /* min-width: 0 is crucial — without it, flex: 1 items inside a narrow
+     flex row can still overflow instead of shrinking */
+  min-width: 0;
+  /* Remove max-width: 320px at the base level — it was preventing the
+     wrapper from expanding to fill available space, hiding the Presets button */
+  max-width: none;
 }
 
 @media (max-width: 640px) {
@@ -5598,6 +5894,8 @@ code, pre, .font-mono {
 
 .auth-key-input {
   flex: 1;
+  /* min-width: 0 allows the input to shrink in tight spaces */
+  min-width: 0;
   font-family: var(--font-mono);
   font-size: 0.775rem;
   padding: 0.35rem 0.6rem;
@@ -5616,6 +5914,8 @@ code, pre, .font-mono {
   border-radius: var(--radius-sm);
   cursor: pointer;
   white-space: nowrap;
+  /* Never shrink the Presets button */
+  flex-shrink: 0;
 }
 
 .manage-key-btn:hover {

@@ -1,4 +1,4 @@
-import React, { useState, ReactNode } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
 import { Header, AppView } from './Header';
 import { SidebarContainer } from './SidebarContainer';
 
@@ -16,6 +16,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   onSelectView
 }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Auto-close sidebar when the active view changes (e.g. user taps Docs/Learn
+  // from the mobile sidebar nav — the sidebar should close so the new page is visible).
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [currentView]);
 
   return (
     <div className="app-shell">

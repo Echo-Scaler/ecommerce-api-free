@@ -123,7 +123,6 @@ export const Header: React.FC<HeaderProps> = ({
             className="auth-header-btn unauthenticated" 
             onClick={openAuthModal}
             title="Generate custom key or select presets"
-            style={{ padding: '0.25rem 0.6rem', fontSize: '0.75rem' }}
           >
             <span>⚡ Key / Presets</span>
           </button>
