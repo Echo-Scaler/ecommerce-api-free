@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { 
   ShieldCheck, 
   ShieldAlert, 
@@ -24,6 +25,7 @@ export const AuthTokenModal: React.FC = () => {
     isAuthModalOpen, 
     closeAuthModal 
   } = useAuth();
+  const { t, isMyanmar } = useLanguage();
 
   const [inputToken, setInputToken] = useState('');
   const [showToken, setShowToken] = useState(false);
@@ -73,10 +75,10 @@ export const AuthTokenModal: React.FC = () => {
             </div>
             <div>
               <h2 id="auth-modal-title" className="auth-modal-title">
-                API Authentication
+                {t('authModalTitle')}
               </h2>
               <p className="auth-modal-subtitle">
-                Manage Bearer token for authorized requests
+                {t('authModalDesc')}
               </p>
             </div>
           </div>
@@ -97,14 +99,14 @@ export const AuthTokenModal: React.FC = () => {
               <>
                 <ShieldCheck size={18} className="text-emerald-400" />
                 <span className="auth-status-text authenticated">
-                  Authentication Token Active
+                  {isMyanmar ? 'တိုကင် အသက်ဝင်နေပါသည်' : 'Authentication Token Active'}
                 </span>
               </>
             ) : (
               <>
                 <ShieldAlert size={18} className="text-amber-400" />
                 <span className="auth-status-text unauthenticated">
-                  No Active Token (Public Endpoints Only)
+                  {isMyanmar ? 'တိုကင် မရှိသေးပါ (အများသုံး API များသာ)' : 'No Active Token (Public Endpoints Only)'}
                 </span>
               </>
             )}
@@ -121,7 +123,7 @@ export const AuthTokenModal: React.FC = () => {
           <div className="auth-form-field">
             <div className="auth-label-row">
               <label htmlFor="bearer-token-input" className="auth-input-label">
-                Bearer Token
+                {t('bearerTokenLabel')}
               </label>
               <button
                 type="button"
@@ -129,7 +131,7 @@ export const AuthTokenModal: React.FC = () => {
                 onClick={() => setShowToken(!showToken)}
               >
                 {showToken ? <EyeOff size={14} /> : <Eye size={14} />}
-                <span>{showToken ? 'Mask Token' : 'Show Token'}</span>
+                <span>{showToken ? (isMyanmar ? 'တိုကင် ဖုံးကွယ်မည်' : 'Mask Token') : (isMyanmar ? 'တိုကင် ပြသမည်' : 'Show Token')}</span>
               </button>
             </div>
 
@@ -147,7 +149,7 @@ export const AuthTokenModal: React.FC = () => {
               />
             </div>
             <p className="auth-input-hint">
-              Stored safely in your browser localStorage. Automatically appended to protected API requests.
+              {isMyanmar ? 'ဘရောက်ဆာ၏ localStorage တွင် လုံခြုံစွာ သိမ်းဆည်းထားပြီး လိုအပ်သော API ခေါ်ဆိုမှုများတွင် အလိုအလျောက် ထည့်သွင်းပေးပါမည်။' : 'Stored safely in your browser localStorage. Automatically appended to protected API requests.'}
             </p>
           </div>
 
@@ -155,7 +157,7 @@ export const AuthTokenModal: React.FC = () => {
           <div className="auth-presets-section">
             <div className="auth-presets-label">
               <Sparkles size={13} />
-              <span>Quick Test Presets</span>
+              <span>{t('presetTokensTitle')}</span>
             </div>
             <div className="auth-presets-buttons">
               <button
@@ -163,14 +165,14 @@ export const AuthTokenModal: React.FC = () => {
                 className="preset-btn"
                 onClick={() => handleApplyPreset(SAMPLE_CUSTOMER_TOKEN)}
               >
-                Customer Role Token
+                {t('customerPreset')}
               </button>
               <button
                 type="button"
                 className="preset-btn admin"
                 onClick={() => handleApplyPreset(SAMPLE_ADMIN_TOKEN)}
               >
-                Admin Role Token
+                {t('adminPreset')}
               </button>
             </div>
           </div>
@@ -184,7 +186,7 @@ export const AuthTokenModal: React.FC = () => {
                 onClick={handleClear}
               >
                 <Trash2 size={15} />
-                <span>Clear Token</span>
+                <span>{t('clearTokenBtn')}</span>
               </button>
             )}
 
@@ -194,7 +196,7 @@ export const AuthTokenModal: React.FC = () => {
                 className="auth-cancel-btn"
                 onClick={closeAuthModal}
               >
-                Cancel
+                {isMyanmar ? 'မလုပ်တော့ပါ' : 'Cancel'}
               </button>
               <button
                 type="submit"
@@ -204,10 +206,10 @@ export const AuthTokenModal: React.FC = () => {
                 {savedSuccess ? (
                   <>
                     <Check size={16} />
-                    <span>Saved!</span>
+                    <span>{isMyanmar ? 'သိမ်းဆည်းပြီးပါပြီ!' : 'Saved!'}</span>
                   </>
                 ) : (
-                  <span>Save Token</span>
+                  <span>{t('saveCloseBtn')}</span>
                 )}
               </button>
             </div>

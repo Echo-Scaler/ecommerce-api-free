@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AuthProvider } from './context/AuthContext';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { AuthTokenModal } from './components/auth/AuthTokenModal';
 import { AppLayout } from './components/layout/AppLayout';
 import { ApiSidebar } from './components/navigation/ApiSidebar';
@@ -9,6 +10,7 @@ import { ArrowRight, Layers, Zap, Shield, Database } from 'lucide-react';
 
 const AppContent: React.FC = () => {
   const [selectedEndpointId, setSelectedEndpointId] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   const allEndpoints = API_MODULES.flatMap((m) => m.endpoints);
   const selectedEndpoint = allEndpoints.find((e) => e.id === selectedEndpointId);
@@ -35,8 +37,8 @@ const AppContent: React.FC = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           {/* Welcome Banner */}
           <section style={{
-            background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(124, 58, 237, 0.06))',
-            border: '1px solid rgba(59, 130, 246, 0.25)',
+            background: 'linear-gradient(135deg, rgba(65, 90, 36, 0.08), rgba(201, 225, 180, 0.25))',
+            border: '1px solid var(--border-subtle)',
             borderRadius: 'var(--radius-lg)',
             padding: '2.25rem',
             position: 'relative',
@@ -49,16 +51,16 @@ const AppContent: React.FC = () => {
                 fontWeight: 700,
                 textTransform: 'uppercase',
                 letterSpacing: '0.08em',
-                color: 'var(--accent-primary)',
+                color: 'var(--brand-primary)',
                 marginBottom: '0.5rem'
               }}>
-                RESTful Developer Platform
+                {t('platformTag')}
               </span>
               <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.25, marginBottom: '1rem' }}>
-                E-Commerce API Documentation & Interactive Testing
+                {t('platformTitle')}
               </h1>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-                Select an endpoint from the left navigation to explore comprehensive documentation, schema parameters, JSON payloads, and response structures.
+                {t('platformDesc')}
               </p>
 
               <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
@@ -69,7 +71,7 @@ const AppContent: React.FC = () => {
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.5rem',
-                    backgroundColor: 'var(--accent-primary)',
+                    backgroundColor: 'var(--brand-primary)',
                     color: '#ffffff',
                     padding: '0.6rem 1.2rem',
                     borderRadius: 'var(--radius-md)',
@@ -79,7 +81,7 @@ const AppContent: React.FC = () => {
                     cursor: 'pointer'
                   }}
                 >
-                  <span>Explore Products API</span>
+                  <span>{t('exploreProductsBtn')}</span>
                   <ArrowRight size={16} />
                 </button>
               </div>
@@ -89,7 +91,7 @@ const AppContent: React.FC = () => {
           {/* Module Cards Grid */}
           <section>
             <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem' }}>
-              API Modules ({API_MODULES.length})
+              {t('apiModulesHeading')} ({API_MODULES.length})
             </h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
               {API_MODULES.map((m) => (
@@ -116,8 +118,8 @@ const AppContent: React.FC = () => {
                       {m.description}
                     </p>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--accent-primary)', fontWeight: 600 }}>
-                    <span>{m.endpoints.length} Endpoints</span>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--brand-primary)', fontWeight: 600 }}>
+                    <span>{m.endpoints.length} {t('endpointsCount')}</span>
                     <ArrowRight size={14} />
                   </div>
                 </div>
@@ -128,35 +130,35 @@ const AppContent: React.FC = () => {
           {/* Platform Highlights */}
           <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
             <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
-              <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', background: 'var(--brand-sage-light)', color: 'var(--brand-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
                 <Layers size={18} />
               </div>
-              <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>30 REST Endpoints</h3>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Complete coverage across all e-commerce domains.</p>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>{t('highlight1Title')}</h3>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{t('highlight1Desc')}</p>
             </div>
 
             <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
               <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', background: 'rgba(168, 85, 247, 0.1)', color: '#a855f7', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
                 <Shield size={18} />
               </div>
-              <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>Bearer Auth & Roles</h3>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Admin and customer permission guard indicators.</p>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>{t('highlight2Title')}</h3>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{t('highlight2Desc')}</p>
             </div>
 
             <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
               <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
                 <Zap size={18} />
               </div>
-              <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>Interactive Tester</h3>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>In-browser request execution and status validation.</p>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>{t('highlight3Title')}</h3>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{t('highlight3Desc')}</p>
             </div>
 
             <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
-              <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', background: 'rgba(237, 178, 0, 0.15)', color: '#b45309', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
                 <Database size={18} />
               </div>
-              <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>Response Examples</h3>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Real JSON samples for 200, 201, 401, 404 status codes.</p>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>{t('highlight4Title')}</h3>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{t('highlight4Desc')}</p>
             </div>
           </section>
         </div>
@@ -168,9 +170,11 @@ const AppContent: React.FC = () => {
 
 export const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </LanguageProvider>
   );
 };
 

@@ -16,6 +16,8 @@ import {
   Send
 } from 'lucide-react';
 
+import { useLanguage } from '../../context/LanguageContext';
+
 interface ApiTesterFormProps {
   endpoint: ApiEndpoint;
   onSendRequest: (requestData: {
@@ -35,6 +37,7 @@ export const ApiTesterForm: React.FC<ApiTesterFormProps> = ({
   isLoading = false
 }) => {
   const { token, isAuthenticated, openAuthModal } = useAuth();
+  const { t, isMyanmar } = useLanguage();
 
   // Path params state
   const pathParamDefs = endpoint.parameters.filter((p) => p.location === 'path');
@@ -402,7 +405,7 @@ export const ApiTesterForm: React.FC<ApiTesterFormProps> = ({
           onClick={handleReset}
         >
           <RotateCcw size={14} />
-          <span>Reset All Fields</span>
+          <span>{isMyanmar ? 'အကုန် ပြန်လည်စတင်မည်' : 'Reset All Fields'}</span>
         </button>
 
         <button
@@ -413,12 +416,12 @@ export const ApiTesterForm: React.FC<ApiTesterFormProps> = ({
           {isLoading ? (
             <>
               <span className="spinner-mini"></span>
-              <span>Executing API Request...</span>
+              <span>{t('sendingRequestBtn')}</span>
             </>
           ) : (
             <>
               <Play size={16} fill="currentColor" />
-              <span>Execute {endpoint.method} Request</span>
+              <span>{isMyanmar ? `${endpoint.method} Request ပို့မည်` : `Execute ${endpoint.method} Request`}</span>
             </>
           )}
         </button>

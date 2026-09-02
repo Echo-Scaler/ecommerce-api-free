@@ -22,6 +22,8 @@ import {
   Zap
 } from 'lucide-react';
 
+import { useLanguage } from '../../context/LanguageContext';
+
 interface EndpointDocViewProps {
   endpoint: ApiEndpoint;
   module: ApiModule;
@@ -32,6 +34,7 @@ export const EndpointDocView: React.FC<EndpointDocViewProps> = ({
   module
 }) => {
   const { token } = useAuth();
+  const { t, isMyanmar } = useLanguage();
   const [activeTab, setActiveTab] = useState<'docs' | 'tester'>('docs');
   const [copiedUrl, setCopiedUrl] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -122,12 +125,12 @@ export const EndpointDocView: React.FC<EndpointDocViewProps> = ({
             {endpoint.authRequired ? (
               <span className="auth-pill required">
                 <Lock size={12} />
-                <span>Bearer Auth Required</span>
+                <span>{t('authRequired')}</span>
               </span>
             ) : (
               <span className="auth-pill public">
                 <Unlock size={12} />
-                <span>Public Route</span>
+                <span>{t('publicAccess')}</span>
               </span>
             )}
 
@@ -159,7 +162,7 @@ export const EndpointDocView: React.FC<EndpointDocViewProps> = ({
             onClick={() => setActiveTab('docs')}
           >
             <BookOpen size={16} />
-            <span>Endpoint Documentation</span>
+            <span>{isMyanmar ? 'အသေးစိတ် စာရွက်စာတမ်း' : 'Endpoint Documentation'}</span>
           </button>
           <button
             type="button"
@@ -167,7 +170,7 @@ export const EndpointDocView: React.FC<EndpointDocViewProps> = ({
             onClick={() => setActiveTab('tester')}
           >
             <Zap size={16} />
-            <span>Interactive API Tester</span>
+            <span>{isMyanmar ? 'တိုက်ရိုက် စမ်းသပ်စနစ်' : 'Interactive API Tester'}</span>
             {lastResponse && (
               <span className={`mini-status-dot ${lastResponse.isError ? 'error' : 'success'}`} />
             )}

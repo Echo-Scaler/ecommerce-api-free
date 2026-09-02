@@ -47,12 +47,15 @@ const getModuleIcon = (iconName: string) => {
   }
 };
 
+import { useLanguage } from '../../context/LanguageContext';
+
 export const ApiSidebar: React.FC<ApiSidebarProps> = ({
   modules,
   selectedEndpointId,
   onSelectEndpoint,
   onSelectOverview,
 }) => {
+  const { t, isMyanmar } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedModules, setExpandedModules] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
@@ -105,20 +108,20 @@ export const ApiSidebar: React.FC<ApiSidebarProps> = ({
       <ApiSearchInput
         value={searchQuery}
         onChange={setSearchQuery}
-        placeholder="Search endpoints (e.g. GET, /cart)..."
+        placeholder={t('searchPlaceholder')}
       />
 
       {/* Overview Button (only when not searching) */}
       {!searchQuery && (
         <>
-          <div className="nav-section-header">GETTING STARTED</div>
+          <div className="nav-section-header">{isMyanmar ? 'အစပျိုးရန်' : 'GETTING STARTED'}</div>
           <button
             type="button"
             className={`nav-overview-btn ${selectedEndpointId === null ? 'active' : ''}`}
             onClick={onSelectOverview}
           >
             <BookOpen size={16} />
-            <span>Platform Overview</span>
+            <span>{t('overviewNav')}</span>
           </button>
         </>
       )}
@@ -127,19 +130,19 @@ export const ApiSidebar: React.FC<ApiSidebarProps> = ({
       <div className="nav-section-header" style={{ marginTop: searchQuery ? '0.25rem' : '1.25rem' }}>
         {searchQuery ? (
           <div className="search-results-count">
-            <span>RESULTS ({totalMatchingEndpoints})</span>
+            <span>{isMyanmar ? `ရလဒ်များ (${totalMatchingEndpoints})` : `RESULTS (${totalMatchingEndpoints})`}</span>
             {searchQuery && (
               <button 
                 type="button" 
                 className="search-clear-link" 
                 onClick={() => setSearchQuery('')}
               >
-                Reset
+                {t('resetBtn')}
               </button>
             )}
           </div>
         ) : (
-          `API MODULES (${modules.length})`
+          isMyanmar ? `API ကဏ္ဍများ (${modules.length})` : `API MODULES (${modules.length})`
         )}
       </div>
 
@@ -147,7 +150,7 @@ export const ApiSidebar: React.FC<ApiSidebarProps> = ({
       {filteredModules.length === 0 ? (
         <div className="sidebar-empty-search">
           <SearchX size={32} className="empty-search-icon" />
-          <div className="empty-search-title">No endpoints found</div>
+          <div className="empty-search-title">{t('noEndpointsFound')}</div>
           <div className="empty-search-subtitle">
             No matches for &ldquo;<span className="font-mono">{searchQuery}</span>&rdquo;
           </div>
@@ -156,7 +159,7 @@ export const ApiSidebar: React.FC<ApiSidebarProps> = ({
             className="empty-search-reset-btn"
             onClick={() => setSearchQuery('')}
           >
-            Clear Search
+            {t('resetBtn')}
           </button>
         </div>
       ) : (
