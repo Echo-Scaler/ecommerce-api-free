@@ -431,15 +431,6 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
           </div>
         </section>
 
-        {/* VISUAL SEPARATION / DIVIDER */}
-        <div className="console-section-divider col-span-full">
-          <div className="divider-line" />
-          <span className="divider-label">
-            {isMyanmar ? '******************' : '******************'}
-          </span>
-          <div className="divider-line" />
-        </div>
-
         {/* 1. RESPONSE PAYLOAD (FULL ROW WIDTH, APPEARS FIRST) */}
         <section className="console-response-card col-span-full" id="response-payload-section">
           <div className="response-header-bar">
