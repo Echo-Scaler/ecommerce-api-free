@@ -440,129 +440,7 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
           <div className="divider-line" />
         </div>
 
-        {/* INTERACTIVE REQUEST CONSOLE FORM */}
-        <section className="console-request-section col-span-full">
-          <div className="panel-header-row" style={{ marginBottom: '0.75rem' }}>
-            <div>
-              <h2 className="panel-header-title">{isMyanmar ? 'တိုက်ရိုက် စမ်းသပ်မှု ကွန်ဆိုးလ်' : 'Interactive Request Console'}</h2>
-              <span className="panel-header-sub">{isMyanmar ? 'Request path သို့မဟုတ် parameter များကို စိတ်ကြိုက် ပြင်ဆင်စမ်းသပ်နိုင်ပါသည်' : 'Execute live requests or customize path and parameters'}</span>
-            </div>
-            <div className="status-indicator-live">
-              <span className="dot green" />
-              <span className="live-text">{isMyanmar ? 'API ချိတ်ဆက်ထားသည်' : 'API Online'}</span>
-            </div>
-          </div>
-
-          <form className="console-request-box" onSubmit={handleSendRequest}>
-            {/* Request Bar with URL and Submit Button */}
-            <div className="request-url-row">
-              <div className="request-url-bar">
-                <select
-                  className={`method-dropdown method-select-${selectedMethod.toLowerCase()}`}
-                  value={selectedMethod}
-                  onChange={(e) => setSelectedMethod(e.target.value as HttpMethod)}
-                  aria-label="HTTP Method"
-                >
-                  <option value="GET">GET</option>
-                  <option value="POST">POST</option>
-                  <option value="PUT">PUT</option>
-                  <option value="PATCH">PATCH</option>
-                  <option value="DELETE">DELETE</option>
-                </select>
-
-                <input
-                  type="text"
-                  className="path-text-input"
-                  value={requestPath}
-                  onChange={(e) => setRequestPath(e.target.value)}
-                  placeholder="/api/v1/products?limit=5"
-                  required
-                  aria-label="API Request URL Path"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="send-request-btn"
-                disabled={isLoading}
-                title={isMyanmar ? 'Request ပေးပို့ရန် နှိပ်ပါ (သို့မဟုတ် Enter ခေါက်ပါ)' : 'Click to send request (or press Enter)'}
-              >
-                {isLoading ? (
-                  <>
-                    <span className="btn-spinner" />
-                    <span>{isMyanmar ? 'ပေးပို့နေသည်...' : 'Executing...'}</span>
-                  </>
-                ) : (
-                  <>
-                    <Send size={15} />
-                    <span>{isMyanmar ? 'Request ပေးပို့မည်' : 'Send Request'}</span>
-                  </>
-                )}
-              </button>
-            </div>
-
-            {/* Hint for how to submit request */}
-            <div className="request-submit-hint">
-              <span>💡 {isMyanmar ? 'Enter ခေါက်၍ဖြစ်စေ၊ အစိမ်းရောင် "Request ပေးပို့မည်" ခလုတ်ကို နှိပ်၍ဖြစ်စေ API ကို စမ်းသပ်နိုင်ပါသည်' : 'Press Enter or click the green "Send Request" button to execute API'}</span>
-            </div>
-
-            {/* Auth Key Header */}
-            <div className="request-auth-bar">
-              <label className="auth-bar-label">
-                <Key size={13} />
-                <span>{isMyanmar ? 'API Key Header (x-api-key / Bearer):' : 'API Key Header (x-api-key / Bearer):'}</span>
-              </label>
-              <div className="auth-input-wrapper">
-                <input
-                  type="text"
-                  className="auth-key-input"
-                  value={apiKey}
-                  onChange={(e) => setApiKey(e.target.value)}
-                  placeholder="demo-key-12345"
-                />
-                <button
-                  type="button"
-                  className="manage-key-btn"
-                  onClick={openAuthModal}
-                  title={isMyanmar ? 'တိုကင် သို့မဟုတ် Presets စီမံမည်' : 'Manage Token or Presets'}
-                >
-                  ⚡ {isMyanmar ? 'တိုကင်များ' : 'Presets'}
-                </button>
-              </div>
-            </div>
-
-            {/* Request JSON Body (for POST, PUT, PATCH) */}
-            {['POST', 'PUT', 'PATCH'].includes(selectedMethod) && (
-              <div className="request-body-section">
-                <div className="body-section-header">
-                  <label className="body-label">{isMyanmar ? 'JSON ပေးပို့မည့် အချက်အလက် (Body):' : 'JSON Request Body:'}</label>
-                  <button
-                    type="button"
-                    className="btn-format-json"
-                    onClick={() => {
-                      try {
-                        if (requestBody.trim()) {
-                          setRequestBody(JSON.stringify(JSON.parse(requestBody), null, 2));
-                        }
-                      } catch {}
-                    }}
-                  >
-                    {isMyanmar ? 'JSON ပုံစံညှိမည်' : 'Format JSON'}
-                  </button>
-                </div>
-                <textarea
-                  className="body-textarea"
-                  rows={4}
-                  value={requestBody}
-                  onChange={(e) => setRequestBody(e.target.value)}
-                  placeholder='{ "name": "New Product", "price": 99.99 }'
-                />
-              </div>
-            )}
-          </form>
-        </section>
-
-        {/* 2. RESPONSE PAYLOAD (FULL ROW WIDTH, APPEARS FIRST) */}
+        {/* 1. RESPONSE PAYLOAD (FULL ROW WIDTH, APPEARS FIRST) */}
         <section className="console-response-card col-span-full" id="response-payload-section">
           <div className="response-header-bar">
             <div className="response-metrics-group">
@@ -627,6 +505,107 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
               </button>
             </div>
           </div>
+
+          {/* Interactive Request Bar Embedded in Response Payload Section */}
+          <form className="console-request-box response-embedded-request" onSubmit={handleSendRequest} style={{ border: 'none', borderRadius: 0, borderBottom: '1px solid var(--border-subtle)', background: '#fafbfa', padding: '1rem 1.15rem' }}>
+            <div className="request-url-row">
+              <div className="request-url-bar">
+                <select
+                  className={`method-dropdown method-select-${selectedMethod.toLowerCase()}`}
+                  value={selectedMethod}
+                  onChange={(e) => setSelectedMethod(e.target.value as HttpMethod)}
+                  aria-label="HTTP Method"
+                >
+                  <option value="GET">GET</option>
+                  <option value="POST">POST</option>
+                  <option value="PUT">PUT</option>
+                  <option value="PATCH">PATCH</option>
+                  <option value="DELETE">DELETE</option>
+                </select>
+
+                <input
+                  type="text"
+                  className="path-text-input"
+                  value={requestPath}
+                  onChange={(e) => setRequestPath(e.target.value)}
+                  placeholder="/api/v1/products?limit=5"
+                  required
+                  aria-label="API Request URL Path"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="send-request-btn"
+                disabled={isLoading}
+                title={isMyanmar ? 'Request ပေးပို့ရန် နှိပ်ပါ (သို့မဟုတ် Enter ခေါက်ပါ)' : 'Click to send request (or press Enter)'}
+              >
+                {isLoading ? (
+                  <>
+                    <span className="btn-spinner" />
+                    <span>{isMyanmar ? 'ပေးပို့နေသည်...' : 'Executing...'}</span>
+                  </>
+                ) : (
+                  <>
+                    <Send size={15} />
+                    <span>{isMyanmar ? 'Request ပေးပို့မည်' : 'Send Request'}</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            <div className="request-auth-bar">
+              <label className="auth-bar-label">
+                <Key size={13} />
+                <span>{isMyanmar ? 'API Key Header (x-api-key / Bearer):' : 'API Key Header (x-api-key / Bearer):'}</span>
+              </label>
+              <div className="auth-input-wrapper">
+                <input
+                  type="text"
+                  className="auth-key-input"
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  placeholder="demo-key-12345"
+                />
+                <button
+                  type="button"
+                  className="manage-key-btn"
+                  onClick={openAuthModal}
+                  title={isMyanmar ? 'တိုကင် သို့မဟုတ် Presets စီမံမည်' : 'Manage Token or Presets'}
+                >
+                  ⚡ {isMyanmar ? 'တိုကင်များ' : 'Presets'}
+                </button>
+              </div>
+            </div>
+
+            {['POST', 'PUT', 'PATCH'].includes(selectedMethod) && (
+              <div className="request-body-section">
+                <div className="body-section-header">
+                  <label className="body-label">{isMyanmar ? 'JSON ပေးပို့မည့် အချက်အလက် (Body):' : 'JSON Request Body:'}</label>
+                  <button
+                    type="button"
+                    className="btn-format-json"
+                    onClick={() => {
+                      try {
+                        if (requestBody.trim()) {
+                          setRequestBody(JSON.stringify(JSON.parse(requestBody), null, 2));
+                        }
+                      } catch {}
+                    }}
+                  >
+                    {isMyanmar ? 'JSON ပုံစံညှိမည်' : 'Format JSON'}
+                  </button>
+                </div>
+                <textarea
+                  className="body-textarea"
+                  rows={4}
+                  value={requestBody}
+                  onChange={(e) => setRequestBody(e.target.value)}
+                  placeholder='{ "name": "New Product", "price": 99.99 }'
+                />
+              </div>
+            )}
+          </form>
 
           {/* JSON Content Pre Block */}
           <div className="response-json-container">
