@@ -1,12 +1,10 @@
 import React from 'react';
-import { 
-  ShoppingBag, 
-  Terminal, 
-  Menu, 
-  ExternalLink, 
-  Globe, 
-  BookOpen, 
-  GraduationCap, 
+import {
+  ShoppingBag,
+  Menu,
+  Globe,
+  BookOpen,
+  GraduationCap,
   SlidersHorizontal,
   Sparkles
 } from 'lucide-react';
@@ -22,10 +20,10 @@ interface HeaderProps {
   onSelectView: (view: AppView) => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ 
-  onToggleSidebar, 
-  currentView, 
-  onSelectView 
+export const Header: React.FC<HeaderProps> = ({
+  onToggleSidebar,
+  currentView,
+  onSelectView
 }) => {
   const { token, openAuthModal } = useAuth();
   const { language, setLanguage, t, isMyanmar } = useLanguage();
@@ -46,8 +44,8 @@ export const Header: React.FC<HeaderProps> = ({
       <header className="app-header">
         <div className="header-left">
           {currentView === 'console' && (
-            <button 
-              className="mobile-sidebar-toggle" 
+            <button
+              className="mobile-sidebar-toggle"
               onClick={onToggleSidebar}
               aria-label="Toggle Navigation Sidebar"
             >
@@ -55,9 +53,9 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           )}
 
-          <div 
-            className="brand-badge" 
-            onClick={() => onSelectView('console')} 
+          <div
+            className="brand-badge"
+            onClick={() => onSelectView('console')}
             style={{ cursor: 'pointer' }}
             title="E-Commerce API Platform"
           >
@@ -108,9 +106,9 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="api-key-pill hide-on-tablet" title={isMyanmar ? 'အသုံးပြုနေသော API Authentication Key' : 'Active API Authentication Key'}>
             <span className="key-dot" />
             <code>{token ? (token.length > 15 ? `${token.substring(0, 13)}...` : token) : 'demo-key-12345'}</code>
-            <button 
-              type="button" 
-              className="key-copy-btn" 
+            <button
+              type="button"
+              className="key-copy-btn"
               onClick={handleCopyKey}
               title={isMyanmar ? 'API Key ကို ကူးယူမည်' : 'Copy Active API Key'}
             >
@@ -118,9 +116,9 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           </div>
 
-          <button 
-            type="button" 
-            className="auth-header-btn unauthenticated" 
+          <button
+            type="button"
+            className="auth-header-btn unauthenticated"
             onClick={openAuthModal}
             title={isMyanmar ? 'တိုကင် သတ်မှတ်ရန် သို့မဟုတ် Presets ရွေးချယ်ရန်' : 'Generate custom key or select presets'}
           >
@@ -162,20 +160,6 @@ export const Header: React.FC<HeaderProps> = ({
               မြန်မာ
             </button>
           </div>
-
-          <div className="header-divider hide-on-mobile" />
-
-          <a 
-            href="https://github.com/Echo-Scaler/ecommerce-api-free" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="header-link-btn hide-on-tablet"
-            title="View Source on GitHub"
-          >
-            <Terminal size={14} />
-            <span className="github-btn-label">{t('github')}</span>
-            <ExternalLink size={11} />
-          </a>
         </div>
       </header>
 
