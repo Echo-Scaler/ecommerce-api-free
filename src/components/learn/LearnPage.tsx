@@ -205,7 +205,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
                       <span className="module-tag">{isMyanmar ? `မော်ဂျူး ${lesson.moduleNum}` : `Module ${lesson.moduleNum}`}</span>
                       <span className="time-tag"><Clock size={11} /> {lesson.durationMin}{isMyanmar ? 'မိနစ်' : 'm'}</span>
                     </div>
-                    <div className="lesson-item-title">{lesson.title}</div>
+                    <div className="lesson-item-title">{isMyanmar ? lesson.title_my : lesson.title}</div>
                   </div>
                   <div className="lesson-item-status-col">
                     {isDone ? (
@@ -233,8 +233,8 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
                 </span>
               )}
             </div>
-            <h2 className="lesson-view-title">{currentLesson.title}</h2>
-            <p className="lesson-view-subtitle">{currentLesson.subtitle}</p>
+            <h2 className="lesson-view-title">{isMyanmar ? currentLesson.title_my : currentLesson.title}</h2>
+            <p className="lesson-view-subtitle">{isMyanmar ? currentLesson.subtitle_my : currentLesson.subtitle}</p>
 
             {/* Interactive Tabs */}
             <div className="lesson-tabs-bar">
@@ -270,17 +270,17 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
             <div className="lesson-tab-content theory-content">
               <div className="theory-summary-box">
                 <div className="summary-icon"><Info size={20} /></div>
-                <div className="summary-text">{currentLesson.theory.summary}</div>
+                <div className="summary-text">{isMyanmar ? currentLesson.theory.summary_my : currentLesson.theory.summary}</div>
               </div>
 
               {currentLesson.theory.sections.map((sec, idx) => (
                 <section key={idx} className="theory-section">
-                  <h3 className="theory-section-heading">{sec.heading}</h3>
-                  <p className="theory-section-text">{sec.content}</p>
+                  <h3 className="theory-section-heading">{isMyanmar ? sec.heading_my : sec.heading}</h3>
+                  <p className="theory-section-text">{isMyanmar ? sec.content_my : sec.content}</p>
 
                   {sec.bulletPoints && (
                     <ul className="theory-bullet-list">
-                      {sec.bulletPoints.map((pt, pIdx) => (
+                      {(isMyanmar && sec.bulletPoints_my ? sec.bulletPoints_my : sec.bulletPoints).map((pt, pIdx) => (
                         <li key={pIdx}>
                           <span className="bullet-dot" />
                           <span>{pt}</span>
@@ -305,7 +305,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
                       <div className="callout-icon">
                         {sec.callout.type === 'tip' ? <Sparkles size={16} /> : <AlertTriangle size={16} />}
                       </div>
-                      <div className="callout-text">{sec.callout.text}</div>
+                      <div className="callout-text">{isMyanmar && sec.callout.text_my ? sec.callout.text_my : sec.callout.text}</div>
                     </div>
                   )}
                 </section>
@@ -331,14 +331,14 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
                 <div className="exercise-header">
                   <div className="exercise-title-row">
                     <span className="exercise-badge">{t('learnChallengeTitle')}</span>
-                    <h3 className="exercise-title">{currentLesson.exercise.title}</h3>
+                    <h3 className="exercise-title">{isMyanmar ? currentLesson.exercise.title_my : currentLesson.exercise.title}</h3>
                   </div>
                   <div className="exercise-goal-box">
-                    <strong>{t('learnGoalLabel')}</strong> {currentLesson.exercise.goal}
+                    <strong>{t('learnGoalLabel')}</strong> {isMyanmar ? currentLesson.exercise.goal_my : currentLesson.exercise.goal}
                   </div>
                 </div>
 
-                <p className="exercise-desc">{currentLesson.exercise.description}</p>
+                <p className="exercise-desc">{isMyanmar ? currentLesson.exercise.description_my : currentLesson.exercise.description}</p>
 
                 {/* Request Bar */}
                 <div className="exercise-request-bar">
@@ -438,7 +438,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
 
                     <div className="exercise-explanation-note">
                       <div className="note-icon"><Sparkles size={16} /></div>
-                      <div className="note-text">{currentLesson.exercise.explanationNote}</div>
+                      <div className="note-text">{isMyanmar ? currentLesson.exercise.explanationNote_my : currentLesson.exercise.explanationNote}</div>
                     </div>
                   </div>
                 )}
@@ -463,7 +463,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
               <div className="quiz-card">
                 <div className="quiz-card-header">
                   <div className="quiz-header-badge">{t('learnAssessmentTitle')}</div>
-                  <h3 className="quiz-card-title">{currentLesson.quiz.title}</h3>
+                  <h3 className="quiz-card-title">{isMyanmar ? currentLesson.quiz.title_my : currentLesson.quiz.title}</h3>
                   <p className="quiz-card-desc">{t('learnAssessmentDesc')}</p>
                 </div>
 
@@ -476,11 +476,11 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
                       <div key={q.id} className="quiz-question-item">
                         <div className="question-header">
                           <span className="question-number">Q{qIndex + 1}</span>
-                          <h4 className="question-text">{q.question}</h4>
+                          <h4 className="question-text">{isMyanmar ? q.question_my : q.question}</h4>
                         </div>
 
                         <div className="quiz-options-list">
-                          {q.options.map((opt, optIdx) => {
+                          {(isMyanmar ? q.options_my : q.options).map((opt, optIdx) => {
                             const isSelectedOption = selectedIdx === optIdx;
                             let optionClass = 'quiz-option-btn';
                             if (isSelectedOption) optionClass += ' selected';
@@ -512,7 +512,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({ onNavigateToConsole }) => 
 
                         {quizSubmitted && (
                           <div className={`quiz-explanation-box ${isCorrect ? 'explanation-correct' : 'explanation-incorrect'}`}>
-                            <strong>{isCorrect ? (isMyanmar ? '✓ မှန်ကန်ပါသည်!' : '✓ Correct!') : (isMyanmar ? '✗ မှားယွင်းနေပါသည်:' : '✗ Incorrect:')}</strong> {q.explanation}
+                            <strong>{isCorrect ? (isMyanmar ? '✓ မှန်ကန်ပါသည်!' : '✓ Correct!') : (isMyanmar ? '✗ မှားယွင်းနေပါသည်:' : '✗ Incorrect:')}</strong> {isMyanmar ? q.explanation_my : q.explanation}
                           </div>
                         )}
                       </div>
