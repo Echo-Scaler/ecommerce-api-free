@@ -5,12 +5,12 @@ import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { executeApiRequest } from '../../lib/api-client';
 import { generateCurlSnippet, generateFetchSnippet, generateAxiosSnippet } from '../../lib/code-generator';
-import { 
-  Copy, 
-  Check, 
-  Download, 
-  Clock, 
-  Key, 
+import {
+  Copy,
+  Check,
+  Download,
+  Clock,
+  Key,
   ExternalLink,
   Send
 } from 'lucide-react';
@@ -36,7 +36,7 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
   const [apiKey, setApiKey] = useState<string>(token || 'demo-key-12345');
   const [requestBody, setRequestBody] = useState<string>('');
   const [activeCodeTab, setActiveCodeTab] = useState<'fetch' | 'axios' | 'curl' | 'postman'>('fetch');
-  
+
   // Execution state
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [response, setLastResponse] = useState<ApiResponseExecution | null>(null);
@@ -193,13 +193,13 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
   const activeAxiosSnippet = generateAxiosSnippet(currentEndpointObj, { bearerToken: apiKey, body: requestBody });
   const activeCurlSnippet = generateCurlSnippet(currentEndpointObj, { bearerToken: apiKey, body: requestBody });
 
-  const jsonResponseString = response 
+  const jsonResponseString = response
     ? (typeof response.data === 'string' ? response.data : JSON.stringify(response.data, null, 2))
     : JSON.stringify({
-        message: isMyanmar 
-          ? 'အပေါ်ရှိ "Request ပေးပို့မည် 🚀" ခလုတ်ကို နှိပ်၍ API တုံ့ပြန်မှုရလဒ်ကို စစ်ဆေးပါ...' 
-          : 'Click "Send Request 🚀" to execute this API endpoint and inspect live JSON payload...'
-      }, null, 2);
+      message: isMyanmar
+        ? 'အပေါ်ရှိ "Request ပေးပို့မည် 🚀" ခလုတ်ကို နှိပ်၍ API တုံ့ပြန်မှုရလဒ်ကို စစ်ဆေးပါ...'
+        : 'Click "Send Request 🚀" to execute this API endpoint and inspect live JSON payload...'
+    }, null, 2);
 
   const payloadSizeKb = (new Blob([jsonResponseString]).size / 1024).toFixed(2);
 
@@ -226,7 +226,7 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
             </h1>
 
             <p className="banner-desc">
-              {isMyanmar 
+              {isMyanmar
                 ? 'ထုတ်လုပ်မှုအဆင့်မီ Bearer & API Key အတည်ပြုချက်ပါဝင်သော RESTful API ဖြစ်ပြီး ကုန်ပစ္စည်း ၅၀၊ ကဏ္ဍ ၅၀၊ အမှာစာ ၅၀၊ သုံးစွဲသူ ၅၀၊ စတော့၊ ခြင်းတောင်းနှင့် ရှာဖွေမှုစနစ်များကို အပြည့်အစုံ ထောက်ပံ့ပေးထားပါသည်။'
                 : 'A production-ready, Bearer & API-Key-authenticated REST API delivering comprehensive data on 50+ products, categories, orders, customers, inventory, cart, and search. Built for developers who need reliable, structured e-commerce data fast.'}
             </p>
@@ -320,8 +320,8 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
               <h2 className="panel-header-title">{isMyanmar ? 'API ကဏ္ဍများ' : 'API Modules'}</h2>
               <p className="panel-header-sub">{isMyanmar ? 'စမ်းသပ်လိုသော Endpoint ကို နှိပ်၍ အချက်အလက်များကို ရယူပါ' : 'Click any endpoint card to test it instantly'}</p>
             </div>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="view-full-docs-link"
               onClick={onNavigateToDocs}
             >
@@ -334,57 +334,57 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
           <div className="endpoint-group query-presets-group">
             <h3 className="group-title">🎯 {isMyanmar ? 'အမြန် စမ်းသပ်မှု နမူနာများ' : 'Query Options & Presets'}</h3>
             <div className="preset-chips-grid">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="chip-btn"
                 onClick={() => selectPreset('GET', '/api/v1/products?limit=5', undefined, 'get-products')}
               >
                 {isMyanmar ? '📊 ထိပ်တန်း ကုန်ပစ္စည်း ၅ ခု' : '📊 Top 5 Products'}
               </button>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="chip-btn highlight"
                 onClick={() => selectPreset('GET', '/api/v1/products/30', undefined, 'get-product-by-id')}
               >
                 {isMyanmar ? '📦 ကုန်ပစ္စည်း ID 30' : '📦 Product ID 30'}
               </button>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="chip-btn"
                 onClick={() => selectPreset('GET', '/api/v1/search?q=sony', undefined, 'search-products')}
               >
                 {isMyanmar ? '🔎 "sony" ရှာဖွေမည်' : '🔎 Search "sony"'}
               </button>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="chip-btn"
                 onClick={() => selectPreset('GET', '/api/v1/products?category_id=cat_1', undefined, 'get-products')}
               >
                 {isMyanmar ? '🏷️ အသံပိုင်းဆိုင်ရာ ကဏ္ဍ' : '🏷️ Audio Category'}
               </button>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="chip-btn"
                 onClick={() => selectPreset('GET', '/api/v1/categories/30', undefined, 'get-category-by-id')}
               >
                 {isMyanmar ? '📁 ကဏ္ဍ ID 30' : '📁 Category ID 30'}
               </button>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="chip-btn"
                 onClick={() => selectPreset('GET', '/api/v1/orders/30', undefined, 'get-order-by-id')}
               >
                 {isMyanmar ? '📑 အမှာစာ ID 30' : '📑 Order ID 30'}
               </button>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="chip-btn"
                 onClick={() => selectPreset('GET', '/api/v1/cart', undefined, 'get-cart')}
               >
                 {isMyanmar ? '🛒 လက်ရှိ ခြင်းတောင်း' : '🛒 Active Cart'}
               </button>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="chip-btn"
                 onClick={() => selectPreset('GET', '/api/v1/inventory/low-stock?threshold=20', undefined, 'get-low-stock-items')}
               >
@@ -435,7 +435,7 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
         <div className="console-section-divider col-span-full">
           <div className="divider-line" />
           <span className="divider-label">
-            {isMyanmar ? 'သီးခြား အချက်အလက် ကဏ္ဍ' : 'SEPARATE INFORMATION SECTION'}
+            {isMyanmar ? '******************' : '******************'}
           </span>
           <div className="divider-line" />
         </div>
@@ -590,7 +590,7 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
                         if (requestBody.trim()) {
                           setRequestBody(JSON.stringify(JSON.parse(requestBody), null, 2));
                         }
-                      } catch {}
+                      } catch { }
                     }}
                   >
                     {isMyanmar ? 'JSON ပုံစံညှိမည်' : 'Format JSON'}
