@@ -12,10 +12,7 @@ import {
   Clock, 
   Key, 
   ExternalLink,
-  Send,
-  Columns,
-  Maximize2,
-  LayoutGrid
+  Send
 } from 'lucide-react';
 
 interface ConsoleWorkspaceProps {
@@ -39,7 +36,6 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
   const [apiKey, setApiKey] = useState<string>(token || 'demo-key-12345');
   const [requestBody, setRequestBody] = useState<string>('');
   const [activeCodeTab, setActiveCodeTab] = useState<'fetch' | 'axios' | 'curl' | 'postman'>('fetch');
-  const [layoutMode, setLayoutMode] = useState<'split' | 'console' | 'endpoints'>('split');
   
   // Execution state
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -304,7 +300,7 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
         </div>
       </section>
 
-      {/* 2. MAIN CONSOLE WORKSPACE HEADER & LAYOUT TOGGLE */}
+      {/* 2. MAIN CONSOLE WORKSPACE HEADER */}
       <div className="console-workspace-header-bar">
         <div className="workspace-title-group">
           <h2 className="workspace-main-heading">
@@ -314,47 +310,16 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
             {isMyanmar ? 'Endpoints များကို စမ်းသပ်ပြီး တုံ့ပြန်မှုရလဒ်များကို တိုက်ရိုက်ကြည့်ရှုပါ' : 'Select an endpoint to test or enter custom API requests'}
           </span>
         </div>
-
-        <div className="console-layout-toggle" role="group" aria-label="Console Layout">
-          <button
-            type="button"
-            className={`layout-toggle-btn ${layoutMode === 'split' ? 'active' : ''}`}
-            onClick={() => setLayoutMode('split')}
-            title={isMyanmar ? 'နှစ်ခြမ်းခွဲ ပုံစံ (Endpoints + Console)' : 'Split View (Endpoints + Console)'}
-          >
-            <Columns size={13} />
-            <span>{isMyanmar ? 'နှစ်ခြမ်းခွဲ' : 'Split'}</span>
-          </button>
-          <button
-            type="button"
-            className={`layout-toggle-btn ${layoutMode === 'console' ? 'active' : ''}`}
-            onClick={() => setLayoutMode('console')}
-            title={isMyanmar ? 'ကွန်ဆိုးလ် အပြည့်အကျယ်' : 'Full Console View'}
-          >
-            <Maximize2 size={13} />
-            <span>{isMyanmar ? 'ကွန်ဆိုးလ်အပြည့်' : 'Full Console'}</span>
-          </button>
-          <button
-            type="button"
-            className={`layout-toggle-btn ${layoutMode === 'endpoints' ? 'active' : ''}`}
-            onClick={() => setLayoutMode('endpoints')}
-            title={isMyanmar ? 'Endpoints စာရင်းသာ' : 'Endpoints Only'}
-          >
-            <LayoutGrid size={13} />
-            <span>{isMyanmar ? 'Endpoints' : 'Endpoints'}</span>
-          </button>
-        </div>
       </div>
 
-      <main className={`workspace-console-grid layout-${layoutMode}`}>
-        {/* LEFT COLUMN: Endpoints, Query Presets & Integration Code Guide */}
-        {(layoutMode === 'split' || layoutMode === 'endpoints') && (
-          <section className="docs-panel-console">
-            <div className="panel-header-row">
-              <div>
-                <h2 className="panel-header-title">{isMyanmar ? 'API Endpoints များ' : 'API Endpoints'}</h2>
-                <p className="panel-header-sub">{isMyanmar ? 'စမ်းသပ်လိုသော Endpoint ကို နှိပ်၍ အချက်အလက်များကို ရယူပါ' : 'Click any endpoint card to test it instantly'}</p>
-              </div>
+      <main className="workspace-console-grid">
+        {/* 1. API MODULES (8 MODULES IN RESPONSIVE GRID) */}
+        <section className="api-modules-section col-span-full">
+          <div className="panel-header-row">
+            <div>
+              <h2 className="panel-header-title">{isMyanmar ? 'API ကဏ္ဍများ' : 'API Modules'}</h2>
+              <p className="panel-header-sub">{isMyanmar ? 'စမ်းသပ်လိုသော Endpoint ကို နှိပ်၍ အချက်အလက်များကို ရယူပါ' : 'Click any endpoint card to test it instantly'}</p>
+            </div>
             <button 
               type="button" 
               className="view-full-docs-link"
@@ -366,7 +331,7 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
           </div>
 
           {/* Quick Query Presets Chips */}
-          <div className="endpoint-group">
+          <div className="endpoint-group query-presets-group">
             <h3 className="group-title">🎯 {isMyanmar ? 'အမြန် စမ်းသပ်မှု နမူနာများ' : 'Query Options & Presets'}</h3>
             <div className="preset-chips-grid">
               <button 
@@ -428,121 +393,66 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
             </div>
           </div>
 
-          {/* Endpoints Group List */}
-          {API_MODULES.map((mod) => (
-            <div key={mod.id} className="endpoint-group">
-              <h3 className="group-title">
-                {mod.id === 'auth' && '🔐 '}
-                {mod.id === 'products' && '📦 '}
-                {mod.id === 'categories' && '📁 '}
-                {mod.id === 'orders' && '📑 '}
-                {mod.id === 'customers' && '👤 '}
-                {mod.id === 'cart' && '🛒 '}
-                {mod.id === 'search' && '🔎 '}
-                {mod.id === 'inventory' && '📊 '}
-                {mod.name}
-              </h3>
+          {/* 8 API MODULES GRID */}
+          <div className="api-modules-grid">
+            {API_MODULES.map((mod) => (
+              <div key={mod.id} className="endpoint-group module-grid-card">
+                <h3 className="group-title">
+                  {mod.id === 'auth' && '🔐 '}
+                  {mod.id === 'products' && '📦 '}
+                  {mod.id === 'categories' && '📁 '}
+                  {mod.id === 'orders' && '📑 '}
+                  {mod.id === 'customers' && '👤 '}
+                  {mod.id === 'cart' && '🛒 '}
+                  {mod.id === 'search' && '🔎 '}
+                  {mod.id === 'inventory' && '📊 '}
+                  {mod.name}
+                </h3>
 
-              <div className="endpoint-cards-list">
-                {mod.endpoints.map((ep) => {
-                  const isActive = activeEndpointId === ep.id;
-                  const methodClass = ep.method.toLowerCase();
-                  return (
-                    <div
-                      key={ep.id}
-                      className={`console-endpoint-card ${isActive ? 'active' : ''}`}
-                      onClick={() => selectEndpoint(ep)}
-                    >
-                      <span className={`method-tag method-${methodClass}`}>{ep.method}</span>
-                      <span className="card-path">{ep.path}</span>
-                      <span className="card-desc">{ep.name}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
-
-          {/* Integration Code Guide */}
-          <div className="endpoint-group code-guide-box">
-            <div className="code-guide-header">
-              <h3 className="group-title" style={{ marginBottom: 0 }}>💻 {isMyanmar ? 'ကုဒ်ဖြင့် ချိတ်ဆက်အသုံးပြုနည်း' : 'API Integration Code Guide'}</h3>
-              <div className="code-guide-tabs">
-                <button
-                  type="button"
-                  className={`code-guide-tab ${activeCodeTab === 'fetch' ? 'active' : ''}`}
-                  onClick={() => setActiveCodeTab('fetch')}
-                >
-                  Fetch API
-                </button>
-                <button
-                  type="button"
-                  className={`code-guide-tab ${activeCodeTab === 'axios' ? 'active' : ''}`}
-                  onClick={() => setActiveCodeTab('axios')}
-                >
-                  Axios
-                </button>
-                <button
-                  type="button"
-                  className={`code-guide-tab ${activeCodeTab === 'curl' ? 'active' : ''}`}
-                  onClick={() => setActiveCodeTab('curl')}
-                >
-                  cURL
-                </button>
-                <button
-                  type="button"
-                  className={`code-guide-tab ${activeCodeTab === 'postman' ? 'active' : ''}`}
-                  onClick={() => setActiveCodeTab('postman')}
-                >
-                  Postman
-                </button>
-              </div>
-            </div>
-
-            <div className="code-guide-body">
-              {activeCodeTab === 'fetch' && (
-                <pre className="code-display"><code>{activeFetchSnippet}</code></pre>
-              )}
-              {activeCodeTab === 'axios' && (
-                <pre className="code-display"><code>{activeAxiosSnippet}</code></pre>
-              )}
-              {activeCodeTab === 'curl' && (
-                <pre className="code-display"><code>{activeCurlSnippet}</code></pre>
-              )}
-              {activeCodeTab === 'postman' && (
-                <div className="postman-guide-card">
-                  <p><strong>{isMyanmar ? 'နည်းလမ်း ၁: Header နည်းလမ်း (အကြံပြုထားသည်)' : 'Method 1: Header Method (Recommended)'}</strong></p>
-                  <ul>
-                    <li>Header: <code>x-api-key</code> &rarr; Value: <code>{apiKey || 'demo-key-12345'}</code></li>
-                    <li>Header: <code>Authorization</code> &rarr; Value: <code>Bearer {apiKey || 'demo-key-12345'}</code></li>
-                  </ul>
-                  <p><strong>{isMyanmar ? 'နည်းလမ်း ၂: Authorization Tab နည်းလမ်း' : 'Method 2: Authorization Tab'}</strong></p>
-                  <ul>
-                    <li>Type: {isMyanmar ? 'Bearer Token သို့မဟုတ် API Key ကို ရွေးချယ်ပါ' : 'Select Bearer Token or API Key'}</li>
-                    <li>Key: <code>x-api-key</code>, Value: <code>{apiKey || 'demo-key-12345'}</code>, Add to: <code>Header</code></li>
-                  </ul>
+                <div className="endpoint-cards-list">
+                  {mod.endpoints.map((ep) => {
+                    const isActive = activeEndpointId === ep.id;
+                    const methodClass = ep.method.toLowerCase();
+                    return (
+                      <div
+                        key={ep.id}
+                        className={`console-endpoint-card ${isActive ? 'active' : ''}`}
+                        onClick={() => selectEndpoint(ep)}
+                      >
+                        <span className={`method-tag method-${methodClass}`}>{ep.method}</span>
+                        <span className="card-path">{ep.path}</span>
+                        <span className="card-desc">{ep.name}</span>
+                      </div>
+                    );
+                  })}
                 </div>
-              )}
-            </div>
+              </div>
+            ))}
           </div>
         </section>
-      )}
 
-      {/* RIGHT COLUMN: Interactive Request Console & Response Viewer */}
-      {(layoutMode === 'split' || layoutMode === 'console') && (
-        <section className="tester-panel-console">
-          {/* Header */}
-          <div className="panel-header-row">
+        {/* VISUAL SEPARATION / DIVIDER */}
+        <div className="console-section-divider col-span-full">
+          <div className="divider-line" />
+          <span className="divider-label">
+            {isMyanmar ? 'သီးခြား အချက်အလက် ကဏ္ဍ' : 'SEPARATE INFORMATION SECTION'}
+          </span>
+          <div className="divider-line" />
+        </div>
+
+        {/* INTERACTIVE REQUEST CONSOLE FORM */}
+        <section className="console-request-section col-span-full">
+          <div className="panel-header-row" style={{ marginBottom: '0.75rem' }}>
             <div>
               <h2 className="panel-header-title">{isMyanmar ? 'တိုက်ရိုက် စမ်းသပ်မှု ကွန်ဆိုးလ်' : 'Interactive Request Console'}</h2>
-              <div className="status-indicator-live">
-                <span className="dot green" />
-                <span className="live-text">{isMyanmar ? 'API ချိတ်ဆက်ထားသည်' : 'API Online'}</span>
-              </div>
+              <span className="panel-header-sub">{isMyanmar ? 'Request path သို့မဟုတ် parameter များကို စိတ်ကြိုက် ပြင်ဆင်စမ်းသပ်နိုင်ပါသည်' : 'Execute live requests or customize path and parameters'}</span>
+            </div>
+            <div className="status-indicator-live">
+              <span className="dot green" />
+              <span className="live-text">{isMyanmar ? 'API ချိတ်ဆက်ထားသည်' : 'API Online'}</span>
             </div>
           </div>
 
-          {/* Request Form Box */}
           <form className="console-request-box" onSubmit={handleSendRequest}>
             {/* Request Bar with URL and Submit Button */}
             <div className="request-url-row">
@@ -650,82 +560,144 @@ export const ConsoleWorkspace: React.FC<ConsoleWorkspaceProps> = ({
               </div>
             )}
           </form>
+        </section>
 
-          {/* Response Payload Viewer */}
-          <div className="console-response-card">
-            <div className="response-header-bar">
-              <div className="response-metrics-group">
-                <span className="response-heading-title">
-                  {isMyanmar ? 'တုံ့ပြန်မှု ရလဒ် (Payload)' : 'Response Payload'}
+        {/* 2. RESPONSE PAYLOAD (FULL ROW WIDTH, APPEARS FIRST) */}
+        <section className="console-response-card col-span-full" id="response-payload-section">
+          <div className="response-header-bar">
+            <div className="response-metrics-group">
+              <span className="response-heading-title">
+                {isMyanmar ? 'တုံ့ပြန်မှု ရလဒ် (Payload)' : 'Response Payload'}
+              </span>
+
+              <div className="badges-list">
+                <span className={`status-pill ${response ? (response.status < 400 ? 'status-ok' : 'status-err') : 'status-idle'}`}>
+                  {response ? `${response.status} ${response.statusText}` : (isMyanmar ? 'အခြေအနေ: --' : 'Status: --')}
                 </span>
 
-                <div className="badges-list">
-                  <span className={`status-pill ${response ? (response.status < 400 ? 'status-ok' : 'status-err') : 'status-idle'}`}>
-                    {response ? `${response.status} ${response.statusText}` : (isMyanmar ? 'အခြေအနေ: --' : 'Status: --')}
+                <span className="time-pill">
+                  <Clock size={12} />
+                  <span>{response ? `${response.durationMs} ms` : (isMyanmar ? 'ကြာချိန်: -- ms' : 'Time: -- ms')}</span>
+                </span>
+
+                {response && (
+                  <span className="speed-pill">
+                    ⚡ {response.durationMs < 100 ? (isMyanmar ? 'မြန်ဆန်' : 'Fast') : (isMyanmar ? 'ပုံမှန်' : 'Normal')}
                   </span>
+                )}
 
-                  <span className="time-pill">
-                    <Clock size={12} />
-                    <span>{response ? `${response.durationMs} ms` : (isMyanmar ? 'ကြာချိန်: -- ms' : 'Time: -- ms')}</span>
-                  </span>
+                <span className="ratelimit-pill">
+                  🛡️ {isMyanmar ? 'ကန့်သတ်ချက်: 994/1000' : 'Rate Limit: 994/1000'}
+                </span>
 
-                  {response && (
-                    <span className="speed-pill">
-                      ⚡ {response.durationMs < 100 ? (isMyanmar ? 'မြန်ဆန်' : 'Fast') : (isMyanmar ? 'ပုံမှန်' : 'Normal')}
-                    </span>
-                  )}
-
-                  <span className="ratelimit-pill">
-                    🛡️ {isMyanmar ? 'ကန့်သတ်ချက်: 994/1000' : 'Rate Limit: 994/1000'}
-                  </span>
-
-                  <span className="size-pill">
-                    📦 {payloadSizeKb} KB
-                  </span>
-                </div>
-              </div>
-
-              <div className="response-action-buttons">
-                <button
-                  type="button"
-                  className="btn-action-sm"
-                  onClick={handleCopyJson}
-                  title={isMyanmar ? 'JSON ကို ကူးယူမည်' : 'Copy JSON to Clipboard'}
-                >
-                  {copiedJson ? (
-                    <>
-                      <Check size={13} className="text-emerald-400" />
-                      <span className="text-emerald-400">{isMyanmar ? 'ကူးယူပြီး!' : 'Copied!'}</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy size={13} />
-                      <span>{isMyanmar ? 'JSON ကူးယူမည်' : 'Copy JSON'}</span>
-                    </>
-                  )}
-                </button>
-
-                <button
-                  type="button"
-                  className="btn-action-sm"
-                  onClick={handleDownloadJson}
-                  title={isMyanmar ? '.json ဖိုင်အဖြစ် ဒေါင်းလုဒ်ဆွဲမည်' : 'Download .json file'}
-                >
-                  <Download size={13} />
-                  <span>{isMyanmar ? 'ဒေါင်းလုဒ်' : 'Download'}</span>
-                </button>
+                <span className="size-pill">
+                  📦 {payloadSizeKb} KB
+                </span>
               </div>
             </div>
 
-            {/* JSON Content Pre Block */}
-            <div className="response-json-container">
-              <pre className="response-pre-code">
-                <code>{jsonResponseString}</code>
-              </pre>
+            <div className="response-action-buttons">
+              <button
+                type="button"
+                className="btn-action-sm"
+                onClick={handleCopyJson}
+                title={isMyanmar ? 'JSON ကို ကူးယူမည်' : 'Copy JSON to Clipboard'}
+              >
+                {copiedJson ? (
+                  <>
+                    <Check size={13} className="text-emerald-400" />
+                    <span className="text-emerald-400">{isMyanmar ? 'ကူးယူပြီး!' : 'Copied!'}</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy size={13} />
+                    <span>{isMyanmar ? 'JSON ကူးယူမည်' : 'Copy JSON'}</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                className="btn-action-sm"
+                onClick={handleDownloadJson}
+                title={isMyanmar ? '.json ဖိုင်အဖြစ် ဒေါင်းလုဒ်ဆွဲမည်' : 'Download .json file'}
+              >
+                <Download size={13} />
+                <span>{isMyanmar ? 'ဒေါင်းလုဒ်' : 'Download'}</span>
+              </button>
             </div>
           </div>
+
+          {/* JSON Content Pre Block */}
+          <div className="response-json-container">
+            <pre className="response-pre-code">
+              <code>{jsonResponseString}</code>
+            </pre>
+          </div>
         </section>
-      )}
+
+        {/* 3. API INTEGRATION CODE GUIDE (FULL ROW WIDTH, DIRECTLY BELOW RESPONSE PAYLOAD) */}
+        <section className="endpoint-group code-guide-box col-span-full" id="api-integration-code-guide">
+          <div className="code-guide-header">
+            <h3 className="group-title" style={{ marginBottom: 0 }}>💻 {isMyanmar ? 'ကုဒ်ဖြင့် ချိတ်ဆက်အသုံးပြုနည်း' : 'API Integration Code Guide'}</h3>
+            <div className="code-guide-tabs">
+              <button
+                type="button"
+                className={`code-guide-tab ${activeCodeTab === 'fetch' ? 'active' : ''}`}
+                onClick={() => setActiveCodeTab('fetch')}
+              >
+                Fetch API
+              </button>
+              <button
+                type="button"
+                className={`code-guide-tab ${activeCodeTab === 'axios' ? 'active' : ''}`}
+                onClick={() => setActiveCodeTab('axios')}
+              >
+                Axios
+              </button>
+              <button
+                type="button"
+                className={`code-guide-tab ${activeCodeTab === 'curl' ? 'active' : ''}`}
+                onClick={() => setActiveCodeTab('curl')}
+              >
+                cURL
+              </button>
+              <button
+                type="button"
+                className={`code-guide-tab ${activeCodeTab === 'postman' ? 'active' : ''}`}
+                onClick={() => setActiveCodeTab('postman')}
+              >
+                Postman
+              </button>
+            </div>
+          </div>
+
+          <div className="code-guide-body">
+            {activeCodeTab === 'fetch' && (
+              <pre className="code-display"><code>{activeFetchSnippet}</code></pre>
+            )}
+            {activeCodeTab === 'axios' && (
+              <pre className="code-display"><code>{activeAxiosSnippet}</code></pre>
+            )}
+            {activeCodeTab === 'curl' && (
+              <pre className="code-display"><code>{activeCurlSnippet}</code></pre>
+            )}
+            {activeCodeTab === 'postman' && (
+              <div className="postman-guide-card">
+                <p><strong>{isMyanmar ? 'နည်းလမ်း ၁: Header နည်းလမ်း (အကြံပြုထားသည်)' : 'Method 1: Header Method (Recommended)'}</strong></p>
+                <ul>
+                  <li>Header: <code>x-api-key</code> &rarr; Value: <code>{apiKey || 'demo-key-12345'}</code></li>
+                  <li>Header: <code>Authorization</code> &rarr; Value: <code>Bearer {apiKey || 'demo-key-12345'}</code></li>
+                </ul>
+                <p><strong>{isMyanmar ? 'နည်းလမ်း ၂: Authorization Tab နည်းလမ်း' : 'Method 2: Authorization Tab'}</strong></p>
+                <ul>
+                  <li>Type: {isMyanmar ? 'Bearer Token သို့မဟုတ် API Key ကို ရွေးချယ်ပါ' : 'Select Bearer Token or API Key'}</li>
+                  <li>Key: <code>x-api-key</code>, Value: <code>{apiKey || 'demo-key-12345'}</code>, Add to: <code>Header</code></li>
+                </ul>
+              </div>
+            )}
+          </div>
+        </section>
       </main>
     </div>
   );
