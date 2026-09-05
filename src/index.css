@@ -1,7 +1,7 @@
 :root {
-  --font-sans: 'Inter', 'Noto Sans Myanmar', 'Padauk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-myanmar: 'Noto Sans Myanmar', 'Padauk', 'Pyidaungsu', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  --font-sans: 'Inter', 'Noto Sans Myanmar', 'Pyidaungsu', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-myanmar: 'Noto Sans Myanmar', 'Pyidaungsu', 'Myanmar Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 
   /* Goodwill Advisory Exact Color Palette (https://goodwilladvisory.vercel.app/en) */
   --bg-primary: #f8faf7;
@@ -66,45 +66,186 @@ html, body {
   font-family: var(--font-sans);
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  line-height: 1.5;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* Myanmar Typography Global Perfection */
-body.lang-my,
-body.lang-my *,
-[lang="my"],
-[lang="my"] * {
-  font-family: 'Noto Sans Myanmar', 'Padauk', 'Pyidaungsu', -apple-system, BlinkMacSystemFont, sans-serif !important;
-  letter-spacing: normal !important;
-  word-spacing: normal !important;
+/* Myanmar Typography Global Setup */
+body.lang-my {
+  font-family: var(--font-myanmar);
+  line-height: 1.7;
 }
 
-body.lang-my {
-  line-height: 1.65;
+/* UI text in Myanmar mode cleanly inherits font-myanmar */
+body.lang-my button,
+body.lang-my input,
+body.lang-my select,
+body.lang-my textarea,
+body.lang-my h1,
+body.lang-my h2,
+body.lang-my h3,
+body.lang-my h4,
+body.lang-my h5,
+body.lang-my h6,
+body.lang-my p,
+body.lang-my span,
+body.lang-my a,
+body.lang-my label,
+body.lang-my td,
+body.lang-my th,
+body.lang-my li,
+[lang="my"] {
+  font-family: var(--font-myanmar);
+  letter-spacing: normal;
+  word-spacing: normal;
+}
+
+/* Monospace & Code elements MUST ALWAYS retain font-mono in both languages */
+code,
+pre,
+kbd,
+samp,
+var,
+.font-mono,
+.endpoint-path-text,
+.endpoint-path-code,
+.param-name-code,
+.param-type-badge,
+.param-example-code,
+.code-block-pre,
+.code-block-pre *,
+.response-pre-code,
+.response-pre-code *,
+.response-json-container,
+.response-json-container *,
+.method-badge,
+.method-tag,
+.method-dropdown,
+.path-text-input,
+.status-pill,
+.auth-token-textarea,
+.body-textarea,
+.base-url-code,
+.url-strip-code,
+.api-key-pill code,
+body.lang-my code,
+body.lang-my pre,
+body.lang-my kbd,
+body.lang-my samp,
+body.lang-my var,
+body.lang-my .font-mono,
+body.lang-my .endpoint-path-text,
+body.lang-my .endpoint-path-code,
+body.lang-my .param-name-code,
+body.lang-my .param-type-badge,
+body.lang-my .param-example-code,
+body.lang-my .code-block-pre,
+body.lang-my .code-block-pre *,
+body.lang-my .response-pre-code,
+body.lang-my .response-pre-code *,
+body.lang-my .response-json-container,
+body.lang-my .response-json-container *,
+body.lang-my .method-badge,
+body.lang-my .method-tag,
+body.lang-my .method-dropdown,
+body.lang-my .path-text-input,
+body.lang-my .status-pill,
+body.lang-my .auth-token-textarea,
+body.lang-my .body-textarea,
+body.lang-my .base-url-code,
+body.lang-my .url-strip-code,
+body.lang-my .api-key-pill code {
+  font-family: var(--font-mono) !important;
+}
+
+/* Myanmar-specific weight and sizing balance:
+   Burmese characters have intricate circular loops and tone markers.
+   Keeping headings to semibold (600) and buttons/tabs to medium (500)
+   prevents muddy character bleed while keeping great visual contrast. */
+body.lang-my h1,
+body.lang-my .overview-title,
+body.lang-my .docs-hero-title,
+body.lang-my .learn-hero-title,
+body.lang-my .banner-title,
+body.lang-my .workspace-main-heading,
+body.lang-my .panel-header-title,
+body.lang-my .response-heading-title {
+  font-weight: 600 !important;
+  line-height: 1.45 !important;
+  letter-spacing: normal !important;
+}
+
+body.lang-my h2,
+body.lang-my h3,
+body.lang-my h4,
+body.lang-my .section-title,
+body.lang-my .lesson-view-title,
+body.lang-my .quiz-card-title,
+body.lang-my .endpoint-title,
+body.lang-my .overview-module-title,
+body.lang-my .doc-section-heading,
+body.lang-my .exercise-title {
+  font-weight: 600 !important;
+}
+
+body.lang-my button,
+body.lang-my .btn,
+body.lang-my .header-nav-tab,
+body.lang-my .mobile-view-tab,
+body.lang-my .view-tab-btn,
+body.lang-my .code-tab-btn,
+body.lang-my .lesson-tab-btn,
+body.lang-my .auth-header-btn,
+body.lang-my .tester-send-btn,
+body.lang-my .send-request-btn,
+body.lang-my .btn-submit-quiz,
+body.lang-my .auth-save-btn,
+body.lang-my .nav-overview-btn,
+body.lang-my .endpoint-name,
+body.lang-my .btag,
+body.lang-my .auth-pill,
+body.lang-my .role-pill,
+body.lang-my .tag-pill {
+  font-weight: 500 !important;
+}
+
+body.lang-my p,
+body.lang-my .endpoint-summary-text,
+body.lang-my .endpoint-detailed-desc,
+body.lang-my .overview-subtitle,
+body.lang-my .docs-hero-subtitle,
+body.lang-my .learn-hero-subtitle,
+body.lang-my .section-intro,
+body.lang-my .param-desc-cell,
+body.lang-my .banner-desc,
+body.lang-my .theory-section-text,
+body.lang-my td {
+  font-weight: 400 !important;
+  line-height: 1.7 !important;
 }
 
 body.lang-my .brand-title {
   font-size: 1rem;
-  line-height: 1;
+  line-height: 1.2;
+  font-weight: 600 !important;
+}
+
+body.lang-my .brand-highlight {
+  font-weight: 600 !important;
 }
 
 body.lang-my .header-nav-tab,
 body.lang-my .mobile-view-tab {
   font-size: 0.8rem;
-  line-height: 1;
+  line-height: 1.2;
 }
 
 body.lang-my .banner-title {
-  font-size: 1.65rem !important;
+  font-size: 1.55rem !important;
   line-height: 1.4 !important;
-  letter-spacing: normal !important;
   word-break: break-word !important;
-}
-
-code, pre, .font-mono {
-  font-family: var(--font-mono);
 }
 
 /* Custom Scrollbar */
@@ -208,7 +349,7 @@ code, pre, .font-mono {
 
 .brand-title {
   font-size: 1.05rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: normal;
   color: #101828;
   line-height: 1;
@@ -222,7 +363,7 @@ code, pre, .font-mono {
 
 .brand-highlight {
   color: var(--brand-primary);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .version-pill {
@@ -327,7 +468,7 @@ code, pre, .font-mono {
   height: 26px !important;
   padding: 0 6px !important;
   font-size: 0.75rem !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   color: var(--text-secondary) !important;
   background: transparent !important;
   border: none !important;
@@ -358,7 +499,7 @@ code, pre, .font-mono {
   font-size: 0.775rem;
   padding: 0.35rem 0.75rem;
   border-radius: 999px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   border: 1px solid transparent;
@@ -449,7 +590,7 @@ code, pre, .font-mono {
 
 .sidebar-mobile-title {
   font-size: 0.95rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
 }
 
@@ -605,7 +746,7 @@ code, pre, .font-mono {
 
 .empty-search-title {
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
 }
 
@@ -641,7 +782,7 @@ code, pre, .font-mono {
 
 .nav-section-header {
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.08em;
   color: var(--text-muted);
   padding: 0 0.5rem 0.5rem 0.5rem;
@@ -659,7 +800,7 @@ code, pre, .font-mono {
   border-radius: var(--radius-md);
   color: var(--text-secondary);
   font-size: 0.865rem;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.15s ease;
   text-align: left;
@@ -674,7 +815,7 @@ code, pre, .font-mono {
   background: #eef6e9;
   color: #415a24;
   border-color: #c9e1b4;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .module-groups-list {
@@ -713,7 +854,7 @@ code, pre, .font-mono {
 
 .module-name {
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
 }
 
@@ -788,7 +929,7 @@ code, pre, .font-mono {
 
 .endpoint-nav-item.active .endpoint-name {
   color: #415a24;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 /* Method Badge */
@@ -797,7 +938,7 @@ code, pre, .font-mono {
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono);
-  font-weight: 700;
+  font-weight: 600;
   border-radius: 6px;
   line-height: 1;
   text-transform: uppercase;
@@ -910,7 +1051,7 @@ code, pre, .font-mono {
 .endpoint-path-text {
   font-family: var(--font-mono);
   font-size: 1.2rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #101828;
   background: #f8faf7;
   padding: 0.35rem 0.85rem;
@@ -994,7 +1135,7 @@ code, pre, .font-mono {
 
 .endpoint-title {
   font-size: 1.65rem;
-  font-weight: 800;
+  font-weight: 700;
   color: #101828;
   letter-spacing: -0.02em;
 }
@@ -1032,7 +1173,7 @@ code, pre, .font-mono {
   border-radius: 999px;
   color: var(--text-secondary);
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -1045,6 +1186,7 @@ code, pre, .font-mono {
 .view-tab-btn.active {
   background: #415a24;
   color: #ffffff;
+  font-weight: 600;
   border-color: #415a24;
   box-shadow: 0 4px 12px rgba(65, 90, 36, 0.25);
 }
@@ -1090,7 +1232,7 @@ code, pre, .font-mono {
 
 .doc-section-heading {
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #101828;
 }
 
@@ -1114,7 +1256,7 @@ code, pre, .font-mono {
 
 .param-section-title {
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text-muted);
@@ -1159,7 +1301,7 @@ code, pre, .font-mono {
 .param-name-code {
   font-family: var(--font-mono);
   color: #415a24;
-  font-weight: 700;
+  font-weight: 600;
   background: #eef6e9;
   padding: 0.2rem 0.5rem;
   border-radius: 6px;
@@ -1179,7 +1321,7 @@ code, pre, .font-mono {
   background: #fee2e2;
   padding: 0.15rem 0.45rem;
   border-radius: 4px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .param-optional-badge {
@@ -1223,7 +1365,7 @@ code, pre, .font-mono {
   color: #a8bda0;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .code-copy-btn {
@@ -1297,7 +1439,7 @@ code, pre, .font-mono {
   border-radius: 999px;
   color: var(--text-secondary);
   font-size: 0.815rem;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -1311,6 +1453,7 @@ code, pre, .font-mono {
 .code-tab-btn.active {
   background: #415a24;
   color: #ffffff;
+  font-weight: 600;
   border-color: #415a24;
   box-shadow: 0 2px 6px rgba(65, 90, 36, 0.2);
 }
@@ -1349,7 +1492,7 @@ code, pre, .font-mono {
 .status-pill {
   font-family: var(--font-mono);
   font-size: 0.725rem;
-  font-weight: 700;
+  font-weight: 600;
   padding: 0.15rem 0.45rem;
   border-radius: 4px;
 }
@@ -1393,7 +1536,7 @@ code, pre, .font-mono {
 
 .response-desc-label {
   color: var(--text-muted);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .response-desc-text {
@@ -1403,7 +1546,7 @@ code, pre, .font-mono {
 .payload-example-label {
   font-size: 0.75rem;
   color: var(--text-muted);
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -1464,7 +1607,7 @@ code, pre, .font-mono {
 
 .auth-modal-title {
   font-size: 1.15rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #101828;
 }
 
@@ -1508,7 +1651,7 @@ code, pre, .font-mono {
 
 .auth-status-text.authenticated {
   color: #415a24;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .auth-status-text.unauthenticated {
@@ -1544,7 +1687,7 @@ code, pre, .font-mono {
 
 .auth-input-label {
   font-size: 0.835rem;
-  font-weight: 700;
+  font-weight: 500;
   color: #344054;
 }
 
@@ -1609,7 +1752,7 @@ code, pre, .font-mono {
   align-items: center;
   gap: 0.4rem;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #415a24;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -1707,7 +1850,7 @@ code, pre, .font-mono {
   border: none;
   color: #ffffff;
   font-size: 0.825rem;
-  font-weight: 700;
+  font-weight: 600;
   padding: 0.55rem 1.25rem;
   border-radius: 999px;
   cursor: pointer;
@@ -1771,7 +1914,7 @@ code, pre, .font-mono {
 
 .tester-resolved-path {
   color: #415a24;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .tester-resolved-query {
@@ -1787,7 +1930,7 @@ code, pre, .font-mono {
   border: none;
   color: #ffffff;
   font-size: 0.865rem;
-  font-weight: 700;
+  font-weight: 600;
   padding: 0.65rem 1.4rem;
   border-radius: 999px;
   cursor: pointer;
@@ -1858,7 +2001,7 @@ code, pre, .font-mono {
   border: 1px solid #c9e1b4;
   color: #415a24;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   padding: 0.35rem 0.85rem;
   border-radius: 999px;
   cursor: pointer;
@@ -1891,7 +2034,7 @@ code, pre, .font-mono {
 
 .tester-card-title {
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #101828;
 }
 
@@ -1954,7 +2097,7 @@ code, pre, .font-mono {
 
 .tester-field-name {
   font-family: var(--font-mono);
-  font-weight: 700;
+  font-weight: 600;
   color: #344054;
 }
 
@@ -2138,7 +2281,7 @@ code, pre, .font-mono {
 
 .response-empty-title {
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #101828;
 }
 
@@ -2174,7 +2317,7 @@ code, pre, .font-mono {
 
 .response-loading-title {
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #101828;
 }
 
@@ -2207,7 +2350,7 @@ code, pre, .font-mono {
   gap: 0.4rem;
   font-family: var(--font-mono);
   font-size: 0.825rem;
-  font-weight: 700;
+  font-weight: 600;
   padding: 0.35rem 0.75rem;
   border-radius: 6px;
 }
@@ -2218,7 +2361,7 @@ code, pre, .font-mono {
   gap: 0.35rem;
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #415a24;
   background: #eef6e9;
   border: 1px solid #c9e1b4;
@@ -2308,7 +2451,7 @@ code, pre, .font-mono {
   background: #eef6e9;
   color: #415a24;
   border-color: #c9e1b4;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .response-view-tab.error-tab {
@@ -2452,7 +2595,7 @@ code, pre, .font-mono {
 
 .api-error-type-tag {
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.08em;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -2460,7 +2603,7 @@ code, pre, .font-mono {
 
 .api-error-title {
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #101828;
 }
 
@@ -2485,7 +2628,7 @@ code, pre, .font-mono {
 
 .error-details-label {
   color: var(--text-muted);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .error-details-text {
@@ -2504,7 +2647,7 @@ code, pre, .font-mono {
 
 .validation-header {
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #c2410c;
   margin-bottom: 0.2rem;
 }
@@ -2523,7 +2666,7 @@ code, pre, .font-mono {
   background: #fee2e2;
   padding: 0.15rem 0.45rem;
   border-radius: 4px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .validation-msg {
@@ -2546,7 +2689,7 @@ code, pre, .font-mono {
   align-items: center;
   gap: 0.4rem;
   font-size: 0.775rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #415a24;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -2576,7 +2719,7 @@ code, pre, .font-mono {
   color: #ffffff;
   border: none;
   font-size: 0.775rem;
-  font-weight: 700;
+  font-weight: 600;
   padding: 0.45rem 1rem;
   border-radius: 999px;
   cursor: pointer;
@@ -2632,7 +2775,7 @@ code, pre, .font-mono {
   align-items: center;
   gap: 0.35rem;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   background: #eef6e9;
@@ -2644,7 +2787,7 @@ code, pre, .font-mono {
 
 .overview-title {
   font-size: 2.25rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.03em;
   color: #101828;
 }
@@ -2687,7 +2830,7 @@ code, pre, .font-mono {
 
 .stat-val {
   font-size: 1.5rem;
-  font-weight: 800;
+  font-weight: 700;
   color: #101828;
   font-family: var(--font-mono);
 }
@@ -2748,7 +2891,7 @@ code, pre, .font-mono {
 
 .overview-module-title {
   font-size: 1.15rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #101828;
 }
 
@@ -3161,7 +3304,7 @@ code, pre, .font-mono {
 
 .nav-tab-badge {
   font-size: 0.65rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   padding: 0.15rem 0.45rem;
   border-radius: 999px;
@@ -3192,7 +3335,7 @@ code, pre, .font-mono {
   gap: 0.35rem;
   padding: 0.5rem 0.65rem;
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-secondary);
   background: var(--bg-primary);
   border: 1px solid var(--border-subtle);
@@ -3207,6 +3350,7 @@ code, pre, .font-mono {
 .mobile-view-tab.active {
   background: var(--brand-primary);
   color: #ffffff;
+  font-weight: 600;
   border-color: var(--brand-primary);
 }
 
@@ -3277,7 +3421,7 @@ code, pre, .font-mono {
   align-items: center;
   gap: 0.4rem;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--brand-primary);
@@ -3290,7 +3434,7 @@ code, pre, .font-mono {
 
 .docs-hero-title {
   font-size: 2rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-primary);
   line-height: 1.25;
   margin-bottom: 0.65rem;
@@ -3322,7 +3466,7 @@ code, pre, .font-mono {
 
 .docs-meta-item .meta-val {
   font-size: 1.5rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--brand-primary);
   line-height: 1.1;
 }
@@ -3368,7 +3512,7 @@ code, pre, .font-mono {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -3406,7 +3550,7 @@ code, pre, .font-mono {
 .docs-sidebar-link.active {
   background: #eef6e9;
   color: #415a24;
-  font-weight: 700;
+  font-weight: 600;
   border-left: 3px solid #415a24;
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
@@ -3423,7 +3567,7 @@ code, pre, .font-mono {
 
 .sidebar-cta-card h4 {
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
 }
 
@@ -3472,7 +3616,7 @@ code, pre, .font-mono {
 
 .section-title {
   font-size: 1.35rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 0.75rem;
   letter-spacing: -0.01em;
@@ -3563,7 +3707,7 @@ code, pre, .font-mono {
 
 .feature-mini-card h4 {
   font-size: 0.925rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 0.35rem;
 }
@@ -3591,7 +3735,7 @@ code, pre, .font-mono {
 .docs-table th {
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-weight: 700;
+  font-weight: 600;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--border-subtle);
   white-space: nowrap;
@@ -3666,7 +3810,7 @@ code, pre, .font-mono {
 
 .module-doc-title {
   font-size: 1.15rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
 }
 
@@ -3788,7 +3932,7 @@ code, pre, .font-mono {
 
 .params-mini-title {
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   color: var(--text-muted);
   display: block;
@@ -3869,7 +4013,7 @@ code, pre, .font-mono {
   display: inline-block;
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 0.75rem;
 }
 
@@ -3890,7 +4034,7 @@ code, pre, .font-mono {
 
 .bp-card h4 {
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 0.25rem;
 }
@@ -3931,7 +4075,7 @@ code, pre, .font-mono {
   align-items: center;
   gap: 0.4rem;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--brand-primary);
@@ -3944,7 +4088,7 @@ code, pre, .font-mono {
 
 .learn-hero-title {
   font-size: 2rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-primary);
   line-height: 1.25;
   margin-bottom: 0.65rem;
@@ -3977,14 +4121,14 @@ code, pre, .font-mono {
 
 .progress-card-label {
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   color: var(--text-muted);
 }
 
 .progress-card-badge {
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--brand-primary);
 }
 
@@ -4021,7 +4165,7 @@ code, pre, .font-mono {
   background: #fef3c7;
   padding: 0.15rem 0.45rem;
   border-radius: 999px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .learn-workspace-layout {
@@ -4056,7 +4200,7 @@ code, pre, .font-mono {
 
 .modules-sidebar-header h3 {
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -4111,7 +4255,7 @@ code, pre, .font-mono {
 
 .module-tag {
   font-size: 0.675rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   color: var(--brand-primary);
 }
@@ -4162,7 +4306,7 @@ code, pre, .font-mono {
 
 .module-pill {
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   background: var(--brand-sage-light);
   color: var(--brand-primary);
@@ -4183,7 +4327,7 @@ code, pre, .font-mono {
   align-items: center;
   gap: 0.25rem;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #10b981;
   background: #ecfdf5;
   padding: 0.2rem 0.5rem;
@@ -4192,7 +4336,7 @@ code, pre, .font-mono {
 
 .lesson-view-title {
   font-size: 1.6rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-primary);
   line-height: 1.25;
   margin-bottom: 0.35rem;
@@ -4277,7 +4421,7 @@ code, pre, .font-mono {
 
 .theory-section-heading {
   font-size: 1.15rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 0.65rem;
 }
@@ -4419,7 +4563,7 @@ code, pre, .font-mono {
 
 .exercise-badge {
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   background: var(--brand-gold);
   color: #1a1a1a;
@@ -4429,7 +4573,7 @@ code, pre, .font-mono {
 
 .exercise-title {
   font-size: 1.2rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
 }
 
@@ -4500,7 +4644,7 @@ code, pre, .font-mono {
 
 .params-label {
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   color: var(--text-muted);
   display: block;
@@ -4537,7 +4681,7 @@ code, pre, .font-mono {
   padding: 0.75rem 1.5rem;
   border-radius: var(--radius-md);
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 600;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -4593,7 +4737,7 @@ code, pre, .font-mono {
 
 .status-pill {
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 600;
   padding: 0.25rem 0.65rem;
   border-radius: 999px;
 }
@@ -4671,7 +4815,7 @@ code, pre, .font-mono {
 .quiz-header-badge {
   display: inline-block;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   color: var(--brand-primary);
   background: var(--brand-sage-light);
@@ -4682,7 +4826,7 @@ code, pre, .font-mono {
 
 .quiz-card-title {
   font-size: 1.35rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 0.25rem;
 }
@@ -4714,7 +4858,7 @@ code, pre, .font-mono {
 
 .question-number {
   font-size: 0.75rem;
-  font-weight: 800;
+  font-weight: 600;
   background: var(--brand-primary);
   color: #ffffff;
   padding: 0.15rem 0.45rem;
@@ -4781,7 +4925,7 @@ code, pre, .font-mono {
   height: 24px;
   border-radius: 50%;
   background: var(--bg-primary);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 0.75rem;
   flex-shrink: 0;
 }
@@ -4823,7 +4967,7 @@ code, pre, .font-mono {
   padding: 0.85rem 1.5rem;
   border-radius: var(--radius-md);
   font-size: 0.95rem;
-  font-weight: 700;
+  font-weight: 600;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -4853,7 +4997,7 @@ code, pre, .font-mono {
 
 .score-badge {
   font-size: 0.95rem;
-  font-weight: 800;
+  font-weight: 600;
   padding: 0.35rem 0.85rem;
   border-radius: 999px;
 }
@@ -4931,7 +5075,7 @@ code, pre, .font-mono {
   padding: 0.65rem 1.5rem;
   border-radius: var(--radius-md);
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: 600;
   background: var(--brand-primary);
   color: #ffffff;
   border: none;
@@ -5094,7 +5238,7 @@ code, pre, .font-mono {
   align-items: center;
   gap: 0.35rem;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--brand-primary);
@@ -5125,7 +5269,7 @@ code, pre, .font-mono {
 
 .banner-title {
   font-size: 1.75rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-primary);
   line-height: 1.25;
   display: flex;
@@ -5212,7 +5356,7 @@ code, pre, .font-mono {
 
 .url-strip-label {
   font-size: 0.7rem;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.06em;
   color: var(--text-muted);
 }
@@ -5284,7 +5428,7 @@ code, pre, .font-mono {
 
 .bstat-value {
   font-size: 1.05rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-primary);
 }
 
@@ -5309,7 +5453,7 @@ code, pre, .font-mono {
 
 .usecases-title {
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--brand-primary);
   margin-bottom: 0.35rem;
 }
@@ -5354,7 +5498,7 @@ code, pre, .font-mono {
 
 .workspace-main-heading {
   font-size: 1.15rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-primary);
   margin: 0;
 }
@@ -5398,7 +5542,7 @@ code, pre, .font-mono {
 .layout-toggle-btn.active {
   background: var(--brand-primary);
   color: #ffffff;
-  font-weight: 700;
+  font-weight: 600;
   box-shadow: 0 1px 3px rgba(65, 90, 36, 0.25);
 }
 
@@ -5468,7 +5612,7 @@ code, pre, .font-mono {
 
 .console-section-divider .divider-label {
   font-size: 0.75rem;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.08em;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -5500,7 +5644,7 @@ code, pre, .font-mono {
 
 .panel-header-title {
   font-size: 1.2rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-primary);
 }
 
@@ -5514,7 +5658,7 @@ code, pre, .font-mono {
   align-items: center;
   gap: 0.35rem;
   font-size: 0.775rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--brand-primary);
   background: #ffffff;
   border: 1px solid var(--border-medium);
@@ -5534,7 +5678,7 @@ code, pre, .font-mono {
   align-items: center;
   gap: 0.4rem;
   font-size: 0.775rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #15803d;
   background: #f0fdf4;
   border: 1px solid #bbf7d0;
@@ -5555,7 +5699,7 @@ code, pre, .font-mono {
 
 .group-title {
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
   display: flex;
   align-items: center;
@@ -5593,7 +5737,7 @@ code, pre, .font-mono {
   background: #eef6e9;
   border-color: #c9e1b4;
   color: #415a24;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 /* Endpoint Cards List */
@@ -5646,7 +5790,7 @@ code, pre, .font-mono {
 
 .method-tag {
   font-size: 0.675rem;
-  font-weight: 800;
+  font-weight: 600;
   font-family: var(--font-mono);
   padding: 0.15rem 0.45rem;
   border-radius: 4px;
@@ -5704,7 +5848,7 @@ code, pre, .font-mono {
 
 .code-guide-tab {
   font-size: 0.725rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-secondary);
   background: transparent;
   border: none;
@@ -5742,7 +5886,7 @@ code, pre, .font-mono {
 }
 
 .postman-guide-card p {
-  font-weight: 700;
+  font-weight: 600;
   margin-top: 0.5rem;
 }
 
@@ -5799,7 +5943,7 @@ code, pre, .font-mono {
 
 .method-dropdown {
   font-family: var(--font-mono);
-  font-weight: 800;
+  font-weight: 600;
   font-size: 0.8rem;
   padding: 0.45rem 0.65rem;
   border-radius: var(--radius-sm);
@@ -5836,7 +5980,7 @@ code, pre, .font-mono {
   border-radius: var(--radius-md);
   padding: 0.65rem 1.35rem;
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
@@ -5953,7 +6097,7 @@ code, pre, .font-mono {
 
 .manage-key-btn {
   font-size: 0.725rem;
-  font-weight: 700;
+  font-weight: 600;
   background: var(--brand-sage-light);
   color: var(--brand-primary);
   border: 1px solid var(--brand-sage);
@@ -5984,7 +6128,7 @@ code, pre, .font-mono {
 
 .body-label {
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-secondary);
 }
 
@@ -6040,7 +6184,7 @@ code, pre, .font-mono {
 
 .response-heading-title {
   font-size: 0.95rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-primary);
 }
 
@@ -6053,7 +6197,7 @@ code, pre, .font-mono {
 
 .status-pill {
   font-size: 0.725rem;
-  font-weight: 700;
+  font-weight: 600;
   font-family: var(--font-mono);
   padding: 0.2rem 0.55rem;
   border-radius: 999px;
@@ -6164,7 +6308,7 @@ code, pre, .font-mono {
 
 .key-copy-btn {
   font-size: 0.675rem;
-  font-weight: 700;
+  font-weight: 600;
   background: #ffffff;
   color: var(--text-secondary);
   border: 1px solid var(--border-subtle);
