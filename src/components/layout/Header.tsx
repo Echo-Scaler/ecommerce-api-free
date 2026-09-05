@@ -122,7 +122,8 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={openAuthModal}
             title={isMyanmar ? 'တိုကင် သတ်မှတ်ရန် သို့မဟုတ် Presets ရွေးချယ်ရန်' : 'Generate custom key or select presets'}
           >
-            <span>⚡ {isMyanmar ? 'တိုကင် / Presets' : 'Key / Presets'}</span>
+            <span className="auth-btn-icon">⚡</span>
+            <span className="auth-btn-label">{isMyanmar ? 'တိုကင် / Presets' : 'Key / Presets'}</span>
           </button>
 
           <div className="header-divider hide-on-mobile" />
@@ -131,7 +132,7 @@ export const Header: React.FC<HeaderProps> = ({
           {currentView !== 'console' && (
             <button
               type="button"
-              className="header-quick-tester-btn"
+              className="header-quick-tester-btn hide-on-mobile"
               onClick={() => onSelectView('console')}
               title={isMyanmar ? 'တိုက်ရိုက် API ကွန်ဆိုးလ်ကို ဖွင့်မည်' : 'Open Interactive API Console'}
             >
